@@ -41,11 +41,13 @@
     padding: 20px 0;
   }
 
-  @media (max-width: 480px) {
-    body { background: var(--pink); padding: 0; }
-    .phone-shell { border-radius: 0; padding: 0; max-width: 100%; border: none; }
-    .screen { border-radius: 0; min-height: 100vh; }
-    .status-bar { padding-top: env(safe-area-inset-top, 0); }
+  @media (max-width: 600px) {
+    body { background: var(--bg); padding: 0; align-items: stretch; }
+    .phone-shell { border-radius: 0; padding: 0; max-width: 100%; border: none; background: var(--bg); }
+    .screen { border-radius: 0; min-height: 100vh; max-height: none; }
+    .status-bar { display: none; }
+    .top-bar { padding-top: calc(14px + env(safe-area-inset-top, 0)); }
+    .bottom-nav { padding-bottom: calc(6px + env(safe-area-inset-bottom, 0)); }
   }
 
   .phone-shell {
