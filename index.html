@@ -25,285 +25,239 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; height: 100%; font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); overflow: hidden; }
 
-html, body {
-  width: 100%; height: 100%;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  background: var(--bg);
-  overflow: hidden;
+.app { display: flex; flex-direction: column; width: 100vw; height: 100vh; height: 100dvh; }
+
+/* AUTH */
+#auth-screen {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 100vw; height: 100vh; height: 100dvh;
+  background: var(--bg); padding: 32px 24px;
 }
-
-.app {
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
+.auth-logo  { font-size: 56px; margin-bottom: 14px; }
+.auth-title { font-size: 28px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.auth-sub   { font-size: 14px; color: var(--text-sec); margin-bottom: 36px; text-align: center; line-height: 1.5; }
+.auth-form  { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 12px; }
+.auth-mode-title { font-size: 18px; font-weight: 600; color: var(--text); text-align: center; }
+.auth-error { background: #FFF3F3; border: 1px solid #FFCDD2; color: #C62828; border-radius: 12px; padding: 11px 14px; font-size: 13px; display: none; text-align: center; line-height: 1.5; }
+.auth-input {
+  width: 100%; padding: 15px 16px; border: 1.5px solid var(--border);
+  border-radius: 14px; font-size: 16px; font-family: inherit;
+  background: var(--card); color: var(--text); outline: none; transition: border-color 0.2s;
 }
+.auth-input:focus { border-color: var(--pink); }
+.auth-btn {
+  width: 100%; padding: 16px; background: var(--pink); color: #fff;
+  border: none; border-radius: 14px; font-size: 16px; font-weight: 600;
+  cursor: pointer; font-family: inherit; margin-top: 4px;
+}
+.auth-btn:active { background: var(--pink-dark); }
+.auth-toggle { text-align: center; font-size: 14px; color: var(--text-sec); cursor: pointer; }
+.auth-toggle span { color: var(--pink); font-weight: 600; }
 
-/* Top bar */
+/* LOADING */
+.loading {
+  position: fixed; inset: 0; background: rgba(255,255,255,0.9);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999; flex-direction: column; gap: 14px;
+}
+.spinner {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 3px solid var(--pink-light); border-top-color: var(--pink);
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 14px; color: var(--text-sec); }
+
+/* TOP BAR */
 .top-bar {
   background: var(--pink);
-  padding: 16px 20px 18px;
-  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  padding: 14px 18px 16px;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
   flex-shrink: 0;
 }
-.top-bar-row { display: flex; align-items: center; justify-content: space-between; }
-.top-bar-title { font-size: 22px; font-weight: 600; color: #fff; }
-.top-bar-sub { font-size: 13px; color: rgba(255,255,255,0.82); margin-top: 2px; }
-.top-bar-icon {
-  width: 38px; height: 38px; border-radius: 50%;
-  background: rgba(255,255,255,0.22);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
+.top-bar-row   { display: flex; align-items: center; justify-content: space-between; }
+.top-bar-title { font-size: 20px; font-weight: 600; color: #fff; }
+.top-bar-email { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 2px; }
+.logout-btn    {
+  background: rgba(255,255,255,0.2); border: none; color: #fff;
+  border-radius: 20px; padding: 7px 14px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: inherit; white-space: nowrap;
 }
+.logout-btn:active { background: rgba(255,255,255,0.35); }
 
-/* Scroll content */
+/* CONTENT */
 .content {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  padding: 14px 12px;
+  flex: 1; overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch; padding: 14px 12px;
   padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
 }
 .content::-webkit-scrollbar { display: none; }
-
-/* Tab pages */
 .tab-page { display: none; }
 .tab-page.active { display: block; }
 
-/* Next banner */
+/* NEXT BANNER */
 .next-banner {
-  background: var(--pink);
-  border-radius: 16px;
-  padding: 18px 20px;
-  margin-bottom: 12px;
-  display: none;
-  position: relative;
-  overflow: hidden;
+  background: var(--pink); border-radius: 16px; padding: 18px 20px;
+  margin-bottom: 12px; display: none; position: relative; overflow: hidden;
 }
-.next-banner::after {
-  content: '';
-  position: absolute; right: -16px; top: -16px;
-  width: 90px; height: 90px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 50%;
-}
-.nb-label { font-size: 11px; color: rgba(255,255,255,0.8); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 5px; }
-.nb-date  { font-size: 22px; font-weight: 600; color: #fff; }
-.nb-days  { font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 4px; }
-.nb-dot   { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); font-size: 28px; }
+.next-banner::after { content:''; position:absolute; right:-16px; top:-16px; width:90px; height:90px; background:rgba(255,255,255,0.1); border-radius:50%; }
+.nb-label { font-size:11px; color:rgba(255,255,255,0.8); font-weight:600; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:5px; }
+.nb-date  { font-size:22px; font-weight:600; color:#fff; }
+.nb-days  { font-size:13px; color:rgba(255,255,255,0.85); margin-top:4px; }
+.nb-dot   { position:absolute; right:18px; top:50%; transform:translateY(-50%); font-size:28px; }
 
-/* Stats */
-.stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
-.stat-tile { background: var(--card); border-radius: 14px; padding: 14px 6px; text-align: center; }
-.stat-num  { font-size: 26px; font-weight: 600; color: var(--pink); line-height: 1; }
-.stat-lbl  { font-size: 10px; color: var(--text-sec); margin-top: 5px; line-height: 1.3; }
+/* STATS */
+.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
+.stat-tile { background:var(--card); border-radius:14px; padding:14px 6px; text-align:center; }
+.stat-num  { font-size:26px; font-weight:600; color:var(--pink); line-height:1; }
+.stat-lbl  { font-size:10px; color:var(--text-sec); margin-top:5px; line-height:1.3; }
 
-/* Card */
-.card { background: var(--card); border-radius: 16px; margin-bottom: 12px; overflow: hidden; }
-.card-head { padding: 16px 16px 8px; display: flex; align-items: center; justify-content: space-between; }
-.card-title { font-size: 14px; font-weight: 600; color: var(--text); }
+/* CARD */
+.card { background:var(--card); border-radius:16px; margin-bottom:12px; overflow:hidden; }
+.card-head { padding:16px 16px 8px; display:flex; align-items:center; justify-content:space-between; }
+.card-title { font-size:14px; font-weight:600; color:var(--text); }
 
-/* Calendar nav */
-.cal-nav { display: flex; align-items: center; gap: 4px; }
-.cal-nav-btn {
-  width: 36px; height: 36px; border-radius: 50%;
-  border: none; background: var(--bg);
-  font-size: 20px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--text); font-family: inherit; transition: background 0.12s;
-}
-.cal-nav-btn:active { background: #e0e0e0; }
-.cal-month { font-size: 14px; font-weight: 600; color: var(--text); min-width: 116px; text-align: center; }
+/* CALENDAR */
+.cal-nav { display:flex; align-items:center; gap:4px; }
+.cal-nav-btn { width:36px; height:36px; border-radius:50%; border:none; background:var(--bg); font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text); font-family:inherit; }
+.cal-nav-btn:active { background:#e0e0e0; }
+.cal-month { font-size:14px; font-weight:600; color:var(--text); min-width:116px; text-align:center; }
+.cal-grid  { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; padding:0 10px 8px; }
+.cal-hdr   { font-size:10px; color:var(--text-sec); text-align:center; padding:4px 0 6px; font-weight:600; }
+.day { aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:13px; cursor:pointer; color:var(--text); transition:transform 0.1s; -webkit-user-select:none; user-select:none; }
+.day:active { transform:scale(0.82); }
+.day.empty  { cursor:default; pointer-events:none; }
+.day.fertile   { background:var(--green-light); color:#2E7D32; }
+.day.ovulation { background:var(--green); color:#fff; font-weight:600; }
+.day.period    { background:var(--pink); color:#fff; font-weight:600; border-radius:10px; }
+.day.predicted { background:var(--pink-light); color:var(--pink-dark); border-radius:10px; }
+.day.today:not(.period):not(.predicted) { outline:2.5px solid var(--pink); outline-offset:-2px; }
+.day.selected:not(.period):not(.predicted):not(.ovulation):not(.fertile) { background:#EEEEEE; }
 
-/* Calendar grid */
-.cal-grid {
-  display: grid;
-  grid-template-columns: repeat(7,1fr);
-  gap: 2px;
-  padding: 0 10px 8px;
-}
-.cal-hdr { font-size: 10px; color: var(--text-sec); text-align: center; padding: 4px 0 6px; font-weight: 600; }
-.day {
-  aspect-ratio: 1;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 50%;
-  font-size: 13px;
-  cursor: pointer;
-  color: var(--text);
-  transition: transform 0.1s;
-  -webkit-user-select: none; user-select: none;
-}
-.day:active { transform: scale(0.82); }
-.day.empty  { cursor: default; pointer-events: none; }
-.day.fertile   { background: var(--green-light); color: #2E7D32; }
-.day.ovulation { background: var(--green); color: #fff; font-weight: 600; }
-.day.period    { background: var(--pink); color: #fff; font-weight: 600; border-radius: 10px; }
-.day.predicted { background: var(--pink-light); color: var(--pink-dark); border-radius: 10px; }
-.day.today:not(.period):not(.predicted) { outline: 2.5px solid var(--pink); outline-offset: -2px; }
-.day.selected:not(.period):not(.predicted):not(.ovulation):not(.fertile) { background: #EEEEEE; }
+.legend { display:flex; flex-wrap:wrap; gap:8px 14px; padding:2px 14px 14px; }
+.leg     { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-sec); }
+.leg-dot { width:14px; height:8px; border-radius:4px; flex-shrink:0; }
 
-/* Legend */
-.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; padding: 2px 14px 14px; }
-.leg     { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-sec); }
-.leg-dot { width: 14px; height: 8px; border-radius: 4px; flex-shrink: 0; }
+/* CYCLE BAR */
+.cyc-wrap  { padding:0 14px 14px; }
+.cyc-label { font-size:12px; color:var(--text-sec); margin-bottom:6px; font-weight:500; }
+.cyc-bar   { height:6px; border-radius:3px; background:var(--border); overflow:hidden; }
+.cyc-fill  { height:100%; border-radius:3px; background:var(--pink); transition:width 0.4s ease; }
 
-/* Cycle bar */
-.cyc-wrap  { padding: 0 14px 14px; }
-.cyc-label { font-size: 12px; color: var(--text-sec); margin-bottom: 6px; font-weight: 500; }
-.cyc-bar   { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
-.cyc-fill  { height: 100%; border-radius: 3px; background: var(--pink); transition: width 0.4s ease; }
+/* LOG */
+.log-section { padding:12px 14px 16px; border-top:1px solid var(--border); }
+.log-label   { font-size:11px; font-weight:600; color:var(--text-sec); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:8px; }
+.sel-date    { font-size:15px; font-weight:500; color:var(--text); margin-bottom:14px; min-height:22px; }
+.sel-date.ph { color:var(--text-sec); font-weight:400; }
+.btn-row     { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.btn         { padding:15px 8px; border-radius:14px; font-size:14px; font-weight:600; cursor:pointer; border:none; font-family:inherit; transition:transform 0.1s; line-height:1.2; }
+.btn:active  { transform:scale(0.95); }
+.btn-fill    { background:var(--pink); color:#fff; }
+.btn-soft    { background:var(--pink-light); color:var(--pink); }
 
-/* Log section */
-.log-section { padding: 12px 14px 16px; border-top: 1px solid var(--border); }
-.log-label { font-size: 11px; font-weight: 600; color: var(--text-sec); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
-.sel-date  { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 14px; min-height: 22px; }
-.sel-date.ph { color: var(--text-sec); font-weight: 400; }
-.btn-row   { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.btn {
-  padding: 15px 8px; border-radius: 14px;
-  font-size: 14px; font-weight: 600; cursor: pointer;
-  border: none; font-family: inherit; transition: transform 0.1s;
-  line-height: 1.2; text-align: center;
-}
-.btn:active  { transform: scale(0.95); }
-.btn-fill    { background: var(--pink); color: #fff; }
-.btn-soft    { background: var(--pink-light); color: var(--pink); }
+/* PHASE */
+.phase-card  { background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border-left:4px solid var(--pink); display:none; }
+.phase-badge { display:inline-block; font-size:11px; font-weight:600; padding:3px 10px; border-radius:20px; margin-bottom:8px; letter-spacing:0.04em; text-transform:uppercase; }
+.phase-name  { font-size:16px; font-weight:600; color:var(--text); margin-bottom:4px; }
+.phase-desc  { font-size:13px; color:var(--text-sec); line-height:1.55; }
 
-/* Phase */
-.phase-card {
-  background: var(--card); border-radius: 16px;
-  padding: 16px; margin-bottom: 12px;
-  border-left: 4px solid var(--pink); display: none;
-}
-.phase-badge {
-  display: inline-block; font-size: 11px; font-weight: 600;
-  padding: 3px 10px; border-radius: 20px; margin-bottom: 8px;
-  letter-spacing: 0.04em; text-transform: uppercase;
-}
-.phase-name { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-.phase-desc { font-size: 13px; color: var(--text-sec); line-height: 1.55; }
+/* HISTORY */
+.hist-item   { padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.hist-item:last-child { border-bottom:none; }
+.hist-date   { font-size:15px; font-weight:600; color:var(--text); }
+.hist-sub    { font-size:12px; color:var(--text-sec); margin-top:3px; }
+.hist-right  { display:flex; align-items:center; gap:10px; }
+.hist-badge  { background:var(--pink-light); color:var(--pink-dark); font-size:13px; font-weight:600; padding:5px 12px; border-radius:20px; }
+.del-btn     { width:32px; height:32px; border-radius:50%; background:var(--bg); border:none; color:var(--text-sec); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:inherit; }
+.del-btn:active { background:#ffebee; color:#e53935; }
+.empty-state { padding:48px 20px; text-align:center; color:var(--text-sec); }
+.empty-icon  { font-size:44px; margin-bottom:14px; opacity:0.35; }
+.empty-text  { font-size:14px; }
 
-/* History */
-.hist-item {
-  padding: 16px; border-bottom: 1px solid var(--border);
-  display: flex; justify-content: space-between; align-items: center;
-}
-.hist-item:last-child { border-bottom: none; }
-.hist-date { font-size: 15px; font-weight: 600; color: var(--text); }
-.hist-sub  { font-size: 12px; color: var(--text-sec); margin-top: 3px; }
-.hist-right { display: flex; align-items: center; gap: 10px; }
-.hist-badge { background: var(--pink-light); color: var(--pink-dark); font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 20px; }
-.del-btn {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: var(--bg); border: none; color: var(--text-sec);
-  font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  font-family: inherit;
-}
-.del-btn:active { background: #ffebee; color: #e53935; }
-.empty-state { padding: 48px 20px; text-align: center; color: var(--text-sec); }
-.empty-icon  { font-size: 44px; margin-bottom: 14px; opacity: 0.35; }
-.empty-text  { font-size: 14px; }
+/* SETTINGS */
+.sett-section { font-size:11px; font-weight:600; color:var(--text-sec); letter-spacing:0.07em; text-transform:uppercase; padding:0 4px 8px; }
+.sett-item    { padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.sett-item:last-child { border-bottom:none; }
+.sett-lbl  { font-size:15px; color:var(--text); font-weight:500; }
+.sett-sub  { font-size:12px; color:var(--text-sec); margin-top:2px; }
+.sett-ctrl { display:flex; align-items:center; gap:10px; }
+.sett-num  { font-size:18px; font-weight:600; color:var(--pink); min-width:32px; text-align:center; }
+.sett-btn  { width:34px; height:34px; border-radius:50%; border:2px solid var(--pink); background:#fff; font-size:20px; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; color:var(--pink); font-weight:600; }
+.sett-btn:active { background:var(--pink-light); }
+.danger-btn { width:100%; padding:15px; background:#fff; border:1.5px solid #FFCDD2; color:#E53935; border-radius:14px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
+.danger-btn:active { background:#FFF3F3; }
+.priv-note  { margin-top:20px; text-align:center; font-size:12px; color:#bbb; line-height:1.7; }
 
-/* Settings */
-.sett-section { font-size: 11px; font-weight: 600; color: var(--text-sec); letter-spacing: 0.07em; text-transform: uppercase; padding: 0 4px 8px; }
-.sett-item { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-.sett-item:last-child { border-bottom: none; }
-.sett-lbl  { font-size: 15px; color: var(--text); font-weight: 500; }
-.sett-sub  { font-size: 12px; color: var(--text-sec); margin-top: 2px; }
-.sett-ctrl { display: flex; align-items: center; gap: 10px; }
-.sett-num  { font-size: 18px; font-weight: 600; color: var(--pink); min-width: 32px; text-align: center; }
-.sett-btn  {
-  width: 34px; height: 34px; border-radius: 50%;
-  border: 2px solid var(--pink); background: #fff;
-  font-size: 20px; cursor: pointer; font-family: inherit;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--pink); font-weight: 600;
-}
-.sett-btn:active { background: var(--pink-light); }
-.danger-btn {
-  width: 100%; padding: 15px; background: #fff;
-  border: 1.5px solid #FFCDD2; color: #E53935;
-  border-radius: 14px; font-size: 14px; font-weight: 600;
-  cursor: pointer; font-family: inherit;
-}
-.danger-btn:active { background: #FFF3F3; }
-.priv-note { margin-top: 20px; text-align: center; font-size: 12px; color: #bbb; line-height: 1.7; }
+/* BOTTOM NAV */
+.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border); display:flex; padding:6px 0; padding-bottom:calc(6px + env(safe-area-inset-bottom,0px)); z-index:100; }
+.nav-item   { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:5px 0; }
+.nav-item:active { opacity:0.6; }
+.nav-icon   { width:26px; height:26px; }
+.nav-lbl    { font-size:10px; color:var(--text-sec); font-weight:500; }
+.nav-item.active .nav-lbl { color:var(--pink); }
 
-/* Bottom nav */
-.bottom-nav {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  background: var(--card);
-  border-top: 1px solid var(--border);
-  display: flex;
-  padding: 6px 0;
-  padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
-  z-index: 100;
-}
-.nav-item {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; gap: 3px; cursor: pointer; padding: 5px 0;
-}
-.nav-item:active { opacity: 0.6; }
-.nav-icon { width: 26px; height: 26px; }
-.nav-lbl  { font-size: 10px; color: var(--text-sec); font-weight: 500; }
-.nav-item.active .nav-lbl { color: var(--pink); }
-
-/* Toast */
-.toast {
-  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
-  background: rgba(26,26,26,0.92); color: #fff;
-  padding: 11px 22px; border-radius: 24px;
-  font-size: 13px; font-weight: 500;
-  opacity: 0; transition: opacity 0.25s;
-  pointer-events: none; white-space: nowrap; z-index: 999;
-  font-family: 'DM Sans', sans-serif;
-}
-.toast.show { opacity: 1; }
+/* TOAST */
+.toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:rgba(26,26,26,0.92); color:#fff; padding:11px 22px; border-radius:24px; font-size:13px; font-weight:500; opacity:0; transition:opacity 0.25s; pointer-events:none; white-space:nowrap; z-index:9999; font-family:'DM Sans',sans-serif; }
+.toast.show { opacity:1; }
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- ÉCRAN DE CONNEXION -->
+<div id="auth-screen">
+  <div class="auth-logo">🌸</div>
+  <div class="auth-title">Mon Cycle</div>
+  <div class="auth-sub">Connecte-toi pour retrouver<br>ton suivi sur tous tes appareils</div>
+  <div class="auth-form">
+    <div class="auth-mode-title" id="auth-mode-title">Connexion</div>
+    <div class="auth-error" id="auth-error"></div>
+    <input class="auth-input" type="email"    id="auth-email"    placeholder="Adresse email"  autocomplete="email">
+    <input class="auth-input" type="password" id="auth-password" placeholder="Mot de passe"   autocomplete="current-password">
+    <button class="auth-btn" id="auth-submit" onclick="authSubmit()">Se connecter</button>
+    <div class="auth-toggle" id="auth-toggle" onclick="toggleAuthMode()">
+      Pas encore de compte ? <span>Créer un compte</span>
+    </div>
+  </div>
+</div>
+
+<!-- APP PRINCIPALE -->
+<div class="app" id="main-app" style="display:none">
 
   <div class="top-bar">
     <div class="top-bar-row">
       <div>
         <div class="top-bar-title" id="page-title">Mon cycle</div>
-        <div class="top-bar-sub"   id="page-sub">Suivi menstruel</div>
+        <div class="top-bar-email" id="user-email"></div>
       </div>
-      <div class="top-bar-icon">♡</div>
+      <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
     </div>
   </div>
 
   <div class="content" id="content">
 
-    <!-- HOME -->
+    <!-- ACCUEIL -->
     <div class="tab-page active" id="tab-home">
-
       <div class="next-banner" id="next-banner">
         <div class="nb-label">Prochaines règles</div>
         <div class="nb-date" id="nb-date">—</div>
         <div class="nb-days" id="nb-days"></div>
         <div class="nb-dot">🌸</div>
       </div>
-
       <div class="stats-row">
         <div class="stat-tile"><div class="stat-num" id="st-cycle">—</div><div class="stat-lbl">Jours<br>cycle</div></div>
         <div class="stat-tile"><div class="stat-num" id="st-period">—</div><div class="stat-lbl">Jours<br>règles</div></div>
         <div class="stat-tile"><div class="stat-num" id="st-count">0</div><div class="stat-lbl">Cycles<br>enregistrés</div></div>
       </div>
-
       <div class="phase-card" id="phase-card">
         <span class="phase-badge" id="phase-badge"></span>
         <div class="phase-name" id="phase-name"></div>
         <div class="phase-desc" id="phase-desc"></div>
       </div>
-
       <div class="card">
         <div class="card-head">
-          <div class="cal-month" id="cal-month">Avril 2026</div>
+          <div class="cal-month" id="cal-month"></div>
           <div class="cal-nav">
             <button class="cal-nav-btn" onclick="prevMonth()">‹</button>
             <button class="cal-nav-btn" onclick="nextMonth()">›</button>
@@ -311,7 +265,7 @@ html, body {
         </div>
         <div class="cal-grid" id="cal-grid"></div>
         <div class="cyc-wrap" id="cyc-wrap" style="display:none">
-          <div class="cyc-label" id="cyc-label">Jour — sur —</div>
+          <div class="cyc-label" id="cyc-label"></div>
           <div class="cyc-bar"><div class="cyc-fill" id="cyc-fill" style="width:0%"></div></div>
         </div>
         <div class="legend">
@@ -329,15 +283,14 @@ html, body {
           </div>
         </div>
       </div>
-
     </div>
 
-    <!-- HISTORY -->
+    <!-- HISTORIQUE -->
     <div class="tab-page" id="tab-hist">
       <div class="card"><div id="hist-list"></div></div>
     </div>
 
-    <!-- SETTINGS -->
+    <!-- RÉGLAGES -->
     <div class="tab-page" id="tab-sett">
       <div class="sett-section">Paramètres</div>
       <div class="card" style="margin-bottom:16px">
@@ -370,7 +323,7 @@ html, body {
       <div class="card" style="padding:14px">
         <button class="danger-btn" onclick="clearAll()">Effacer toutes les données</button>
       </div>
-      <div class="priv-note">Tes données restent sur cet appareil.<br>Rien n'est envoyé à un serveur.</div>
+      <div class="priv-note">Tes données sont sauvegardées de façon sécurisée<br>sur Firebase. Accessibles depuis n'importe quel appareil.</div>
     </div>
 
   </div>
@@ -400,9 +353,33 @@ html, body {
   </div>
 
 </div>
+
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loading-text">Chargement...</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
-<script>
+<script type="module">
+import { initializeApp }                                                            from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+         signOut, onAuthStateChanged }                                              from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc }                                       from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+/* ── Firebase init ── */
+const app = initializeApp({
+  apiKey:            "AIzaSyDU0ArCq7kz5G4fxO-1AsmXouM7WcOGns0",
+  authDomain:        "mon-cycle-737e5.firebaseapp.com",
+  projectId:         "mon-cycle-737e5",
+  storageBucket:     "mon-cycle-737e5.firebasestorage.app",
+  messagingSenderId: "153621529995",
+  appId:             "1:153621529995:web:d52d9978751ee2063d1b8e"
+});
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* ── State ── */
 const MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 const DAYS   = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
 const PHASES = [
@@ -413,25 +390,21 @@ const PHASES = [
 ];
 
 let S = {
-  periods: [],
-  settings: { cycle:28, period:5, proj:3 },
-  vy: new Date().getFullYear(),
-  vm: new Date().getMonth(),
-  sel: null
+  periods: [], settings: { cycle:28, period:5, proj:3 },
+  vy: new Date().getFullYear(), vm: new Date().getMonth(),
+  sel: null, uid: null
 };
+let authMode = 'login';
 
-function load() {
-  try {
-    const d = JSON.parse(localStorage.getItem('moncycle_v3') || '{}');
-    S.periods  = d.periods  || [];
-    S.settings = Object.assign(S.settings, d.settings || {});
-  } catch(e) {}
-  syncSett();
+/* ── UI helpers ── */
+function showLoading(v, msg='Chargement...') {
+  document.getElementById('loading').style.display = v ? 'flex' : 'none';
+  document.getElementById('loading-text').textContent = msg;
 }
-function save() {
-  try { localStorage.setItem('moncycle_v3', JSON.stringify({ periods: S.periods, settings: S.settings })); } catch(e) {}
+function showApp(v) {
+  document.getElementById('auth-screen').style.display = v ? 'none' : 'flex';
+  document.getElementById('main-app').style.display    = v ? 'flex' : 'none';
 }
-
 let _tt;
 function toast(msg) {
   clearTimeout(_tt);
@@ -439,29 +412,108 @@ function toast(msg) {
   el.textContent = msg; el.classList.add('show');
   _tt = setTimeout(() => el.classList.remove('show'), 2400);
 }
+function authError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg; el.style.display = msg ? 'block' : 'none';
+}
 
-const PAGE = { home:{t:'Mon cycle',s:'Suivi menstruel'}, hist:{t:'Historique',s:'Mes cycles'}, sett:{t:'Réglages',s:'Personnaliser'} };
-function goTab(tab) {
+/* ── Auth mode toggle ── */
+window.toggleAuthMode = () => {
+  authMode = authMode === 'login' ? 'register' : 'login';
+  authError('');
+  const isLogin = authMode === 'login';
+  document.getElementById('auth-mode-title').textContent = isLogin ? 'Connexion' : 'Créer un compte';
+  document.getElementById('auth-submit').textContent     = isLogin ? 'Se connecter' : 'Créer le compte';
+  document.getElementById('auth-toggle').innerHTML       = isLogin
+    ? 'Pas encore de compte ? <span>Créer un compte</span>'
+    : 'Déjà un compte ? <span>Se connecter</span>';
+};
+
+/* ── Auth submit ── */
+window.authSubmit = async () => {
+  authError('');
+  const email = document.getElementById('auth-email').value.trim();
+  const pass  = document.getElementById('auth-password').value;
+  if (!email || !pass) { authError('Remplis tous les champs.'); return; }
+  showLoading(true, authMode === 'login' ? 'Connexion...' : 'Création du compte...');
+  try {
+    if (authMode === 'login') await signInWithEmailAndPassword(auth, email, pass);
+    else                      await createUserWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    showLoading(false);
+    const msgs = {
+      'auth/invalid-email':        'Email invalide.',
+      'auth/user-not-found':       'Aucun compte avec cet email.',
+      'auth/wrong-password':       'Mot de passe incorrect.',
+      'auth/invalid-credential':   'Email ou mot de passe incorrect.',
+      'auth/email-already-in-use': 'Cet email est déjà utilisé.',
+      'auth/weak-password':        'Le mot de passe doit faire au moins 6 caractères.',
+      'auth/too-many-requests':    'Trop de tentatives. Réessaie plus tard.'
+    };
+    authError(msgs[e.code] || 'Erreur : ' + e.message);
+  }
+};
+
+window.doLogout = async () => {
+  await signOut(auth);
+  S.periods = []; S.settings = { cycle:28, period:5, proj:3 }; S.sel = null; S.uid = null;
+};
+
+/* ── Firebase data ── */
+async function loadData(uid) {
+  const snap = await getDoc(doc(db, 'users', uid));
+  if (snap.exists()) {
+    const d = snap.data();
+    S.periods  = d.periods  || [];
+    S.settings = Object.assign({ cycle:28, period:5, proj:3 }, d.settings || {});
+  }
+}
+async function saveData() {
+  if (!S.uid) return;
+  await setDoc(doc(db, 'users', S.uid), { periods: S.periods, settings: S.settings }, { merge: true });
+}
+
+/* ── Auth observer ── */
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    S.uid = user.uid;
+    document.getElementById('user-email').textContent = user.email;
+    showLoading(true, 'Chargement de tes données...');
+    try { await loadData(user.uid); } catch(e) { console.warn(e); }
+    showLoading(false);
+    showApp(true);
+    syncSett();
+    renderCal();
+  } else {
+    S.uid = null;
+    showLoading(false);
+    showApp(false);
+  }
+});
+
+/* ── Tab nav ── */
+const PAGE_TITLES = { home:'Mon cycle', hist:'Historique', sett:'Réglages' };
+window.goTab = tab => {
   ['home','hist','sett'].forEach(t => {
     document.getElementById('tab-'+t).classList.toggle('active', t===tab);
-    const n = document.getElementById('nav-'+t);
+    const n  = document.getElementById('nav-'+t);
     const on = t===tab;
     n.classList.toggle('active', on);
     n.querySelector('.nav-lbl').style.color = on ? 'var(--pink)' : '';
     n.querySelectorAll('[stroke]').forEach(el => el.setAttribute('stroke', on ? '#E91E8C' : '#bbb'));
   });
-  document.getElementById('page-title').textContent = PAGE[tab].t;
-  document.getElementById('page-sub').textContent   = PAGE[tab].s;
+  document.getElementById('page-title').textContent = PAGE_TITLES[tab];
   document.getElementById('content').scrollTop = 0;
   if (tab==='hist') renderHist();
-}
+};
 
+/* ── Data helpers ── */
 function periodDays() {
   const s = new Set();
   S.periods.forEach(p => {
-    const st  = new Date(p.start);
+    const st = new Date(p.start);
     const dur = p.end ? Math.round((new Date(p.end)-st)/86400000)+1 : S.settings.period;
-    for (let i=0;i<dur;i++) { const d=new Date(st); d.setDate(d.getDate()+i); s.add(d.toISOString().slice(0,10)); }
+    for (let i=0;i<dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(d.toISOString().slice(0,10));}
   });
   return s;
 }
@@ -469,58 +521,57 @@ function getProj() {
   if (!S.periods.length) return [];
   const sorted = [...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
   let avg = S.settings.cycle;
-  if (sorted.length>1) {
-    let t=0;
-    for (let i=1;i<sorted.length;i++) t+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;
-    avg = Math.round(t/(sorted.length-1));
-  }
+  if (sorted.length>1){let t=0;for(let i=1;i<sorted.length;i++)t+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;avg=Math.round(t/(sorted.length-1));}
   const last = new Date(sorted[sorted.length-1].start);
-  return Array.from({length:S.settings.proj},(_,i)=>{ const d=new Date(last); d.setDate(d.getDate()+avg*(i+1)); return {start:d.toISOString().slice(0,10),dur:S.settings.period}; });
+  return Array.from({length:S.settings.proj},(_,i)=>{const d=new Date(last);d.setDate(d.getDate()+avg*(i+1));return{start:d.toISOString().slice(0,10),dur:S.settings.period};});
 }
 function projDays() {
-  const s = new Set();
-  getProj().forEach(p=>{ const st=new Date(p.start); for(let i=0;i<p.dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(d.toISOString().slice(0,10));} });
+  const s=new Set();
+  getProj().forEach(p=>{const st=new Date(p.start);for(let i=0;i<p.dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(d.toISOString().slice(0,10));}});
   return s;
 }
 function getFertile() {
-  const f=new Set(), ov=new Set();
+  const f=new Set(),ov=new Set();
   [...S.periods.map(p=>p.start),...getProj().map(p=>p.start)].forEach(st=>{
-    const ovd=new Date(st); ovd.setDate(ovd.getDate()+S.settings.cycle-14);
+    const ovd=new Date(st);ovd.setDate(ovd.getDate()+S.settings.cycle-14);
     ov.add(ovd.toISOString().slice(0,10));
     for(let i=-5;i<=1;i++){const fd=new Date(ovd);fd.setDate(fd.getDate()+i);const k=fd.toISOString().slice(0,10);if(!ov.has(k))f.add(k);}
   });
-  return {f,ov};
+  return{f,ov};
 }
 
+/* ── Calendar ── */
 function renderCal() {
-  const {vy:y,vm:m} = S;
-  document.getElementById('cal-month').textContent = `${MONTHS[m]} ${y}`;
-  const pd=periodDays(), prd=projDays(), {f,ov}=getFertile();
+  const{vy:y,vm:m}=S;
+  document.getElementById('cal-month').textContent=`${MONTHS[m]} ${y}`;
+  const pd=periodDays(),prd=projDays(),{f,ov}=getFertile();
   const today=new Date().toISOString().slice(0,10);
   const grid=document.getElementById('cal-grid');
   grid.innerHTML='';
-  DAYS.forEach(d=>{ const e=document.createElement('div'); e.className='cal-hdr'; e.textContent=d; grid.appendChild(e); });
+  DAYS.forEach(d=>{const e=document.createElement('div');e.className='cal-hdr';e.textContent=d;grid.appendChild(e);});
   const off=(new Date(y,m,1).getDay()+6)%7;
   for(let i=0;i<off;i++){const e=document.createElement('div');e.className='day empty';grid.appendChild(e);}
   const dim=new Date(y,m+1,0).getDate();
   for(let d=1;d<=dim;d++){
     const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const e=document.createElement('div'); e.className='day'; e.textContent=d;
-    if(ov.has(ds))      e.classList.add('ovulation');
-    else if(f.has(ds))  e.classList.add('fertile');
-    if(pd.has(ds))      e.classList.add('period');
+    const e=document.createElement('div');e.className='day';e.textContent=d;
+    if(ov.has(ds))e.classList.add('ovulation');
+    else if(f.has(ds))e.classList.add('fertile');
+    if(pd.has(ds))e.classList.add('period');
     else if(prd.has(ds))e.classList.add('predicted');
-    if(ds===today)      e.classList.add('today');
-    if(S.sel===ds)      e.classList.add('selected');
+    if(ds===today)e.classList.add('today');
+    if(S.sel===ds)e.classList.add('selected');
     e.addEventListener('click',()=>selectDay(ds));
     grid.appendChild(e);
   }
-  updateBanner(); updateStats(); updatePhase(); updateCycBar();
+  updateBanner();updateStats();updatePhase();updateCycBar();
 }
+window.prevMonth=()=>{S.vm--;if(S.vm<0){S.vm=11;S.vy--;}renderCal();};
+window.nextMonth=()=>{S.vm++;if(S.vm>11){S.vm=0;S.vy++;}renderCal();};
 
-function selectDay(ds) {
+function selectDay(ds){
   S.sel=ds;
-  const [y,mo,d]=ds.split('-').map(Number);
+  const[y,mo,d]=ds.split('-').map(Number);
   const lbl=new Date(y,mo-1,d).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
   const el=document.getElementById('sel-show');
   el.textContent=lbl.charAt(0).toUpperCase()+lbl.slice(1);
@@ -528,36 +579,36 @@ function selectDay(ds) {
   renderCal();
 }
 
-function logStart() {
+window.logStart=async()=>{
   if(!S.sel){toast('Sélectionne d\'abord un jour');return;}
   if(S.periods.find(p=>p.start===S.sel)){toast('Début déjà enregistré');return;}
   S.periods.push({start:S.sel,end:null});
   S.periods.sort((a,b)=>new Date(a.start)-new Date(b.start));
-  save(); renderCal(); toast('Début des règles enregistré ✓');
-}
-function logEnd() {
+  renderCal();toast('Début des règles enregistré ✓');
+  try{await saveData();}catch(e){toast('Erreur de sauvegarde');}
+};
+
+window.logEnd=async()=>{
   if(!S.sel){toast('Sélectionne d\'abord un jour');return;}
   const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
   const last=sorted[sorted.length-1];
   if(!last){toast('Enregistre d\'abord un début');return;}
   if(new Date(S.sel)<new Date(last.start)){toast('La fin doit être après le début');return;}
   S.periods[S.periods.findIndex(p=>p.start===last.start)].end=S.sel;
-  save(); renderCal(); toast('Fin des règles enregistrée ✓');
-}
+  renderCal();toast('Fin des règles enregistrée ✓');
+  try{await saveData();}catch(e){toast('Erreur de sauvegarde');}
+};
 
-function updateBanner() {
-  const proj=getProj();
-  const b=document.getElementById('next-banner');
+function updateBanner(){
+  const proj=getProj();const b=document.getElementById('next-banner');
   if(!proj.length){b.style.display='none';return;}
   b.style.display='';
-  const next=new Date(proj[0].start);
-  const today=new Date(); today.setHours(0,0,0,0);
+  const next=new Date(proj[0].start);const today=new Date();today.setHours(0,0,0,0);
   const diff=Math.round((next-today)/86400000);
   document.getElementById('nb-date').textContent=next.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
   document.getElementById('nb-days').textContent=diff>0?`Dans ${diff} jour${diff>1?'s':''}`:diff===0?'Aujourd\'hui':`Il y a ${Math.abs(diff)} jour${Math.abs(diff)>1?'s':''}`;
 }
-
-function updateStats() {
+function updateStats(){
   const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
   document.getElementById('st-count').textContent=sorted.length;
   if(sorted.length>1){let t=0;for(let i=1;i<sorted.length;i++)t+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;document.getElementById('st-cycle').textContent=Math.round(t/(sorted.length-1));}
@@ -566,37 +617,32 @@ function updateStats() {
   if(we.length){let t=0;we.forEach(p=>t+=(new Date(p.end)-new Date(p.start))/86400000+1);document.getElementById('st-period').textContent=Math.round(t/we.length);}
   else document.getElementById('st-period').textContent=S.settings.period;
 }
-
-function updatePhase() {
+function updatePhase(){
   if(!S.periods.length){document.getElementById('phase-card').style.display='none';return;}
   const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
   const last=new Date(sorted[sorted.length-1].start);
   const today=new Date();today.setHours(0,0,0,0);
-  let day=Math.round((today-last)/86400000)%S.settings.cycle;
-  if(day<0)day+=S.settings.cycle;
+  let day=Math.round((today-last)/86400000)%S.settings.cycle;if(day<0)day+=S.settings.cycle;
   const ph=day<S.settings.period?0:day<Math.round(S.settings.cycle*0.45)?1:day<Math.round(S.settings.cycle*0.55)?2:3;
   const pc=document.getElementById('phase-card'),p=PHASES[ph];
   pc.style.display='';pc.style.borderLeftColor=p.col;
-  const badge=document.getElementById('phase-badge');
-  badge.textContent=p.name;badge.style.background=p.bg;badge.style.color=p.col;
-  document.getElementById('phase-name').textContent=p.name;
-  document.getElementById('phase-name').style.color=p.col;
+  const badge=document.getElementById('phase-badge');badge.textContent=p.name;badge.style.background=p.bg;badge.style.color=p.col;
+  document.getElementById('phase-name').textContent=p.name;document.getElementById('phase-name').style.color=p.col;
   document.getElementById('phase-desc').textContent=p.desc;
 }
-
-function updateCycBar() {
+function updateCycBar(){
   if(!S.periods.length){document.getElementById('cyc-wrap').style.display='none';return;}
   const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
   const last=new Date(sorted[sorted.length-1].start);
   const today=new Date();today.setHours(0,0,0,0);
-  let day=Math.round((today-last)/86400000)%S.settings.cycle;
-  if(day<0)day+=S.settings.cycle;
+  let day=Math.round((today-last)/86400000)%S.settings.cycle;if(day<0)day+=S.settings.cycle;
   document.getElementById('cyc-wrap').style.display='';
   document.getElementById('cyc-label').textContent=`Jour ${day+1} sur ${S.settings.cycle}`;
   document.getElementById('cyc-fill').style.width=Math.min(100,Math.round((day/S.settings.cycle)*100))+'%';
 }
 
-function renderHist() {
+/* ── History ── */
+function renderHist(){
   const sorted=[...S.periods].sort((a,b)=>new Date(b.start)-new Date(a.start));
   const list=document.getElementById('hist-list');
   if(!sorted.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Aucun cycle enregistré</div></div>';return;}
@@ -605,22 +651,35 @@ function renderHist() {
     const st=new Date(p.start);
     const dur=p.end?Math.round((new Date(p.end)-st)/86400000)+1:null;
     const el=document.createElement('div');el.className='hist-item';
-    el.innerHTML=`<div><div class="hist-date">${st.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div><div class="hist-sub">${dur?dur+' jours de règles':'Fin non renseignée'}</div></div><div class="hist-right"><span class="hist-badge">${dur?dur+'j':'?'}</span><button class="del-btn" onclick="delPeriod('${p.start}')">✕</button></div>`;
+    el.innerHTML=`<div><div class="hist-date">${st.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div><div class="hist-sub">${dur?dur+' jours de règles':'Fin non renseignée'}</div></div><div class="hist-right"><span class="hist-badge">${dur?dur+'j':'?'}</span><button class="del-btn" data-start="${p.start}">✕</button></div>`;
     list.appendChild(el);
   });
+  list.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',()=>delPeriod(btn.dataset.start)));
 }
-function delPeriod(start){if(!confirm('Supprimer ce cycle ?'))return;S.periods=S.periods.filter(p=>p.start!==start);save();renderHist();renderCal();toast('Cycle supprimé');}
-function clearAll(){if(!confirm('Effacer toutes les données ?'))return;S.periods=[];save();renderHist();renderCal();toast('Données effacées');}
+async function delPeriod(start){
+  if(!confirm('Supprimer ce cycle ?'))return;
+  S.periods=S.periods.filter(p=>p.start!==start);
+  renderHist();renderCal();toast('Cycle supprimé');
+  try{await saveData();}catch(e){}
+}
+window.clearAll=async()=>{
+  if(!confirm('Effacer toutes les données ?'))return;
+  S.periods=[];renderHist();renderCal();toast('Données effacées');
+  try{await saveData();}catch(e){}
+};
 
+/* ── Settings ── */
 const LIM={cycle:[20,45],period:[1,10],proj:[1,12]};
-function adj(k,d){S.settings[k]=Math.max(LIM[k][0],Math.min(LIM[k][1],S.settings[k]+d));save();syncSett();renderCal();}
-function syncSett(){document.getElementById('sv-cycle').textContent=S.settings.cycle;document.getElementById('sv-period').textContent=S.settings.period;document.getElementById('sv-proj').textContent=S.settings.proj;}
-
-function prevMonth(){S.vm--;if(S.vm<0){S.vm=11;S.vy--;}renderCal();}
-function nextMonth(){S.vm++;if(S.vm>11){S.vm=0;S.vy++;}renderCal();}
-
-load();
-renderCal();
+window.adj=async(k,d)=>{
+  S.settings[k]=Math.max(LIM[k][0],Math.min(LIM[k][1],S.settings[k]+d));
+  syncSett();renderCal();
+  try{await saveData();}catch(e){}
+};
+function syncSett(){
+  document.getElementById('sv-cycle').textContent=S.settings.cycle;
+  document.getElementById('sv-period').textContent=S.settings.period;
+  document.getElementById('sv-proj').textContent=S.settings.proj;
+}
 </script>
 </body>
 </html>
