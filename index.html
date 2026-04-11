@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#D81B60">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mon Cycle">
+<title>Mon Cycle</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --pink: #E91E8C;
+    --pink-dark: #C2185B;
+    --pink-light: #FCE4EC;
+    --pink-mid: #F48FB1;
+    --green: #4CAF50;
+    --green-light: #E8F5E9;
+    --purple: #9C27B0;
+    --orange: #FF9800;
+    --bg: #F5F5F5;
+    --card: #FFFFFF;
+    --text: #1A1A1A;
+    --text-sec: #757575;
+    --border: #EEEEEE;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px 0;
+  }
+
+  @media (max-width: 480px) {
+    body { background: var(--pink); padding: 0; }
+    .phone-shell { border-radius: 0; padding: 0; max-width: 100%; border: none; }
+    .screen { border-radius: 0; min-height: 100vh; }
+    .status-bar { padding-top: env(safe-area-inset-top, 0); }
+  }
+
+  .phone-shell {
+    background: #1a1a2e;
+    border-radius: 44px;
+    padding: 14px;
+    max-width: 400px;
+    width: 100%;
+    border: 2px solid #2d2d4a;
+  }
+
+  .screen {
+    background: var(--bg);
+    border-radius: 32px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 760px;
+    max-height: 90vh;
+  }
+
+  /* Status bar */
+  .status-bar {
+    background: var(--pink);
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-shrink: 0;
+  }
+  .status-bar span { font-size: 11px; color: #fff; font-weight: 600; letter-spacing: 0.02em; }
+
+  /* Top bar */
+  .top-bar {
+    background: var(--pink);
+    padding: 14px 20px 20px;
+    flex-shrink: 0;
+  }
+  .top-bar-row { display: flex; align-items: flex-start; justify-content: space-between; }
+  .top-bar-title { font-size: 22px; font-weight: 600; color: #fff; }
+  .top-bar-sub { font-size: 13px; color: rgba(255,255,255,0.8); margin-top: 2px; }
+  .top-bar-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: #fff; font-weight: 600; cursor: pointer;
+  }
+
+  /* Content scroll area */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    background: var(--bg);
+    padding: 14px 12px 80px;
+  }
+  .content::-webkit-scrollbar { display: none; }
+
+  /* Tab pages */
+  .tab-page { display: none; }
+  .tab-page.active { display: block; }
+
+  /* Next period banner */
+  .next-banner {
+    background: var(--pink);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    display: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .next-banner::after {
+    content: '';
+    position: absolute;
+    right: -20px; top: -20px;
+    width: 100px; height: 100px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+  .next-banner-label { font-size: 12px; color: rgba(255,255,255,0.8); margin-bottom: 4px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+  .next-banner-date { font-size: 24px; font-weight: 600; color: #fff; }
+  .next-banner-days { font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 4px; }
+  .next-banner-dot {
+    position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+
+  /* Stats row */
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+  .stat-tile {
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    padding: 14px 8px;
+    text-align: center;
+  }
+  .stat-num { font-size: 26px; font-weight: 600; color: var(--pink); line-height: 1; }
+  .stat-lbl { font-size: 10px; color: var(--text-sec); margin-top: 5px; line-height: 1.3; }
+
+  /* Cards */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .card-head {
+    padding: 16px 16px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-title { font-size: 14px; font-weight: 600; color: var(--text); }
+
+  /* Calendar nav */
+  .cal-nav { display: flex; align-items: center; gap: 6px; }
+  .cal-nav-btn {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: none; background: var(--bg);
+    font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text); transition: background 0.15s;
+    font-family: inherit;
+  }
+  .cal-nav-btn:active { background: var(--border); }
+  .cal-month { font-size: 14px; font-weight: 600; color: var(--text); min-width: 110px; text-align: center; }
+
+  /* Calendar grid */
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    padding: 0 10px 10px;
+  }
+  .cal-hdr { font-size: 10px; color: var(--text-sec); text-align: center; padding: 4px 0 6px; font-weight: 600; }
+  .day {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text);
+    transition: background 0.1s, transform 0.1s;
+    position: relative;
+    font-weight: 400;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .day:active { transform: scale(0.88); }
+  .day.empty { cursor: default; pointer-events: none; }
+  .day.other-month { color: #ccc; }
+
+  .day.fertile { background: var(--green-light); color: #2E7D32; border-radius: 50%; }
+  .day.ovulation { background: var(--green); color: #fff; font-weight: 600; border-radius: 50%; }
+  .day.period { background: var(--pink); color: #fff; font-weight: 600; border-radius: 12px; }
+  .day.predicted { background: var(--pink-light); color: var(--pink-dark); border-radius: 12px; }
+  .day.today:not(.period):not(.predicted) {
+    outline: 2.5px solid var(--pink);
+    outline-offset: -2px;
+  }
+  .day.today.period { outline: 2.5px solid #fff; outline-offset: -3px; }
+  .day.selected:not(.period):not(.predicted) { background: #F5F5F5; font-weight: 600; }
+
+  /* Legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; padding: 0 14px 14px; }
+  .leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-sec); }
+  .leg-dot { width: 12px; height: 8px; border-radius: 4px; flex-shrink: 0; }
+
+  /* Log section */
+  .log-section { padding: 12px 14px 16px; border-top: 1px solid var(--border); }
+  .log-label { font-size: 11px; color: var(--text-sec); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; }
+  .sel-date { font-size: 15px; color: var(--text); margin-bottom: 14px; font-weight: 500; min-height: 22px; }
+  .sel-date.placeholder { color: var(--text-sec); font-weight: 400; }
+  .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .btn-main {
+    padding: 15px 10px;
+    border-radius: 14px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; border: none;
+    font-family: inherit;
+    transition: transform 0.1s, opacity 0.1s;
+    line-height: 1.2;
+  }
+  .btn-main:active { transform: scale(0.96); opacity: 0.85; }
+  .btn-filled { background: var(--pink); color: #fff; }
+  .btn-outline { background: var(--pink-light); color: var(--pink); border: 1.5px solid var(--pink-light); }
+
+  /* Phase card */
+  .phase-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--pink);
+    display: none;
+  }
+  .phase-badge {
+    display: inline-block;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px;
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .phase-name { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .phase-desc { font-size: 13px; color: var(--text-sec); line-height: 1.5; }
+
+  /* Cycle bar */
+  .cycle-bar-wrap { padding: 0 14px 16px; }
+  .cycle-bar-label { font-size: 11px; color: var(--text-sec); margin-bottom: 6px; font-weight: 500; }
+  .cycle-bar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+  .cycle-bar-fill { height: 100%; border-radius: 3px; background: var(--pink); transition: width 0.4s ease; }
+
+  /* History */
+  .hist-item {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    transition: background 0.1s;
+  }
+  .hist-item:last-child { border-bottom: none; }
+  .hist-item:active { background: var(--bg); }
+  .hist-date { font-size: 15px; font-weight: 600; color: var(--text); }
+  .hist-sub { font-size: 12px; color: var(--text-sec); margin-top: 3px; }
+  .hist-right { display: flex; align-items: center; gap: 10px; }
+  .hist-badge {
+    background: var(--pink-light); color: var(--pink-dark);
+    font-size: 13px; font-weight: 600;
+    padding: 5px 12px; border-radius: 20px;
+  }
+  .del-btn {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--bg); border: none;
+    color: var(--text-sec); font-size: 14px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-family: inherit; transition: background 0.1s;
+  }
+  .del-btn:active { background: #ffebee; color: #e53935; }
+  .empty-state { padding: 48px 20px; text-align: center; color: var(--text-sec); }
+  .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+  .empty-text { font-size: 14px; }
+
+  /* Settings */
+  .sett-section-title { font-size: 11px; font-weight: 600; color: var(--text-sec); letter-spacing: 0.07em; text-transform: uppercase; padding: 0 4px 8px; }
+  .sett-item {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sett-item:last-child { border-bottom: none; }
+  .sett-lbl { font-size: 15px; color: var(--text); font-weight: 500; }
+  .sett-sub { font-size: 12px; color: var(--text-sec); margin-top: 2px; }
+  .sett-ctrl { display: flex; align-items: center; gap: 10px; }
+  .sett-num { font-size: 18px; font-weight: 600; color: var(--pink); min-width: 32px; text-align: center; }
+  .sett-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 2px solid var(--pink); background: #fff;
+    font-size: 18px; cursor: pointer; font-family: inherit;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--pink); transition: background 0.1s; font-weight: 600;
+  }
+  .sett-btn:active { background: var(--pink-light); }
+  .danger-btn {
+    width: 100%; padding: 14px;
+    background: #fff; border: 1.5px solid #FFCDD2;
+    color: #E53935; border-radius: 14px;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+    transition: background 0.1s;
+  }
+  .danger-btn:active { background: #FFF3F3; }
+
+  /* Bottom nav */
+  .bottom-nav {
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    display: flex;
+    padding: 6px 0;
+    padding-bottom: calc(6px + env(safe-area-inset-bottom, 0));
+    flex-shrink: 0;
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 3px;
+    cursor: pointer; padding: 6px 0;
+    transition: transform 0.1s;
+  }
+  .nav-item:active { transform: scale(0.9); }
+  .nav-icon { width: 26px; height: 26px; }
+  .nav-lbl { font-size: 10px; color: var(--text-sec); font-weight: 500; }
+  .nav-item.active .nav-lbl { color: var(--pink); }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+    background: rgba(30,30,30,0.92); color: #fff;
+    padding: 11px 22px; border-radius: 24px;
+    font-size: 13px; font-weight: 500;
+    opacity: 0; transition: opacity 0.25s;
+    pointer-events: none; white-space: nowrap;
+    z-index: 9999; backdrop-filter: blur(4px);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="phone-shell">
+<div class="screen">
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span id="clock">9:41</span>
+    <span>●●●</span>
+    <span>🔋 100%</span>
+  </div>
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="top-bar-row">
+      <div>
+        <div class="top-bar-title" id="page-title">Mon cycle</div>
+        <div class="top-bar-sub" id="page-sub">Suivi menstruel</div>
+      </div>
+      <div class="top-bar-avatar">♡</div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content" id="content">
+
+    <!-- HOME TAB -->
+    <div class="tab-page active" id="tab-home">
+
+      <div class="next-banner" id="next-banner">
+        <div class="next-banner-label">Prochaines règles</div>
+        <div class="next-banner-date" id="nb-date">—</div>
+        <div class="next-banner-days" id="nb-days"></div>
+        <div class="next-banner-dot">🌸</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-tile">
+          <div class="stat-num" id="st-cycle">—</div>
+          <div class="stat-lbl">Jours<br>cycle</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-num" id="st-period">—</div>
+          <div class="stat-lbl">Jours<br>règles</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-num" id="st-count">0</div>
+          <div class="stat-lbl">Cycles<br>enregistrés</div>
+        </div>
+      </div>
+
+      <div class="phase-card" id="phase-card">
+        <span class="phase-badge" id="phase-badge"></span>
+        <div class="phase-name" id="phase-name"></div>
+        <div class="phase-desc" id="phase-desc"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title" id="cal-month-title">Avril 2026</div>
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="prevMonth()">‹</button>
+            <button class="cal-nav-btn" onclick="nextMonth()">›</button>
+          </div>
+        </div>
+
+        <div class="cal-grid" id="cal-grid"></div>
+
+        <div class="cycle-bar-wrap" id="cycle-bar-wrap" style="display:none">
+          <div class="cycle-bar-label" id="cycle-bar-label">Jour X sur 28</div>
+          <div class="cycle-bar"><div class="cycle-bar-fill" id="cycle-bar-fill" style="width:0%"></div></div>
+        </div>
+
+        <div class="legend">
+          <div class="leg"><div class="leg-dot" style="background:#E91E8C"></div>Règles</div>
+          <div class="leg"><div class="leg-dot" style="background:#FCE4EC;border:1px solid #E91E8C"></div>Prévues</div>
+          <div class="leg"><div class="leg-dot" style="background:#4CAF50"></div>Ovulation</div>
+          <div class="leg"><div class="leg-dot" style="background:#E8F5E9;border:1px solid #4CAF50"></div>Fertile</div>
+        </div>
+
+        <div class="log-section">
+          <div class="log-label">Enregistrer</div>
+          <div class="sel-date placeholder" id="sel-show">Appuie sur un jour du calendrier</div>
+          <div class="btn-row">
+            <button class="btn-main btn-filled" onclick="logStart()">+ Début règles</button>
+            <button class="btn-main btn-outline" onclick="logEnd()">+ Fin règles</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div class="tab-page" id="tab-hist">
+      <div class="card">
+        <div id="hist-list"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="tab-page" id="tab-sett">
+      <div style="margin-bottom:8px" class="sett-section-title">Paramètres du cycle</div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="sett-item">
+          <div>
+            <div class="sett-lbl">Durée du cycle</div>
+            <div class="sett-sub">Nombre de jours entre les règles</div>
+          </div>
+          <div class="sett-ctrl">
+            <button class="sett-btn" onclick="adj('cycle',-1)">−</button>
+            <div class="sett-num" id="sv-cycle">28</div>
+            <button class="sett-btn" onclick="adj('cycle',1)">+</button>
+          </div>
+        </div>
+        <div class="sett-item">
+          <div>
+            <div class="sett-lbl">Durée des règles</div>
+            <div class="sett-sub">Nombre de jours moyen</div>
+          </div>
+          <div class="sett-ctrl">
+            <button class="sett-btn" onclick="adj('period',-1)">−</button>
+            <div class="sett-num" id="sv-period">5</div>
+            <button class="sett-btn" onclick="adj('period',1)">+</button>
+          </div>
+        </div>
+        <div class="sett-item">
+          <div>
+            <div class="sett-lbl">Cycles à projeter</div>
+            <div class="sett-sub">Nombre de cycles futurs affichés</div>
+          </div>
+          <div class="sett-ctrl">
+            <button class="sett-btn" onclick="adj('proj',-1)">−</button>
+            <div class="sett-num" id="sv-proj">3</div>
+            <button class="sett-btn" onclick="adj('proj',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:8px" class="sett-section-title">Données</div>
+      <div class="card" style="padding:16px">
+        <button class="danger-btn" onclick="clearAll()">Effacer toutes les données</button>
+      </div>
+
+      <div style="margin-top:20px;text-align:center;font-size:12px;color:#bbb;padding:0 20px;line-height:1.6">
+        Tes données sont stockées uniquement sur cet appareil.<br>
+        Aucune information n'est envoyée à un serveur.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <div class="nav-item active" id="nav-home" onclick="goTab('home')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" stroke="#E91E8C"/>
+        <path d="M12 6v6l4 2" stroke="#E91E8C"/>
+      </svg>
+      <div class="nav-lbl" style="color:#E91E8C">Accueil</div>
+    </div>
+    <div class="nav-item" id="nav-hist" onclick="goTab('hist')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+        <rect x="9" y="3" width="6" height="4" rx="2"/>
+        <line x1="9" y1="12" x2="15" y2="12"/>
+        <line x1="9" y1="16" x2="13" y2="16"/>
+      </svg>
+      <div class="nav-lbl">Historique</div>
+    </div>
+    <div class="nav-item" id="nav-sett" onclick="goTab('sett')">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+      </svg>
+      <div class="nav-lbl">Réglages</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const DAYS   = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
+const PHASES = [
+  { name: 'Menstruation',      col: '#E91E8C', bg: '#FCE4EC', desc: 'Tes règles ont lieu. Prends soin de toi, repose-toi si besoin.' },
+  { name: 'Phase folliculaire', col: '#FF9800', bg: '#FFF3E0', desc: 'Ton corps se prépare à l\'ovulation. L\'énergie remonte progressivement !' },
+  { name: 'Ovulation',          col: '#4CAF50', bg: '#E8F5E9', desc: 'Ton ovule est libéré. C\'est la période de fertilité maximale.' },
+  { name: 'Phase lutéale',      col: '#9C27B0', bg: '#F3E5F5', desc: 'Le corps se prépare. Tu peux ressentir quelques symptômes du SPM.' }
+];
+
+let app = {
+  periods:  [],
+  settings: { cycle: 28, period: 5, proj: 3 },
+  vy: new Date().getFullYear(),
+  vm: new Date().getMonth(),
+  sel: null,
+  activeTab: 'home'
+};
+
+/* ─── Persistence ─────────────────────────────────────────── */
+function load() {
+  try {
+    const s = localStorage.getItem('moncycle_v2');
+    if (s) {
+      const d = JSON.parse(s);
+      app.periods  = d.periods  || [];
+      app.settings = Object.assign(app.settings, d.settings || {});
+    }
+  } catch(e) {}
+  syncSettingsUI();
+}
+function save() {
+  try { localStorage.setItem('moncycle_v2', JSON.stringify({ periods: app.periods, settings: app.settings })); } catch(e) {}
+}
+
+/* ─── Toast ───────────────────────────────────────────────── */
+let toastTimer;
+function toast(msg) {
+  clearTimeout(toastTimer);
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2300);
+}
+
+/* ─── Clock ───────────────────────────────────────────────── */
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent = h + ':' + m;
+}
+setInterval(updateClock, 30000);
+updateClock();
+
+/* ─── Tab navigation ──────────────────────────────────────── */
+const PAGE_META = {
+  home: { title: 'Mon cycle',     sub: 'Suivi menstruel' },
+  hist: { title: 'Historique',    sub: 'Mes cycles passés' },
+  sett: { title: 'Réglages',      sub: 'Personnaliser l\'app' }
+};
+function goTab(tab) {
+  app.activeTab = tab;
+  ['home','hist','sett'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t === tab);
+    const nav = document.getElementById('nav-'+t);
+    const lbl = nav.querySelector('.nav-lbl');
+    const svg = nav.querySelector('svg');
+    const isActive = t === tab;
+    nav.classList.toggle('active', isActive);
+    lbl.style.color = isActive ? 'var(--pink)' : '';
+    svg.setAttribute('stroke', isActive ? '#E91E8C' : '#bbb');
+    // dual-stroke icons (circle + path) for home icon
+    svg.querySelectorAll('circle, path, line, rect').forEach(el => el.setAttribute('stroke', isActive ? '#E91E8C' : '#bbb'));
+  });
+  const meta = PAGE_META[tab];
+  document.getElementById('page-title').textContent = meta.title;
+  document.getElementById('page-sub').textContent   = meta.sub;
+  document.getElementById('content').scrollTop = 0;
+  if (tab === 'hist') renderHist();
+}
+
+/* ─── Data helpers ────────────────────────────────────────── */
+function periodDays() {
+  const s = new Set();
+  app.periods.forEach(p => {
+    const st  = new Date(p.start);
+    const dur = p.end ? Math.round((new Date(p.end) - st) / 86400000) + 1 : app.settings.period;
+    for (let i = 0; i < dur; i++) {
+      const d = new Date(st); d.setDate(d.getDate() + i);
+      s.add(d.toISOString().slice(0,10));
+    }
+  });
+  return s;
+}
+
+function getProj() {
+  if (!app.periods.length) return [];
+  const sorted = [...app.periods].sort((a,b) => new Date(a.start) - new Date(b.start));
+  let avg = app.settings.cycle;
+  if (sorted.length > 1) {
+    let t = 0;
+    for (let i = 1; i < sorted.length; i++)
+      t += (new Date(sorted[i].start) - new Date(sorted[i-1].start)) / 86400000;
+    avg = Math.round(t / (sorted.length - 1));
+  }
+  const last = new Date(sorted[sorted.length-1].start);
+  return Array.from({ length: app.settings.proj }, (_,i) => {
+    const d = new Date(last); d.setDate(d.getDate() + avg * (i+1));
+    return { start: d.toISOString().slice(0,10), dur: app.settings.period };
+  });
+}
+
+function projDays() {
+  const s = new Set();
+  getProj().forEach(p => {
+    const st = new Date(p.start);
+    for (let i = 0; i < p.dur; i++) {
+      const d = new Date(st); d.setDate(d.getDate() + i);
+      s.add(d.toISOString().slice(0,10));
+    }
+  });
+  return s;
+}
+
+function getFertile() {
+  const f = new Set(), ov = new Set();
+  const allStarts = [...app.periods.map(p=>p.start), ...getProj().map(p=>p.start)];
+  allStarts.forEach(st => {
+    const ovd = new Date(st); ovd.setDate(ovd.getDate() + app.settings.cycle - 14);
+    ov.add(ovd.toISOString().slice(0,10));
+    for (let i = -5; i <= 1; i++) {
+      const fd = new Date(ovd); fd.setDate(fd.getDate() + i);
+      const k = fd.toISOString().slice(0,10);
+      if (!ov.has(k)) f.add(k);
+    }
+  });
+  return { f, ov };
+}
+
+/* ─── Calendar rendering ──────────────────────────────────── */
+function renderCal() {
+  const { vy: y, vm: m } = app;
+  document.getElementById('cal-month-title').textContent = `${MONTHS[m]} ${y}`;
+
+  const pd  = periodDays();
+  const prd = projDays();
+  const { f, ov } = getFertile();
+  const today = new Date().toISOString().slice(0,10);
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  DAYS.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-hdr'; el.textContent = d;
+    grid.appendChild(el);
+  });
+
+  const firstDow = (new Date(y, m, 1).getDay() + 6) % 7;
+  for (let i = 0; i < firstDow; i++) {
+    const el = document.createElement('div'); el.className = 'day empty'; grid.appendChild(el);
+  }
+
+  const dim = new Date(y, m+1, 0).getDate();
+  for (let d = 1; d <= dim; d++) {
+    const ds = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const el = document.createElement('div');
+    el.className = 'day';
+    el.textContent = d;
+
+    if (ov.has(ds))  el.classList.add('ovulation');
+    else if (f.has(ds)) el.classList.add('fertile');
+
+    if (pd.has(ds))        el.classList.add('period');
+    else if (prd.has(ds))  el.classList.add('predicted');
+
+    if (ds === today) el.classList.add('today');
+    if (app.sel === ds) el.classList.add('selected');
+
+    el.addEventListener('click', () => selectDay(ds));
+    grid.appendChild(el);
+  }
+
+  updateBanner();
+  updateStats();
+  updatePhase();
+  updateCycleBar();
+}
+
+/* ─── Day selection ───────────────────────────────────────── */
+function selectDay(ds) {
+  app.sel = ds;
+  const [y, mo, d] = ds.split('-').map(Number);
+  const date = new Date(y, mo-1, d);
+  const label = date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const el = document.getElementById('sel-show');
+  el.textContent = label.charAt(0).toUpperCase() + label.slice(1);
+  el.classList.remove('placeholder');
+  renderCal();
+}
+
+/* ─── Logging ─────────────────────────────────────────────── */
+function logStart() {
+  if (!app.sel) { toast('Sélectionne d\'abord un jour'); return; }
+  if (app.periods.find(p => p.start === app.sel)) { toast('Début déjà enregistré pour ce jour'); return; }
+  app.periods.push({ start: app.sel, end: null });
+  app.periods.sort((a,b) => new Date(a.start) - new Date(b.start));
+  save(); renderCal(); toast('Début des règles enregistré ✓');
+}
+function logEnd() {
+  if (!app.sel) { toast('Sélectionne d\'abord un jour'); return; }
+  const sorted = [...app.periods].sort((a,b) => new Date(a.start) - new Date(b.start));
+  const last   = sorted[sorted.length-1];
+  if (!last) { toast('Enregistre d\'abord un début de règles'); return; }
+  if (new Date(app.sel) < new Date(last.start)) { toast('La fin doit être après le début'); return; }
+  const idx = app.periods.findIndex(p => p.start === last.start);
+  app.periods[idx].end = app.sel;
+  save(); renderCal(); toast('Fin des règles enregistrée ✓');
+}
+
+/* ─── Banner ──────────────────────────────────────────────── */
+function updateBanner() {
+  const proj = getProj();
+  const banner = document.getElementById('next-banner');
+  if (!proj.length) { banner.style.display = 'none'; return; }
+  banner.style.display = '';
+  const next  = new Date(proj[0].start);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diff  = Math.round((next - today) / 86400000);
+  document.getElementById('nb-date').textContent = next.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  document.getElementById('nb-days').textContent =
+    diff > 0  ? `Dans ${diff} jour${diff>1?'s':''}` :
+    diff === 0 ? 'Aujourd\'hui' :
+                 `Il y a ${Math.abs(diff)} jour${Math.abs(diff)>1?'s':''}`;
+}
+
+/* ─── Stats ───────────────────────────────────────────────── */
+function updateStats() {
+  const sorted = [...app.periods].sort((a,b) => new Date(a.start) - new Date(b.start));
+  document.getElementById('st-count').textContent = sorted.length;
+
+  if (sorted.length > 1) {
+    let t = 0;
+    for (let i = 1; i < sorted.length; i++)
+      t += (new Date(sorted[i].start) - new Date(sorted[i-1].start)) / 86400000;
+    document.getElementById('st-cycle').textContent = Math.round(t / (sorted.length-1));
+  } else {
+    document.getElementById('st-cycle').textContent = app.settings.cycle;
+  }
+
+  const we = sorted.filter(p => p.end);
+  if (we.length) {
+    let t = 0;
+    we.forEach(p => t += (new Date(p.end) - new Date(p.start)) / 86400000 + 1);
+    document.getElementById('st-period').textContent = Math.round(t / we.length);
+  } else {
+    document.getElementById('st-period').textContent = app.settings.period;
+  }
+}
+
+/* ─── Phase card ──────────────────────────────────────────── */
+function updatePhase() {
+  if (!app.periods.length) { document.getElementById('phase-card').style.display = 'none'; return; }
+  const sorted = [...app.periods].sort((a,b) => new Date(a.start) - new Date(b.start));
+  const last   = new Date(sorted[sorted.length-1].start);
+  const today  = new Date(); today.setHours(0,0,0,0);
+  let dayOfCycle = Math.round((today - last) / 86400000) % app.settings.cycle;
+  if (dayOfCycle < 0) dayOfCycle += app.settings.cycle;
+
+  let phase;
+  if      (dayOfCycle < app.settings.period)                          phase = 0;
+  else if (dayOfCycle < Math.round(app.settings.cycle * 0.45))        phase = 1;
+  else if (dayOfCycle < Math.round(app.settings.cycle * 0.55))        phase = 2;
+  else                                                                 phase = 3;
+
+  const pc = document.getElementById('phase-card');
+  const p  = PHASES[phase];
+  pc.style.display    = '';
+  pc.style.borderLeftColor = p.col;
+  const badge = document.getElementById('phase-badge');
+  badge.textContent   = p.name;
+  badge.style.background = p.bg;
+  badge.style.color      = p.col;
+  document.getElementById('phase-name').textContent = p.name;
+  document.getElementById('phase-name').style.color = p.col;
+  document.getElementById('phase-desc').textContent = p.desc;
+}
+
+/* ─── Cycle bar ───────────────────────────────────────────── */
+function updateCycleBar() {
+  if (!app.periods.length) { document.getElementById('cycle-bar-wrap').style.display = 'none'; return; }
+  const sorted = [...app.periods].sort((a,b) => new Date(a.start) - new Date(b.start));
+  const last   = new Date(sorted[sorted.length-1].start);
+  const today  = new Date(); today.setHours(0,0,0,0);
+  let day = Math.round((today - last) / 86400000) % app.settings.cycle;
+  if (day < 0) day += app.settings.cycle;
+  const pct = Math.min(100, Math.round((day / app.settings.cycle) * 100));
+  document.getElementById('cycle-bar-wrap').style.display = '';
+  document.getElementById('cycle-bar-label').textContent  = `Jour ${day+1} sur ${app.settings.cycle}`;
+  document.getElementById('cycle-bar-fill').style.width   = pct + '%';
+}
+
+/* ─── History ─────────────────────────────────────────────── */
+function renderHist() {
+  const sorted = [...app.periods].sort((a,b) => new Date(b.start) - new Date(a.start));
+  const list   = document.getElementById('hist-list');
+  if (!sorted.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Aucun cycle enregistré</div></div>';
+    return;
+  }
+  list.innerHTML = '';
+  sorted.forEach(p => {
+    const st  = new Date(p.start);
+    const dur = p.end ? Math.round((new Date(p.end) - st) / 86400000) + 1 : null;
+    const el  = document.createElement('div');
+    el.className = 'hist-item';
+    el.innerHTML = `
+      <div>
+        <div class="hist-date">${st.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div>
+        <div class="hist-sub">${dur ? dur + ' jours de règles' : 'Fin non renseignée'}</div>
+      </div>
+      <div class="hist-right">
+        <span class="hist-badge">${dur ? dur+'j' : '?'}</span>
+        <button class="del-btn" onclick="delPeriod('${p.start}')" title="Supprimer">✕</button>
+      </div>`;
+    list.appendChild(el);
+  });
+}
+
+function delPeriod(start) {
+  if (!confirm('Supprimer ce cycle ?')) return;
+  app.periods = app.periods.filter(p => p.start !== start);
+  save(); renderHist(); renderCal(); toast('Cycle supprimé');
+}
+
+function clearAll() {
+  if (!confirm('Effacer toutes les données ? Cette action est irréversible.')) return;
+  app.periods = [];
+  save(); renderHist(); renderCal(); toast('Données effacées');
+}
+
+/* ─── Settings ────────────────────────────────────────────── */
+const LIMITS = { cycle: [20,45], period: [1,10], proj: [1,12] };
+function adj(key, delta) {
+  app.settings[key] = Math.max(LIMITS[key][0], Math.min(LIMITS[key][1], app.settings[key] + delta));
+  save(); syncSettingsUI(); renderCal();
+}
+function syncSettingsUI() {
+  document.getElementById('sv-cycle').textContent  = app.settings.cycle;
+  document.getElementById('sv-period').textContent = app.settings.period;
+  document.getElementById('sv-proj').textContent   = app.settings.proj;
+}
+
+function prevMonth() {
+  app.vm--; if (app.vm < 0)  { app.vm = 11; app.vy--; }
+  renderCal();
+}
+function nextMonth() {
+  app.vm++; if (app.vm > 11) { app.vm = 0;  app.vy++; }
+  renderCal();
+}
+
+/* ─── Init ────────────────────────────────────────────────── */
+load();
+renderCal();
+</script>
+</body>
+</html>
