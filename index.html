@@ -10,211 +10,139 @@
 <title>Mon Cycle</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
-
-:root {
-  --pink: #E91E8C;
-  --pink-dark: #C2185B;
-  --pink-light: #FCE4EC;
-  --green: #4CAF50;
-  --green-light: #E8F5E9;
-  --bg: #F5F5F5;
-  --card: #FFFFFF;
-  --text: #1A1A1A;
-  --text-sec: #757575;
-  --border: #EEEEEE;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { width: 100%; height: 100%; font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); overflow: hidden; }
-
-.app { display: flex; flex-direction: column; width: 100vw; height: 100vh; height: 100dvh; }
-
-/* AUTH */
-#auth-screen {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  width: 100vw; height: 100vh; height: 100dvh;
-  background: var(--bg); padding: 32px 24px;
-}
-.auth-logo  { font-size: 56px; margin-bottom: 14px; }
-.auth-title { font-size: 28px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
-.auth-sub   { font-size: 14px; color: var(--text-sec); margin-bottom: 36px; text-align: center; line-height: 1.5; }
-.auth-form  { width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 12px; }
-.auth-mode-title { font-size: 18px; font-weight: 600; color: var(--text); text-align: center; }
-.auth-error { background: #FFF3F3; border: 1px solid #FFCDD2; color: #C62828; border-radius: 12px; padding: 11px 14px; font-size: 13px; display: none; text-align: center; line-height: 1.5; }
-.auth-input {
-  width: 100%; padding: 15px 16px; border: 1.5px solid var(--border);
-  border-radius: 14px; font-size: 16px; font-family: inherit;
-  background: var(--card); color: var(--text); outline: none; transition: border-color 0.2s;
-}
-.auth-input:focus { border-color: var(--pink); }
-.auth-btn {
-  width: 100%; padding: 16px; background: var(--pink); color: #fff;
-  border: none; border-radius: 14px; font-size: 16px; font-weight: 600;
-  cursor: pointer; font-family: inherit; margin-top: 4px;
-}
-.auth-btn:active { background: var(--pink-dark); }
-.auth-toggle { text-align: center; font-size: 14px; color: var(--text-sec); cursor: pointer; }
-.auth-toggle span { color: var(--pink); font-weight: 600; }
-
-/* LOADING */
-.loading {
-  position: fixed; inset: 0; background: rgba(255,255,255,0.9);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 999; flex-direction: column; gap: 14px;
-}
-.spinner {
-  width: 38px; height: 38px; border-radius: 50%;
-  border: 3px solid var(--pink-light); border-top-color: var(--pink);
-  animation: spin 0.75s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text { font-size: 14px; color: var(--text-sec); }
-
-/* TOP BAR */
-.top-bar {
-  background: var(--pink);
-  padding: 14px 18px 16px;
-  padding-top: calc(14px + env(safe-area-inset-top, 0px));
-  flex-shrink: 0;
-}
-.top-bar-row   { display: flex; align-items: center; justify-content: space-between; }
-.top-bar-title { font-size: 20px; font-weight: 600; color: #fff; }
-.top-bar-email { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 2px; }
-.logout-btn    {
-  background: rgba(255,255,255,0.2); border: none; color: #fff;
-  border-radius: 20px; padding: 7px 14px; font-size: 12px; font-weight: 600;
-  cursor: pointer; font-family: inherit; white-space: nowrap;
-}
-.logout-btn:active { background: rgba(255,255,255,0.35); }
-
-/* CONTENT */
-.content {
-  flex: 1; overflow-y: auto; overflow-x: hidden;
-  -webkit-overflow-scrolling: touch; padding: 14px 12px;
-  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
-}
-.content::-webkit-scrollbar { display: none; }
-.tab-page { display: none; }
-.tab-page.active { display: block; }
-
-/* NEXT BANNER */
-.next-banner {
-  background: var(--pink); border-radius: 16px; padding: 18px 20px;
-  margin-bottom: 12px; display: none; position: relative; overflow: hidden;
-}
-.next-banner::after { content:''; position:absolute; right:-16px; top:-16px; width:90px; height:90px; background:rgba(255,255,255,0.1); border-radius:50%; }
-.nb-label { font-size:11px; color:rgba(255,255,255,0.8); font-weight:600; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:5px; }
-.nb-date  { font-size:22px; font-weight:600; color:#fff; }
-.nb-days  { font-size:13px; color:rgba(255,255,255,0.85); margin-top:4px; }
-.nb-dot   { position:absolute; right:18px; top:50%; transform:translateY(-50%); font-size:28px; }
-
-/* STATS */
-.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
-.stat-tile { background:var(--card); border-radius:14px; padding:14px 6px; text-align:center; }
-.stat-num  { font-size:26px; font-weight:600; color:var(--pink); line-height:1; }
-.stat-lbl  { font-size:10px; color:var(--text-sec); margin-top:5px; line-height:1.3; }
-
-/* CARD */
-.card { background:var(--card); border-radius:16px; margin-bottom:12px; overflow:hidden; }
-.card-head { padding:16px 16px 8px; display:flex; align-items:center; justify-content:space-between; }
-.card-title { font-size:14px; font-weight:600; color:var(--text); }
-
-/* CALENDAR */
-.cal-nav { display:flex; align-items:center; gap:4px; }
-.cal-nav-btn { width:36px; height:36px; border-radius:50%; border:none; background:var(--bg); font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text); font-family:inherit; }
-.cal-nav-btn:active { background:#e0e0e0; }
-.cal-month { font-size:14px; font-weight:600; color:var(--text); min-width:116px; text-align:center; }
-.cal-grid  { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; padding:0 10px 8px; }
-.cal-hdr   { font-size:10px; color:var(--text-sec); text-align:center; padding:4px 0 6px; font-weight:600; }
-.day { aspect-ratio:1; display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:13px; cursor:pointer; color:var(--text); transition:transform 0.1s; -webkit-user-select:none; user-select:none; }
-.day:active { transform:scale(0.82); }
-.day.empty  { cursor:default; pointer-events:none; }
-.day.fertile   { background:var(--green-light); color:#2E7D32; }
-.day.ovulation { background:var(--green); color:#fff; font-weight:600; }
-.day.period    { background:var(--pink); color:#fff; font-weight:600; border-radius:10px; }
-.day.predicted { background:var(--pink-light); color:var(--pink-dark); border-radius:10px; }
-.day.today:not(.period):not(.predicted) { outline:2.5px solid var(--pink); outline-offset:-2px; }
-.day.selected:not(.period):not(.predicted):not(.ovulation):not(.fertile) { background:#EEEEEE; }
-
-.legend { display:flex; flex-wrap:wrap; gap:8px 14px; padding:2px 14px 14px; }
-.leg     { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-sec); }
-.leg-dot { width:14px; height:8px; border-radius:4px; flex-shrink:0; }
-
-/* CYCLE BAR */
-.cyc-wrap  { padding:0 14px 14px; }
-.cyc-label { font-size:12px; color:var(--text-sec); margin-bottom:6px; font-weight:500; }
-.cyc-bar   { height:6px; border-radius:3px; background:var(--border); overflow:hidden; }
-.cyc-fill  { height:100%; border-radius:3px; background:var(--pink); transition:width 0.4s ease; }
-
-/* LOG */
-.log-section { padding:12px 14px 16px; border-top:1px solid var(--border); }
-.log-label   { font-size:11px; font-weight:600; color:var(--text-sec); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:8px; }
-.sel-date    { font-size:15px; font-weight:500; color:var(--text); margin-bottom:14px; min-height:22px; }
-.sel-date.ph { color:var(--text-sec); font-weight:400; }
-.btn-row     { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.btn         { padding:15px 8px; border-radius:14px; font-size:14px; font-weight:600; cursor:pointer; border:none; font-family:inherit; transition:transform 0.1s; line-height:1.2; }
-.btn:active  { transform:scale(0.95); }
-.btn-fill    { background:var(--pink); color:#fff; }
-.btn-soft    { background:var(--pink-light); color:var(--pink); }
-
-/* PHASE */
-.phase-card  { background:var(--card); border-radius:16px; padding:16px; margin-bottom:12px; border-left:4px solid var(--pink); display:none; }
-.phase-badge { display:inline-block; font-size:11px; font-weight:600; padding:3px 10px; border-radius:20px; margin-bottom:8px; letter-spacing:0.04em; text-transform:uppercase; }
-.phase-name  { font-size:16px; font-weight:600; color:var(--text); margin-bottom:4px; }
-.phase-desc  { font-size:13px; color:var(--text-sec); line-height:1.55; }
-
-/* HISTORY */
-.hist-item   { padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
-.hist-item:last-child { border-bottom:none; }
-.hist-date   { font-size:15px; font-weight:600; color:var(--text); }
-.hist-sub    { font-size:12px; color:var(--text-sec); margin-top:3px; }
-.hist-right  { display:flex; align-items:center; gap:10px; }
-.hist-badge  { background:var(--pink-light); color:var(--pink-dark); font-size:13px; font-weight:600; padding:5px 12px; border-radius:20px; }
-.del-btn     { width:32px; height:32px; border-radius:50%; background:var(--bg); border:none; color:var(--text-sec); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:inherit; }
-.del-btn:active { background:#ffebee; color:#e53935; }
-.empty-state { padding:48px 20px; text-align:center; color:var(--text-sec); }
-.empty-icon  { font-size:44px; margin-bottom:14px; opacity:0.35; }
-.empty-text  { font-size:14px; }
-
-/* SETTINGS */
-.sett-section { font-size:11px; font-weight:600; color:var(--text-sec); letter-spacing:0.07em; text-transform:uppercase; padding:0 4px 8px; }
-.sett-item    { padding:16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
-.sett-item:last-child { border-bottom:none; }
-.sett-lbl  { font-size:15px; color:var(--text); font-weight:500; }
-.sett-sub  { font-size:12px; color:var(--text-sec); margin-top:2px; }
-.sett-ctrl { display:flex; align-items:center; gap:10px; }
-.sett-num  { font-size:18px; font-weight:600; color:var(--pink); min-width:32px; text-align:center; }
-.sett-btn  { width:34px; height:34px; border-radius:50%; border:2px solid var(--pink); background:#fff; font-size:20px; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; color:var(--pink); font-weight:600; }
-.sett-btn:active { background:var(--pink-light); }
-.danger-btn { width:100%; padding:15px; background:#fff; border:1.5px solid #FFCDD2; color:#E53935; border-radius:14px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
-.danger-btn:active { background:#FFF3F3; }
-.priv-note  { margin-top:20px; text-align:center; font-size:12px; color:#bbb; line-height:1.7; }
-
-/* BOTTOM NAV */
-.bottom-nav { position:fixed; bottom:0; left:0; right:0; background:var(--card); border-top:1px solid var(--border); display:flex; padding:6px 0; padding-bottom:calc(6px + env(safe-area-inset-bottom,0px)); z-index:100; }
-.nav-item   { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:5px 0; }
-.nav-item:active { opacity:0.6; }
-.nav-icon   { width:26px; height:26px; }
-.nav-lbl    { font-size:10px; color:var(--text-sec); font-weight:500; }
-.nav-item.active .nav-lbl { color:var(--pink); }
-
-/* TOAST */
-.toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%); background:rgba(26,26,26,0.92); color:#fff; padding:11px 22px; border-radius:24px; font-size:13px; font-weight:500; opacity:0; transition:opacity 0.25s; pointer-events:none; white-space:nowrap; z-index:9999; font-family:'DM Sans',sans-serif; }
-.toast.show { opacity:1; }
+:root{--pink:#E91E8C;--pink-dark:#C2185B;--pink-light:#FCE4EC;--green:#4CAF50;--green-light:#E8F5E9;--bg:#F5F5F5;--card:#FFFFFF;--text:#1A1A1A;--text-sec:#757575;--border:#EEEEEE;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);overflow:hidden;}
+.app{display:flex;flex-direction:column;width:100vw;height:100vh;height:100dvh;}
+#auth-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100vw;height:100vh;height:100dvh;background:var(--bg);padding:32px 24px;}
+.auth-logo{font-size:56px;margin-bottom:14px;}
+.auth-title{font-size:28px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.auth-sub{font-size:14px;color:var(--text-sec);margin-bottom:36px;text-align:center;line-height:1.5;}
+.auth-form{width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px;}
+.auth-mode-title{font-size:18px;font-weight:600;color:var(--text);text-align:center;}
+.auth-error{background:#FFF3F3;border:1px solid #FFCDD2;color:#C62828;border-radius:12px;padding:11px 14px;font-size:13px;display:none;text-align:center;line-height:1.5;}
+.auth-input{width:100%;padding:15px 16px;border:1.5px solid var(--border);border-radius:14px;font-size:16px;font-family:inherit;background:var(--card);color:var(--text);outline:none;transition:border-color 0.2s;}
+.auth-input:focus{border-color:var(--pink);}
+.auth-btn{width:100%;padding:16px;background:var(--pink);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:4px;}
+.auth-btn:active{background:var(--pink-dark);}
+.auth-toggle{text-align:center;font-size:14px;color:var(--text-sec);cursor:pointer;}
+.auth-toggle span{color:var(--pink);font-weight:600;}
+.auth-lang{display:flex;gap:8px;justify-content:center;margin-bottom:8px;}
+.auth-lang-btn{padding:6px 16px;border-radius:10px;border:1.5px solid var(--border);background:#fff;color:var(--text-sec);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.auth-lang-btn.active{border-color:var(--pink);background:var(--pink);color:#fff;}
+.loading{position:fixed;inset:0;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:14px;}
+.spinner{width:38px;height:38px;border-radius:50%;border:3px solid var(--pink-light);border-top-color:var(--pink);animation:spin 0.75s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-size:14px;color:var(--text-sec);}
+.top-bar{background:var(--pink);padding:14px 18px 16px;padding-top:calc(14px + env(safe-area-inset-top,0px));flex-shrink:0;}
+.top-bar-row{display:flex;align-items:center;justify-content:space-between;}
+.top-bar-title{font-size:20px;font-weight:600;color:#fff;}
+.top-bar-email{font-size:12px;color:rgba(255,255,255,0.75);margin-top:2px;}
+.logout-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.logout-btn:active{background:rgba(255,255,255,0.35);}
+.content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:14px 12px;padding-bottom:calc(80px + env(safe-area-inset-bottom,0px));}
+.content::-webkit-scrollbar{display:none;}
+.tab-page{display:none;}
+.tab-page.active{display:block;}
+.next-banner{background:var(--pink);border-radius:16px;padding:18px 20px;margin-bottom:12px;display:none;position:relative;overflow:hidden;}
+.next-banner::after{content:'';position:absolute;right:-16px;top:-16px;width:90px;height:90px;background:rgba(255,255,255,0.1);border-radius:50%;}
+.nb-label{font-size:11px;color:rgba(255,255,255,0.8);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:5px;}
+.nb-date{font-size:22px;font-weight:600;color:#fff;}
+.nb-days{font-size:13px;color:rgba(255,255,255,0.85);margin-top:4px;}
+.nb-dot{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:28px;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.stat-tile{background:var(--card);border-radius:14px;padding:14px 6px;text-align:center;}
+.stat-num{font-size:26px;font-weight:600;color:var(--pink);line-height:1;}
+.stat-lbl{font-size:10px;color:var(--text-sec);margin-top:5px;line-height:1.3;}
+.card{background:var(--card);border-radius:16px;margin-bottom:12px;overflow:hidden;}
+.card-head{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:14px;font-weight:600;color:var(--text);}
+.cal-nav{display:flex;align-items:center;gap:4px;}
+.cal-nav-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--bg);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);font-family:inherit;}
+.cal-nav-btn:active{background:#e0e0e0;}
+.cal-month{font-size:14px;font-weight:600;color:var(--text);min-width:116px;text-align:center;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:0 10px 8px;}
+.cal-hdr{font-size:10px;color:var(--text-sec);text-align:center;padding:4px 0 6px;font-weight:600;}
+.day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:13px;cursor:pointer;color:var(--text);transition:transform 0.1s;-webkit-user-select:none;user-select:none;}
+.day:active{transform:scale(0.82);}
+.day.empty{cursor:default;pointer-events:none;}
+.day.fertile{background:var(--green-light);color:#2E7D32;}
+.day.ovulation{background:var(--green);color:#fff;font-weight:600;}
+.day.period{background:var(--pink);color:#fff;font-weight:600;border-radius:10px;}
+.day.predicted{background:var(--pink-light);color:var(--pink-dark);border-radius:10px;}
+.day.today:not(.period):not(.predicted){outline:2.5px solid var(--pink);outline-offset:-2px;}
+.day.selected:not(.period):not(.predicted):not(.ovulation):not(.fertile){background:#EEEEEE;}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;padding:2px 14px 14px;}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-sec);}
+.leg-dot{width:14px;height:8px;border-radius:4px;flex-shrink:0;}
+.cyc-wrap{padding:0 14px 14px;}
+.cyc-label{font-size:12px;color:var(--text-sec);margin-bottom:6px;font-weight:500;}
+.cyc-bar{height:6px;border-radius:3px;background:var(--border);overflow:hidden;}
+.cyc-fill{height:100%;border-radius:3px;background:var(--pink);transition:width 0.4s ease;}
+.log-section{padding:12px 14px 16px;border-top:1px solid var(--border);}
+.log-label{font-size:11px;font-weight:600;color:var(--text-sec);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;}
+.sel-date{font-size:15px;font-weight:500;color:var(--text);margin-bottom:14px;min-height:22px;}
+.sel-date.ph{color:var(--text-sec);font-weight:400;}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.btn{padding:15px 8px;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:transform 0.1s;line-height:1.2;}
+.btn:active{transform:scale(0.95);}
+.btn-fill{background:var(--pink);color:#fff;}
+.btn-soft{background:var(--pink-light);color:var(--pink);}
+.phase-card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;border-left:4px solid var(--pink);display:none;}
+.phase-badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:8px;letter-spacing:0.04em;text-transform:uppercase;}
+.phase-name{font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.phase-desc{font-size:13px;color:var(--text-sec);line-height:1.55;}
+.hist-item{padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.hist-item:last-child{border-bottom:none;}
+.hist-date{font-size:15px;font-weight:600;color:var(--text);}
+.hist-sub{font-size:12px;color:var(--text-sec);margin-top:3px;}
+.hist-right{display:flex;align-items:center;gap:10px;}
+.hist-badge{background:var(--pink-light);color:var(--pink-dark);font-size:13px;font-weight:600;padding:5px 12px;border-radius:20px;}
+.del-btn{width:32px;height:32px;border-radius:50%;background:var(--bg);border:none;color:var(--text-sec);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;}
+.del-btn:active{background:#ffebee;color:#e53935;}
+.empty-state{padding:48px 20px;text-align:center;color:var(--text-sec);}
+.empty-icon{font-size:44px;margin-bottom:14px;opacity:0.35;}
+.empty-text{font-size:14px;}
+.sett-section{font-size:11px;font-weight:600;color:var(--text-sec);letter-spacing:0.07em;text-transform:uppercase;padding:0 4px 8px;}
+.sett-item{padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.sett-item:last-child{border-bottom:none;}
+.sett-lbl{font-size:15px;color:var(--text);font-weight:500;}
+.sett-sub{font-size:12px;color:var(--text-sec);margin-top:2px;}
+.sett-ctrl{display:flex;align-items:center;gap:10px;}
+.sett-num{font-size:18px;font-weight:600;color:var(--pink);min-width:32px;text-align:center;}
+.sett-btn{width:34px;height:34px;border-radius:50%;border:2px solid var(--pink);background:#fff;font-size:20px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;color:var(--pink);font-weight:600;}
+.sett-btn:active{background:var(--pink-light);}
+.lang-toggle{display:flex;gap:8px;}
+.lang-btn{padding:8px 18px;border-radius:10px;border:2px solid var(--border);background:#fff;color:var(--text-sec);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.lang-btn.active{border-color:var(--pink);background:var(--pink);color:#fff;}
+.danger-btn{width:100%;padding:15px;background:#fff;border:1.5px solid #FFCDD2;color:#E53935;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+.danger-btn:active{background:#FFF3F3;}
+.priv-note{margin-top:20px;text-align:center;font-size:12px;color:#bbb;line-height:1.7;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;padding:6px 0;padding-bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:100;}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:5px 0;}
+.nav-item:active{opacity:0.6;}
+.nav-icon{width:26px;height:26px;}
+.nav-lbl{font-size:10px;color:var(--text-sec);font-weight:500;}
+.nav-item.active .nav-lbl{color:var(--pink);}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,26,26,0.92);color:#fff;padding:11px 22px;border-radius:24px;font-size:13px;font-weight:500;opacity:0;transition:opacity 0.25s;pointer-events:none;white-space:nowrap;z-index:9999;font-family:'DM Sans',sans-serif;}
+.toast.show{opacity:1;}
 </style>
 </head>
 <body>
 
-<!-- ÉCRAN DE CONNEXION -->
 <div id="auth-screen">
   <div class="auth-logo">🌸</div>
   <div class="auth-title">Mon Cycle</div>
-  <div class="auth-sub">Connecte-toi pour retrouver<br>ton suivi sur tous tes appareils</div>
+  <div class="auth-lang">
+    <button class="auth-lang-btn active" id="alb-fr" onclick="setLang('fr')">FR</button>
+    <button class="auth-lang-btn" id="alb-en" onclick="setLang('en')">EN</button>
+  </div>
+  <div class="auth-sub" id="auth-sub">Connecte-toi pour retrouver<br>ton suivi sur tous tes appareils</div>
   <div class="auth-form">
     <div class="auth-mode-title" id="auth-mode-title">Connexion</div>
     <div class="auth-error" id="auth-error"></div>
-    <input class="auth-input" type="email"    id="auth-email"    placeholder="Adresse email"  autocomplete="email">
-    <input class="auth-input" type="password" id="auth-password" placeholder="Mot de passe"   autocomplete="current-password">
+    <input class="auth-input" type="email" id="auth-email" placeholder="Email" autocomplete="email">
+    <input class="auth-input" type="password" id="auth-password" placeholder="Mot de passe" autocomplete="current-password">
     <button class="auth-btn" id="auth-submit" onclick="authSubmit()">Se connecter</button>
     <div class="auth-toggle" id="auth-toggle" onclick="toggleAuthMode()">
       Pas encore de compte ? <span>Créer un compte</span>
@@ -222,33 +150,30 @@ html, body { width: 100%; height: 100%; font-family: 'DM Sans', system-ui, sans-
   </div>
 </div>
 
-<!-- APP PRINCIPALE -->
 <div class="app" id="main-app" style="display:none">
-
   <div class="top-bar">
     <div class="top-bar-row">
       <div>
         <div class="top-bar-title" id="page-title">Mon cycle</div>
         <div class="top-bar-email" id="user-email"></div>
       </div>
-      <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
+      <button class="logout-btn" id="logout-btn" onclick="doLogout()">Déconnexion</button>
     </div>
   </div>
 
   <div class="content" id="content">
 
-    <!-- ACCUEIL -->
     <div class="tab-page active" id="tab-home">
       <div class="next-banner" id="next-banner">
-        <div class="nb-label">Prochaines règles</div>
+        <div class="nb-label" id="nb-label">Prochaines règles</div>
         <div class="nb-date" id="nb-date">—</div>
         <div class="nb-days" id="nb-days"></div>
         <div class="nb-dot">🌸</div>
       </div>
       <div class="stats-row">
-        <div class="stat-tile"><div class="stat-num" id="st-cycle">—</div><div class="stat-lbl">Jours<br>cycle</div></div>
-        <div class="stat-tile"><div class="stat-num" id="st-period">—</div><div class="stat-lbl">Jours<br>règles</div></div>
-        <div class="stat-tile"><div class="stat-num" id="st-count">0</div><div class="stat-lbl">Cycles<br>enregistrés</div></div>
+        <div class="stat-tile"><div class="stat-num" id="st-cycle">—</div><div class="stat-lbl" id="st-cycle-lbl">Jours<br>cycle</div></div>
+        <div class="stat-tile"><div class="stat-num" id="st-period">—</div><div class="stat-lbl" id="st-period-lbl">Jours<br>règles</div></div>
+        <div class="stat-tile"><div class="stat-num" id="st-count">0</div><div class="stat-lbl" id="st-count-lbl">Cycles<br>enregistrés</div></div>
       </div>
       <div class="phase-card" id="phase-card">
         <span class="phase-badge" id="phase-badge"></span>
@@ -269,33 +194,31 @@ html, body { width: 100%; height: 100%; font-family: 'DM Sans', system-ui, sans-
           <div class="cyc-bar"><div class="cyc-fill" id="cyc-fill" style="width:0%"></div></div>
         </div>
         <div class="legend">
-          <div class="leg"><div class="leg-dot" style="background:#E91E8C"></div>Règles</div>
-          <div class="leg"><div class="leg-dot" style="background:#FCE4EC;border:1px solid #E91E8C"></div>Prévues</div>
-          <div class="leg"><div class="leg-dot" style="background:#4CAF50"></div>Ovulation</div>
-          <div class="leg"><div class="leg-dot" style="background:#E8F5E9;border:1px solid #4CAF50"></div>Fertile</div>
+          <div class="leg"><div class="leg-dot" style="background:#E91E8C"></div><span id="leg-period">Règles</span></div>
+          <div class="leg"><div class="leg-dot" style="background:#FCE4EC;border:1px solid #E91E8C"></div><span id="leg-predicted">Prévues</span></div>
+          <div class="leg"><div class="leg-dot" style="background:#4CAF50"></div><span id="leg-ovulation">Ovulation</span></div>
+          <div class="leg"><div class="leg-dot" style="background:#E8F5E9;border:1px solid #4CAF50"></div><span id="leg-fertile">Fertile</span></div>
         </div>
         <div class="log-section">
-          <div class="log-label">Enregistrer</div>
+          <div class="log-label" id="log-label">Enregistrer</div>
           <div class="sel-date ph" id="sel-show">Appuie sur un jour du calendrier</div>
           <div class="btn-row">
-            <button class="btn btn-fill" onclick="logStart()">+ Début règles</button>
-            <button class="btn btn-soft" onclick="logEnd()">+ Fin règles</button>
+            <button class="btn btn-fill" id="btn-start" onclick="logStart()">+ Début règles</button>
+            <button class="btn btn-soft" id="btn-end" onclick="logEnd()">+ Fin règles</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- HISTORIQUE -->
     <div class="tab-page" id="tab-hist">
       <div class="card"><div id="hist-list"></div></div>
     </div>
 
-    <!-- RÉGLAGES -->
     <div class="tab-page" id="tab-sett">
-      <div class="sett-section">Paramètres</div>
+      <div class="sett-section" id="sett-params-title">Paramètres</div>
       <div class="card" style="margin-bottom:16px">
         <div class="sett-item">
-          <div><div class="sett-lbl">Durée du cycle</div><div class="sett-sub">Jours entre les règles</div></div>
+          <div><div class="sett-lbl" id="sett-cycle-lbl">Durée du cycle</div><div class="sett-sub" id="sett-cycle-sub">Jours entre les règles</div></div>
           <div class="sett-ctrl">
             <button class="sett-btn" onclick="adj('cycle',-1)">−</button>
             <div class="sett-num" id="sv-cycle">28</div>
@@ -303,7 +226,7 @@ html, body { width: 100%; height: 100%; font-family: 'DM Sans', system-ui, sans-
           </div>
         </div>
         <div class="sett-item">
-          <div><div class="sett-lbl">Durée des règles</div><div class="sett-sub">Nombre de jours moyen</div></div>
+          <div><div class="sett-lbl" id="sett-period-lbl">Durée des règles</div><div class="sett-sub" id="sett-period-sub">Nombre de jours moyen</div></div>
           <div class="sett-ctrl">
             <button class="sett-btn" onclick="adj('period',-1)">−</button>
             <div class="sett-num" id="sv-period">5</div>
@@ -311,7 +234,7 @@ html, body { width: 100%; height: 100%; font-family: 'DM Sans', system-ui, sans-
           </div>
         </div>
         <div class="sett-item">
-          <div><div class="sett-lbl">Cycles à projeter</div><div class="sett-sub">Cycles futurs affichés</div></div>
+          <div><div class="sett-lbl" id="sett-proj-lbl">Cycles à projeter</div><div class="sett-sub" id="sett-proj-sub">Cycles futurs affichés</div></div>
           <div class="sett-ctrl">
             <button class="sett-btn" onclick="adj('proj',-1)">−</button>
             <div class="sett-num" id="sv-proj">3</div>
@@ -319,11 +242,23 @@ html, body { width: 100%; height: 100%; font-family: 'DM Sans', system-ui, sans-
           </div>
         </div>
       </div>
-      <div class="sett-section">Données</div>
-      <div class="card" style="padding:14px">
-        <button class="danger-btn" onclick="clearAll()">Effacer toutes les données</button>
+
+      <div class="sett-section" id="sett-lang-title">Langue / Language</div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="sett-item" style="border-bottom:none">
+          <div><div class="sett-lbl" id="sett-lang-lbl">Langue de l'application</div></div>
+          <div class="lang-toggle">
+            <button class="lang-btn active" id="lang-fr" onclick="setLang('fr')">FR</button>
+            <button class="lang-btn" id="lang-en" onclick="setLang('en')">EN</button>
+          </div>
+        </div>
       </div>
-      <div class="priv-note">Tes données sont sauvegardées de façon sécurisée<br>sur Firebase. Accessibles depuis n'importe quel appareil.</div>
+
+      <div class="sett-section" id="sett-data-title">Données</div>
+      <div class="card" style="padding:14px">
+        <button class="danger-btn" id="clear-btn" onclick="clearAll()">Effacer toutes les données</button>
+      </div>
+      <div class="priv-note" id="priv-note">Tes données sont sauvegardées de façon sécurisée<br>sur Firebase. Accessibles depuis n'importe quel appareil.</div>
     </div>
 
   </div>
@@ -333,7 +268,7 @@ html, body { width: 100%; height: 100%; font-family: 'DM Sans', system-ui, sans-
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round">
         <circle cx="12" cy="12" r="10" stroke="#E91E8C"/><path d="M12 6v6l4 2" stroke="#E91E8C"/>
       </svg>
-      <div class="nav-lbl" style="color:#E91E8C">Accueil</div>
+      <div class="nav-lbl" id="nav-lbl-home" style="color:#E91E8C">Accueil</div>
     </div>
     <div class="nav-item" id="nav-hist" onclick="goTab('hist')">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -341,65 +276,222 @@ html, body { width: 100%; height: 100%; font-family: 'DM Sans', system-ui, sans-
         <rect x="9" y="3" width="6" height="4" rx="2"/>
         <line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/>
       </svg>
-      <div class="nav-lbl">Historique</div>
+      <div class="nav-lbl" id="nav-lbl-hist">Historique</div>
     </div>
     <div class="nav-item" id="nav-sett" onclick="goTab('sett')">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="3"/>
         <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
       </svg>
-      <div class="nav-lbl">Réglages</div>
+      <div class="nav-lbl" id="nav-lbl-sett">Réglages</div>
     </div>
   </div>
-
 </div>
 
 <div class="loading" id="loading">
   <div class="spinner"></div>
   <div class="loading-text" id="loading-text">Chargement...</div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script type="module">
-import { initializeApp }                                                            from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-         signOut, onAuthStateChanged }                                              from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc }                                       from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-/* ── Firebase init ── */
-const app = initializeApp({
-  apiKey:            "AIzaSyDU0ArCq7kz5G4fxO-1AsmXouM7WcOGns0",
-  authDomain:        "mon-cycle-737e5.firebaseapp.com",
-  projectId:         "mon-cycle-737e5",
-  storageBucket:     "mon-cycle-737e5.firebasestorage.app",
-  messagingSenderId: "153621529995",
-  appId:             "1:153621529995:web:d52d9978751ee2063d1b8e"
+const fbApp = initializeApp({
+  apiKey:"AIzaSyDU0ArCq7kz5G4fxO-1AsmXouM7WcOGns0",
+  authDomain:"mon-cycle-737e5.firebaseapp.com",
+  projectId:"mon-cycle-737e5",
+  storageBucket:"mon-cycle-737e5.firebasestorage.app",
+  messagingSenderId:"153621529995",
+  appId:"1:153621529995:web:d52d9978751ee2063d1b8e"
 });
-const auth = getAuth(app);
-const db   = getFirestore(app);
+const auth = getAuth(fbApp);
+const db   = getFirestore(fbApp);
 
-/* ── State ── */
-const MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-const DAYS   = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
-const PHASES = [
-  { name:'Menstruation',       col:'#E91E8C', bg:'#FCE4EC', desc:'Tes règles ont lieu. Repose-toi et prends soin de toi.' },
-  { name:'Phase folliculaire',  col:'#FF9800', bg:'#FFF3E0', desc:'Ton corps se prépare à l\'ovulation. L\'énergie remonte !' },
-  { name:'Ovulation',           col:'#4CAF50', bg:'#E8F5E9', desc:'Ton ovule est libéré. C\'est la période la plus fertile.' },
-  { name:'Phase lutéale',       col:'#9C27B0', bg:'#F3E5F5', desc:'Le corps se prépare. Quelques symptômes du SPM peuvent apparaître.' }
-];
-
-let S = {
-  periods: [], settings: { cycle:28, period:5, proj:3 },
-  vy: new Date().getFullYear(), vm: new Date().getMonth(),
-  sel: null, uid: null
+/* ── Traductions ── */
+const T = {
+  fr: {
+    MONTHS: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
+    DAYS: ['Lu','Ma','Me','Je','Ve','Sa','Di'],
+    PHASES: [
+      {name:'Menstruation',      col:'#E91E8C',bg:'#FCE4EC',desc:'Tes règles ont lieu. Repose-toi et prends soin de toi.'},
+      {name:'Phase folliculaire', col:'#FF9800',bg:'#FFF3E0',desc:"Ton corps se prépare à l'ovulation. L'énergie remonte !"},
+      {name:'Ovulation',          col:'#4CAF50',bg:'#E8F5E9',desc:"Ton ovule est libéré. C'est la période la plus fertile."},
+      {name:'Phase lutéale',      col:'#9C27B0',bg:'#F3E5F5',desc:'Le corps se prépare. Quelques symptômes du SPM peuvent apparaître.'}
+    ],
+    authSub: 'Connecte-toi pour retrouver<br>ton suivi sur tous tes appareils',
+    login: 'Connexion', register: "Créer un compte",
+    signIn: 'Se connecter', createAccount: 'Créer le compte',
+    noAccount: "Pas encore de compte ?", createLink: "Créer un compte",
+    haveAccount: "Déjà un compte ?", signInLink: "Se connecter",
+    loading: 'Chargement...', loadingData: 'Chargement de tes données...',
+    connecting: 'Connexion...', creating: 'Création du compte...',
+    logout: 'Déconnexion',
+    nextPeriod: 'Prochaines règles',
+    inDays: n => n>0 ? `Dans ${n} jour${n>1?'s':''}` : n===0 ? "Aujourd'hui" : `Il y a ${Math.abs(n)} jour${Math.abs(n)>1?'s':''}`,
+    statCycle: 'Jours\ncycle', statPeriod: 'Jours\nrègles', statCount: 'Cycles\nenregistrés',
+    dayOf: (d,t) => `Jour ${d} sur ${t}`,
+    legPeriod:'Règles', legPredicted:'Prévues', legOvulation:'Ovulation', legFertile:'Fertile',
+    logLabel:'Enregistrer', selPrompt:'Appuie sur un jour du calendrier',
+    btnStart:'+ Début règles', btnEnd:'+ Fin règles',
+    tabHome:'Accueil', tabHist:'Historique', tabSett:'Réglages',
+    pageHome:'Mon cycle', pageHist:'Historique', pageSett:'Réglages',
+    paramsTitle:'Paramètres',
+    cycleLbl:'Durée du cycle', cycleSub:'Jours entre les règles',
+    periodLbl:'Durée des règles', periodSub:'Nombre de jours moyen',
+    projLbl:'Cycles à projeter', projSub:'Cycles futurs affichés',
+    langTitle:'Langue / Language', langLbl:"Langue de l'application",
+    dataTitle:'Données', clearBtn:'Effacer toutes les données',
+    privNote:'Tes données sont sauvegardées de façon sécurisée<br>sur Firebase. Accessibles depuis n\'importe quel appareil.',
+    toastStart:'Début des règles enregistré ✓', toastEnd:'Fin des règles enregistrée ✓',
+    toastDeleted:'Cycle supprimé', toastCleared:'Données effacées', toastError:'Erreur de sauvegarde',
+    toastSelectDay:'Sélectionne d\'abord un jour', toastAlreadyLogged:'Début déjà enregistré',
+    toastNeedStart:'Enregistre d\'abord un début', toastEndBeforeStart:'La fin doit être après le début',
+    emptyHist:'Aucun cycle enregistré',
+    histDays: n => n+' jours de règles', histNoEnd:'Fin non renseignée',
+    histCycle: n => `Cycle : ${n} jours`, histLast:'Dernier cycle',
+    histBadgeCycle: n => n+'j cycle',
+    confirmDelete:'Supprimer ce cycle ?', confirmClear:'Effacer toutes les données ?',
+    errEmpty:'Remplis tous les champs.',
+    errMsgs:{
+      'auth/invalid-email':'Email invalide.',
+      'auth/user-not-found':'Aucun compte avec cet email.',
+      'auth/wrong-password':'Mot de passe incorrect.',
+      'auth/invalid-credential':'Email ou mot de passe incorrect.',
+      'auth/email-already-in-use':'Cet email est déjà utilisé.',
+      'auth/weak-password':'Le mot de passe doit faire au moins 6 caractères.',
+      'auth/too-many-requests':'Trop de tentatives. Réessaie plus tard.'
+    }
+  },
+  en: {
+    MONTHS: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+    DAYS: ['Mo','Tu','We','Th','Fr','Sa','Su'],
+    PHASES: [
+      {name:'Menstruation',    col:'#E91E8C',bg:'#FCE4EC',desc:'Your period is happening. Rest and take care of yourself.'},
+      {name:'Follicular phase', col:'#FF9800',bg:'#FFF3E0',desc:'Your body is preparing for ovulation. Energy is rising!'},
+      {name:'Ovulation',        col:'#4CAF50',bg:'#E8F5E9',desc:'Your egg is released. This is your most fertile time.'},
+      {name:'Luteal phase',     col:'#9C27B0',bg:'#F3E5F5',desc:'Your body is preparing. You may experience some PMS symptoms.'}
+    ],
+    authSub: 'Sign in to access your tracking<br>from any device',
+    login:'Sign in', register:'Create account',
+    signIn:'Sign in', createAccount:'Create account',
+    noAccount:"Don't have an account?", createLink:"Create account",
+    haveAccount:"Already have an account?", signInLink:"Sign in",
+    loading:'Loading...', loadingData:'Loading your data...',
+    connecting:'Signing in...', creating:'Creating account...',
+    logout:'Sign out',
+    nextPeriod:'Next period',
+    inDays: n => n>0 ? `In ${n} day${n>1?'s':''}` : n===0 ? 'Today' : `${Math.abs(n)} day${Math.abs(n)>1?'s':''} ago`,
+    statCycle:'Days\ncycle', statPeriod:'Days\nperiod', statCount:'Cycles\nlogged',
+    dayOf: (d,t) => `Day ${d} of ${t}`,
+    legPeriod:'Period', legPredicted:'Predicted', legOvulation:'Ovulation', legFertile:'Fertile',
+    logLabel:'Log', selPrompt:'Tap a day on the calendar',
+    btnStart:'+ Period start', btnEnd:'+ Period end',
+    tabHome:'Home', tabHist:'History', tabSett:'Settings',
+    pageHome:'My cycle', pageHist:'History', pageSett:'Settings',
+    paramsTitle:'Settings',
+    cycleLbl:'Cycle length', cycleSub:'Days between periods',
+    periodLbl:'Period length', periodSub:'Average number of days',
+    projLbl:'Cycles to show', projSub:'Future cycles displayed',
+    langTitle:'Langue / Language', langLbl:'App language',
+    dataTitle:'Data', clearBtn:'Clear all data',
+    privNote:'Your data is securely saved on Firebase.<br>Accessible from any device.',
+    toastStart:'Period start logged ✓', toastEnd:'Period end logged ✓',
+    toastDeleted:'Cycle deleted', toastCleared:'Data cleared', toastError:'Save error',
+    toastSelectDay:'Select a day first', toastAlreadyLogged:'Start already logged',
+    toastNeedStart:'Log a start first', toastEndBeforeStart:'End must be after start',
+    emptyHist:'No cycles logged yet',
+    histDays: n => n+' days of period', histNoEnd:'End not logged',
+    histCycle: n => `Cycle: ${n} days`, histLast:'Latest cycle',
+    histBadgeCycle: n => n+'d cycle',
+    confirmDelete:'Delete this cycle?', confirmClear:'Clear all data?',
+    errEmpty:'Please fill in all fields.',
+    errMsgs:{
+      'auth/invalid-email':'Invalid email.',
+      'auth/user-not-found':'No account with this email.',
+      'auth/wrong-password':'Wrong password.',
+      'auth/invalid-credential':'Invalid email or password.',
+      'auth/email-already-in-use':'Email already in use.',
+      'auth/weak-password':'Password must be at least 6 characters.',
+      'auth/too-many-requests':'Too many attempts. Try again later.'
+    }
+  }
 };
-let authMode = 'login';
 
-/* ── UI helpers ── */
-function showLoading(v, msg='Chargement...') {
+let lang = localStorage.getItem('moncycle_lang') || 'fr';
+let t = T[lang];
+let authMode = 'login';
+let S = { periods:[], settings:{cycle:28,period:5,proj:3}, vy:new Date().getFullYear(), vm:new Date().getMonth(), sel:null, uid:null };
+
+/* ── Langue ── */
+window.setLang = function(l) {
+  lang = l; t = T[l];
+  localStorage.setItem('moncycle_lang', l);
+  document.getElementById('lang-fr') && (document.getElementById('lang-fr').classList.toggle('active', l==='fr'));
+  document.getElementById('lang-en') && (document.getElementById('lang-en').classList.toggle('active', l==='en'));
+  document.getElementById('alb-fr') && (document.getElementById('alb-fr').classList.toggle('active', l==='fr'));
+  document.getElementById('alb-en') && (document.getElementById('alb-en').classList.toggle('active', l==='en'));
+  applyTranslations();
+  renderCal();
+  if (document.getElementById('tab-hist').classList.contains('active')) renderHist();
+};
+
+function applyTranslations() {
+  const isLogin = authMode === 'login';
+  document.getElementById('auth-sub').innerHTML         = t.authSub;
+  document.getElementById('auth-mode-title').textContent = isLogin ? t.login : t.register;
+  document.getElementById('auth-submit').textContent     = isLogin ? t.signIn : t.createAccount;
+  document.getElementById('auth-toggle').innerHTML       = isLogin
+    ? `${t.noAccount} <span>${t.createLink}</span>`
+    : `${t.haveAccount} <span>${t.signInLink}</span>`;
+  document.getElementById('auth-email').placeholder    = 'Email';
+  document.getElementById('auth-password').placeholder = lang==='fr' ? 'Mot de passe' : 'Password';
+  const el = (id) => document.getElementById(id);
+  if (el('logout-btn'))        el('logout-btn').textContent         = t.logout;
+  if (el('nb-label'))          el('nb-label').textContent           = t.nextPeriod;
+  if (el('st-cycle-lbl'))      el('st-cycle-lbl').innerHTML         = t.statCycle.replace('\n','<br>');
+  if (el('st-period-lbl'))     el('st-period-lbl').innerHTML        = t.statPeriod.replace('\n','<br>');
+  if (el('st-count-lbl'))      el('st-count-lbl').innerHTML         = t.statCount.replace('\n','<br>');
+  if (el('leg-period'))        el('leg-period').textContent         = t.legPeriod;
+  if (el('leg-predicted'))     el('leg-predicted').textContent      = t.legPredicted;
+  if (el('leg-ovulation'))     el('leg-ovulation').textContent      = t.legOvulation;
+  if (el('leg-fertile'))       el('leg-fertile').textContent        = t.legFertile;
+  if (el('log-label'))         el('log-label').textContent          = t.logLabel;
+  if (el('btn-start'))         el('btn-start').textContent          = t.btnStart;
+  if (el('btn-end'))           el('btn-end').textContent            = t.btnEnd;
+  if (el('nav-lbl-home'))      el('nav-lbl-home').textContent       = t.tabHome;
+  if (el('nav-lbl-hist'))      el('nav-lbl-hist').textContent       = t.tabHist;
+  if (el('nav-lbl-sett'))      el('nav-lbl-sett').textContent       = t.tabSett;
+  if (el('sett-params-title')) el('sett-params-title').textContent  = t.paramsTitle;
+  if (el('sett-cycle-lbl'))    el('sett-cycle-lbl').textContent     = t.cycleLbl;
+  if (el('sett-cycle-sub'))    el('sett-cycle-sub').textContent     = t.cycleSub;
+  if (el('sett-period-lbl'))   el('sett-period-lbl').textContent    = t.periodLbl;
+  if (el('sett-period-sub'))   el('sett-period-sub').textContent    = t.periodSub;
+  if (el('sett-proj-lbl'))     el('sett-proj-lbl').textContent      = t.projLbl;
+  if (el('sett-proj-sub'))     el('sett-proj-sub').textContent      = t.projSub;
+  if (el('sett-lang-title'))   el('sett-lang-title').textContent    = t.langTitle;
+  if (el('sett-lang-lbl'))     el('sett-lang-lbl').textContent      = t.langLbl;
+  if (el('sett-data-title'))   el('sett-data-title').textContent    = t.dataTitle;
+  if (el('clear-btn'))         el('clear-btn').textContent          = t.clearBtn;
+  if (el('priv-note'))         el('priv-note').innerHTML            = t.privNote;
+  const selEl = el('sel-show');
+  if (selEl && selEl.classList.contains('ph')) selEl.textContent = t.selPrompt;
+  updatePageTitle();
+}
+
+function updatePageTitle() {
+  const active = ['home','hist','sett'].find(tab => document.getElementById('tab-'+tab).classList.contains('active')) || 'home';
+  const titles = {home:t.pageHome, hist:t.pageHist, sett:t.pageSett};
+  const el = document.getElementById('page-title');
+  if (el) el.textContent = titles[active];
+}
+
+/* ── Helpers ── */
+function showLoading(v, msg) {
   document.getElementById('loading').style.display = v ? 'flex' : 'none';
-  document.getElementById('loading-text').textContent = msg;
+  document.getElementById('loading-text').textContent = msg || t.loading;
 }
 function showApp(v) {
   document.getElementById('auth-screen').style.display = v ? 'none' : 'flex';
@@ -417,112 +509,94 @@ function authError(msg) {
   el.textContent = msg; el.style.display = msg ? 'block' : 'none';
 }
 
-/* ── Auth mode toggle ── */
+/* ── Auth ── */
 window.toggleAuthMode = () => {
   authMode = authMode === 'login' ? 'register' : 'login';
   authError('');
-  const isLogin = authMode === 'login';
-  document.getElementById('auth-mode-title').textContent = isLogin ? 'Connexion' : 'Créer un compte';
-  document.getElementById('auth-submit').textContent     = isLogin ? 'Se connecter' : 'Créer le compte';
-  document.getElementById('auth-toggle').innerHTML       = isLogin
-    ? 'Pas encore de compte ? <span>Créer un compte</span>'
-    : 'Déjà un compte ? <span>Se connecter</span>';
+  applyTranslations();
 };
 
-/* ── Auth submit ── */
 window.authSubmit = async () => {
   authError('');
   const email = document.getElementById('auth-email').value.trim();
   const pass  = document.getElementById('auth-password').value;
-  if (!email || !pass) { authError('Remplis tous les champs.'); return; }
-  showLoading(true, authMode === 'login' ? 'Connexion...' : 'Création du compte...');
+  if (!email || !pass) { authError(t.errEmpty); return; }
+  showLoading(true, authMode==='login' ? t.connecting : t.creating);
   try {
-    if (authMode === 'login') await signInWithEmailAndPassword(auth, email, pass);
-    else                      await createUserWithEmailAndPassword(auth, email, pass);
+    if (authMode==='login') await signInWithEmailAndPassword(auth, email, pass);
+    else                    await createUserWithEmailAndPassword(auth, email, pass);
   } catch(e) {
     showLoading(false);
-    const msgs = {
-      'auth/invalid-email':        'Email invalide.',
-      'auth/user-not-found':       'Aucun compte avec cet email.',
-      'auth/wrong-password':       'Mot de passe incorrect.',
-      'auth/invalid-credential':   'Email ou mot de passe incorrect.',
-      'auth/email-already-in-use': 'Cet email est déjà utilisé.',
-      'auth/weak-password':        'Le mot de passe doit faire au moins 6 caractères.',
-      'auth/too-many-requests':    'Trop de tentatives. Réessaie plus tard.'
-    };
-    authError(msgs[e.code] || 'Erreur : ' + e.message);
+    authError(t.errMsgs[e.code] || e.message);
   }
 };
 
 window.doLogout = async () => {
   await signOut(auth);
-  S.periods = []; S.settings = { cycle:28, period:5, proj:3 }; S.sel = null; S.uid = null;
+  S.periods=[]; S.settings={cycle:28,period:5,proj:3}; S.sel=null; S.uid=null;
 };
 
-/* ── Firebase data ── */
+/* ── Firebase ── */
 async function loadData(uid) {
-  const snap = await getDoc(doc(db, 'users', uid));
+  const snap = await getDoc(doc(db,'users',uid));
   if (snap.exists()) {
     const d = snap.data();
     S.periods  = d.periods  || [];
-    S.settings = Object.assign({ cycle:28, period:5, proj:3 }, d.settings || {});
+    S.settings = Object.assign({cycle:28,period:5,proj:3}, d.settings||{});
   }
 }
 async function saveData() {
   if (!S.uid) return;
-  await setDoc(doc(db, 'users', S.uid), { periods: S.periods, settings: S.settings }, { merge: true });
+  await setDoc(doc(db,'users',S.uid), {periods:S.periods, settings:S.settings}, {merge:true});
 }
 
-/* ── Auth observer ── */
 onAuthStateChanged(auth, async user => {
   if (user) {
     S.uid = user.uid;
     document.getElementById('user-email').textContent = user.email;
-    showLoading(true, 'Chargement de tes données...');
+    showLoading(true, t.loadingData);
     try { await loadData(user.uid); } catch(e) { console.warn(e); }
     showLoading(false);
     showApp(true);
     syncSett();
+    applyTranslations();
     renderCal();
   } else {
-    S.uid = null;
-    showLoading(false);
-    showApp(false);
+    S.uid=null; showLoading(false); showApp(false);
   }
 });
 
-/* ── Tab nav ── */
-const PAGE_TITLES = { home:'Mon cycle', hist:'Historique', sett:'Réglages' };
+/* ── Tabs ── */
 window.goTab = tab => {
-  ['home','hist','sett'].forEach(t => {
-    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
-    const n  = document.getElementById('nav-'+t);
-    const on = t===tab;
-    n.classList.toggle('active', on);
+  ['home','hist','sett'].forEach(tab2 => {
+    document.getElementById('tab-'+tab2).classList.toggle('active', tab2===tab);
+    const n=document.getElementById('nav-'+tab2);
+    const on=tab2===tab;
+    n.classList.toggle('active',on);
     n.querySelector('.nav-lbl').style.color = on ? 'var(--pink)' : '';
-    n.querySelectorAll('[stroke]').forEach(el => el.setAttribute('stroke', on ? '#E91E8C' : '#bbb'));
+    n.querySelectorAll('[stroke]').forEach(el=>el.setAttribute('stroke', on?'#E91E8C':'#bbb'));
   });
-  document.getElementById('page-title').textContent = PAGE_TITLES[tab];
-  document.getElementById('content').scrollTop = 0;
+  updatePageTitle();
+  document.getElementById('content').scrollTop=0;
   if (tab==='hist') renderHist();
 };
 
-/* ── Data helpers ── */
+/* ── Data ── */
 function periodDays() {
-  const s = new Set();
-  S.periods.forEach(p => {
-    const st = new Date(p.start);
-    const dur = p.end ? Math.round((new Date(p.end)-st)/86400000)+1 : S.settings.period;
-    for (let i=0;i<dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(d.toISOString().slice(0,10));}
+  const s=new Set();
+  S.periods.forEach(p=>{
+    const st=new Date(p.start);
+    const dur=p.end?Math.round((new Date(p.end)-st)/86400000)+1:S.settings.period;
+    for(let i=0;i<dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(d.toISOString().slice(0,10));}
   });
   return s;
 }
 function getProj() {
   if (!S.periods.length) return [];
-  const sorted = [...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
-  let avg = S.settings.cycle;
-  if (sorted.length>1){let t=0;for(let i=1;i<sorted.length;i++)t+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;avg=Math.round(t/(sorted.length-1));}
-  const last = new Date(sorted[sorted.length-1].start);
+  const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
+  let avg=S.settings.cycle;
+  if(sorted.length>1){let tot=0;for(let i=1;i<sorted.length;i++)tot+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;avg=Math.round(tot/(sorted.length-1));}
+  const last=new Date(sorted[sorted.length-1].start);
   return Array.from({length:S.settings.proj},(_,i)=>{const d=new Date(last);d.setDate(d.getDate()+avg*(i+1));return{start:d.toISOString().slice(0,10),dur:S.settings.period};});
 }
 function projDays() {
@@ -543,12 +617,12 @@ function getFertile() {
 /* ── Calendar ── */
 function renderCal() {
   const{vy:y,vm:m}=S;
-  document.getElementById('cal-month').textContent=`${MONTHS[m]} ${y}`;
+  document.getElementById('cal-month').textContent=`${t.MONTHS[m]} ${y}`;
   const pd=periodDays(),prd=projDays(),{f,ov}=getFertile();
   const today=new Date().toISOString().slice(0,10);
   const grid=document.getElementById('cal-grid');
   grid.innerHTML='';
-  DAYS.forEach(d=>{const e=document.createElement('div');e.className='cal-hdr';e.textContent=d;grid.appendChild(e);});
+  t.DAYS.forEach(d=>{const e=document.createElement('div');e.className='cal-hdr';e.textContent=d;grid.appendChild(e);});
   const off=(new Date(y,m,1).getDay()+6)%7;
   for(let i=0;i<off;i++){const e=document.createElement('div');e.className='day empty';grid.appendChild(e);}
   const dim=new Date(y,m+1,0).getDate();
@@ -564,15 +638,16 @@ function renderCal() {
     e.addEventListener('click',()=>selectDay(ds));
     grid.appendChild(e);
   }
-  updateBanner();updateStats();updatePhase();updateCycBar();
+  updateBanner(); updateStats(); updatePhase(); updateCycBar();
 }
 window.prevMonth=()=>{S.vm--;if(S.vm<0){S.vm=11;S.vy--;}renderCal();};
 window.nextMonth=()=>{S.vm++;if(S.vm>11){S.vm=0;S.vy++;}renderCal();};
 
-function selectDay(ds){
+function selectDay(ds) {
   S.sel=ds;
   const[y,mo,d]=ds.split('-').map(Number);
-  const lbl=new Date(y,mo-1,d).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  const locale = lang==='fr' ? 'fr-FR' : 'en-GB';
+  const lbl=new Date(y,mo-1,d).toLocaleDateString(locale,{weekday:'long',day:'numeric',month:'long'});
   const el=document.getElementById('sel-show');
   el.textContent=lbl.charAt(0).toUpperCase()+lbl.slice(1);
   el.classList.remove('ph');
@@ -580,110 +655,104 @@ function selectDay(ds){
 }
 
 window.logStart=async()=>{
-  if(!S.sel){toast('Sélectionne d\'abord un jour');return;}
-  if(S.periods.find(p=>p.start===S.sel)){toast('Début déjà enregistré');return;}
+  if(!S.sel){toast(t.toastSelectDay);return;}
+  if(S.periods.find(p=>p.start===S.sel)){toast(t.toastAlreadyLogged);return;}
   S.periods.push({start:S.sel,end:null});
   S.periods.sort((a,b)=>new Date(a.start)-new Date(b.start));
-  renderCal();toast('Début des règles enregistré ✓');
-  try{await saveData();}catch(e){toast('Erreur de sauvegarde');}
+  renderCal();toast(t.toastStart);
+  try{await saveData();}catch(e){toast(t.toastError);}
 };
-
 window.logEnd=async()=>{
-  if(!S.sel){toast('Sélectionne d\'abord un jour');return;}
+  if(!S.sel){toast(t.toastSelectDay);return;}
   const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
   const last=sorted[sorted.length-1];
-  if(!last){toast('Enregistre d\'abord un début');return;}
-  if(new Date(S.sel)<new Date(last.start)){toast('La fin doit être après le début');return;}
+  if(!last){toast(t.toastNeedStart);return;}
+  if(new Date(S.sel)<new Date(last.start)){toast(t.toastEndBeforeStart);return;}
   S.periods[S.periods.findIndex(p=>p.start===last.start)].end=S.sel;
-  renderCal();toast('Fin des règles enregistrée ✓');
-  try{await saveData();}catch(e){toast('Erreur de sauvegarde');}
+  renderCal();toast(t.toastEnd);
+  try{await saveData();}catch(e){toast(t.toastError);}
 };
 
-function updateBanner(){
+function updateBanner() {
   const proj=getProj();const b=document.getElementById('next-banner');
   if(!proj.length){b.style.display='none';return;}
   b.style.display='';
   const next=new Date(proj[0].start);const today=new Date();today.setHours(0,0,0,0);
   const diff=Math.round((next-today)/86400000);
-  document.getElementById('nb-date').textContent=next.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
-  document.getElementById('nb-days').textContent=diff>0?`Dans ${diff} jour${diff>1?'s':''}`:diff===0?'Aujourd\'hui':`Il y a ${Math.abs(diff)} jour${Math.abs(diff)>1?'s':''}`;
+  const locale=lang==='fr'?'fr-FR':'en-GB';
+  document.getElementById('nb-date').textContent=next.toLocaleDateString(locale,{day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('nb-days').textContent=t.inDays(diff);
 }
-function updateStats(){
+function updateStats() {
   const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
   document.getElementById('st-count').textContent=sorted.length;
-  if(sorted.length>1){let t=0;for(let i=1;i<sorted.length;i++)t+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;document.getElementById('st-cycle').textContent=Math.round(t/(sorted.length-1));}
+  if(sorted.length>1){let tot=0;for(let i=1;i<sorted.length;i++)tot+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;document.getElementById('st-cycle').textContent=Math.round(tot/(sorted.length-1));}
   else document.getElementById('st-cycle').textContent=S.settings.cycle;
   const we=sorted.filter(p=>p.end);
-  if(we.length){let t=0;we.forEach(p=>t+=(new Date(p.end)-new Date(p.start))/86400000+1);document.getElementById('st-period').textContent=Math.round(t/we.length);}
+  if(we.length){let tot=0;we.forEach(p=>tot+=(new Date(p.end)-new Date(p.start))/86400000+1);document.getElementById('st-period').textContent=Math.round(tot/we.length);}
   else document.getElementById('st-period').textContent=S.settings.period;
 }
-function updatePhase(){
+function updatePhase() {
   if(!S.periods.length){document.getElementById('phase-card').style.display='none';return;}
   const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
   const last=new Date(sorted[sorted.length-1].start);
   const today=new Date();today.setHours(0,0,0,0);
   let day=Math.round((today-last)/86400000)%S.settings.cycle;if(day<0)day+=S.settings.cycle;
   const ph=day<S.settings.period?0:day<Math.round(S.settings.cycle*0.45)?1:day<Math.round(S.settings.cycle*0.55)?2:3;
-  const pc=document.getElementById('phase-card'),p=PHASES[ph];
+  const pc=document.getElementById('phase-card'),p=t.PHASES[ph];
   pc.style.display='';pc.style.borderLeftColor=p.col;
   const badge=document.getElementById('phase-badge');badge.textContent=p.name;badge.style.background=p.bg;badge.style.color=p.col;
   document.getElementById('phase-name').textContent=p.name;document.getElementById('phase-name').style.color=p.col;
   document.getElementById('phase-desc').textContent=p.desc;
 }
-function updateCycBar(){
+function updateCycBar() {
   if(!S.periods.length){document.getElementById('cyc-wrap').style.display='none';return;}
   const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
   const last=new Date(sorted[sorted.length-1].start);
   const today=new Date();today.setHours(0,0,0,0);
   let day=Math.round((today-last)/86400000)%S.settings.cycle;if(day<0)day+=S.settings.cycle;
   document.getElementById('cyc-wrap').style.display='';
-  document.getElementById('cyc-label').textContent=`Jour ${day+1} sur ${S.settings.cycle}`;
+  document.getElementById('cyc-label').textContent=t.dayOf(day+1,S.settings.cycle);
   document.getElementById('cyc-fill').style.width=Math.min(100,Math.round((day/S.settings.cycle)*100))+'%';
 }
 
 /* ── History ── */
-function renderHist(){
-  // Tri chronologique pour calculer les durées de cycle
+function renderHist() {
   const asc=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
-  // Tri anti-chronologique pour l'affichage
   const sorted=[...asc].reverse();
   const list=document.getElementById('hist-list');
-  if(!sorted.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Aucun cycle enregistré</div></div>';return;}
+  const locale=lang==='fr'?'fr-FR':'en-GB';
+  if(!sorted.length){list.innerHTML=`<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">${t.emptyHist}</div></div>`;return;}
   list.innerHTML='';
   sorted.forEach((p,i)=>{
     const st=new Date(p.start);
-    // Durée des règles (début → fin)
     const dur=p.end?Math.round((new Date(p.end)-st)/86400000)+1:null;
-    // Durée du cycle = nb jours entre ce début et le début suivant
-    // Dans asc, l'index de p est (asc.length - 1 - i)
     const ascIdx=asc.length-1-i;
     let cycleDur=null;
-    if(ascIdx+1<asc.length){
-      cycleDur=Math.round((new Date(asc[ascIdx+1].start)-new Date(asc[ascIdx].start))/86400000);
-    }
+    if(ascIdx+1<asc.length) cycleDur=Math.round((new Date(asc[ascIdx+1].start)-new Date(asc[ascIdx].start))/86400000);
     const el=document.createElement('div');el.className='hist-item';
     el.innerHTML=`
       <div style="flex:1">
-        <div class="hist-date">${st.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div>
-        <div class="hist-sub">${dur?dur+' jours de règles':'Fin non renseignée'}${cycleDur?` &nbsp;·&nbsp; Cycle : ${cycleDur} jours`:'&nbsp;·&nbsp; Dernier cycle'}</div>
+        <div class="hist-date">${st.toLocaleDateString(locale,{day:'numeric',month:'long',year:'numeric'})}</div>
+        <div class="hist-sub">${dur?t.histDays(dur):t.histNoEnd}&nbsp;·&nbsp;${cycleDur?t.histCycle(cycleDur):t.histLast}</div>
       </div>
       <div class="hist-right">
-        <span class="hist-badge">${cycleDur?cycleDur+'j cycle':dur?dur+'j':'?'}</span>
+        <span class="hist-badge">${cycleDur?t.histBadgeCycle(cycleDur):dur?dur+'j':'?'}</span>
         <button class="del-btn" data-start="${p.start}">✕</button>
       </div>`;
     list.appendChild(el);
   });
   list.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',()=>delPeriod(btn.dataset.start)));
 }
-async function delPeriod(start){
-  if(!confirm('Supprimer ce cycle ?'))return;
+async function delPeriod(start) {
+  if(!confirm(t.confirmDelete))return;
   S.periods=S.periods.filter(p=>p.start!==start);
-  renderHist();renderCal();toast('Cycle supprimé');
+  renderHist();renderCal();toast(t.toastDeleted);
   try{await saveData();}catch(e){}
 }
 window.clearAll=async()=>{
-  if(!confirm('Effacer toutes les données ?'))return;
-  S.periods=[];renderHist();renderCal();toast('Données effacées');
+  if(!confirm(t.confirmClear))return;
+  S.periods=[];renderHist();renderCal();toast(t.toastCleared);
   try{await saveData();}catch(e){}
 };
 
@@ -694,11 +763,14 @@ window.adj=async(k,d)=>{
   syncSett();renderCal();
   try{await saveData();}catch(e){}
 };
-function syncSett(){
+function syncSett() {
   document.getElementById('sv-cycle').textContent=S.settings.cycle;
   document.getElementById('sv-period').textContent=S.settings.period;
   document.getElementById('sv-proj').textContent=S.settings.proj;
 }
+
+/* ── Init ── */
+applyTranslations();
 </script>
 </body>
 </html>
