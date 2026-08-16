@@ -643,15 +643,34 @@ function updateCycBar(){
 
 /* ── History ── */
 function renderHist(){
-  const sorted=[...S.periods].sort((a,b)=>new Date(b.start)-new Date(a.start));
+  // Tri chronologique pour calculer les durées de cycle
+  const asc=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
+  // Tri anti-chronologique pour l'affichage
+  const sorted=[...asc].reverse();
   const list=document.getElementById('hist-list');
   if(!sorted.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">Aucun cycle enregistré</div></div>';return;}
   list.innerHTML='';
-  sorted.forEach(p=>{
+  sorted.forEach((p,i)=>{
     const st=new Date(p.start);
+    // Durée des règles (début → fin)
     const dur=p.end?Math.round((new Date(p.end)-st)/86400000)+1:null;
+    // Durée du cycle = nb jours entre ce début et le début suivant
+    // Dans asc, l'index de p est (asc.length - 1 - i)
+    const ascIdx=asc.length-1-i;
+    let cycleDur=null;
+    if(ascIdx+1<asc.length){
+      cycleDur=Math.round((new Date(asc[ascIdx+1].start)-new Date(asc[ascIdx].start))/86400000);
+    }
     const el=document.createElement('div');el.className='hist-item';
-    el.innerHTML=`<div><div class="hist-date">${st.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div><div class="hist-sub">${dur?dur+' jours de règles':'Fin non renseignée'}</div></div><div class="hist-right"><span class="hist-badge">${dur?dur+'j':'?'}</span><button class="del-btn" data-start="${p.start}">✕</button></div>`;
+    el.innerHTML=`
+      <div style="flex:1">
+        <div class="hist-date">${st.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})}</div>
+        <div class="hist-sub">${dur?dur+' jours de règles':'Fin non renseignée'}${cycleDur?` &nbsp;·&nbsp; Cycle : ${cycleDur} jours`:'&nbsp;·&nbsp; Dernier cycle'}</div>
+      </div>
+      <div class="hist-right">
+        <span class="hist-badge">${cycleDur?cycleDur+'j cycle':dur?dur+'j':'?'}</span>
+        <button class="del-btn" data-start="${p.start}">✕</button>
+      </div>`;
     list.appendChild(el);
   });
   list.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',()=>delPeriod(btn.dataset.start)));
