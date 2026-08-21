@@ -10,7 +10,7 @@
 <title>Mon Cycle</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
-:root{--pink:#E91E8C;--pink-dark:#C2185B;--pink-light:#FCE4EC;--green:#4CAF50;--green-light:#E8F5E9;--bg:#F5F5F5;--card:#FFFFFF;--text:#1A1A1A;--text-sec:#757575;--border:#EEEEEE;}
+:root{--pink:#E91E8C;--pink-dark:#C2185B;--pink-light:#FCE4EC;--green:#4CAF50;--green-light:#E8F5E9;--purple:#9C27B0;--purple-light:#F3E5F5;--blue:#2196F3;--blue-light:#E3F2FD;--bg:#F5F5F5;--card:#FFFFFF;--text:#1A1A1A;--text-sec:#757575;--border:#EEEEEE;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);overflow:hidden;}
 .app{display:flex;flex-direction:column;width:100vw;height:100vh;height:100dvh;}
@@ -27,38 +27,65 @@ html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;back
 .auth-btn:active{background:var(--pink-dark);}
 .auth-toggle{text-align:center;font-size:14px;color:var(--text-sec);cursor:pointer;}
 .auth-toggle span{color:var(--pink);font-weight:600;}
-.auth-forgot{text-align:center;font-size:13px;color:var(--pink);cursor:pointer;margin-top:-2px;}
+.auth-forgot{text-align:center;font-size:13px;color:var(--pink);cursor:pointer;}
 .auth-divider{text-align:center;font-size:12px;color:#ccc;margin:2px 0;}
-.lang-row{display:flex;gap:8px;justify-content:center;margin-bottom:6px;}
-.lang-btn{padding:6px 18px;border-radius:10px;border:1.5px solid var(--border);background:#fff;color:var(--text-sec);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.lang-row{display:flex;gap:8px;justify-content:center;margin-bottom:8px;}
+.lang-btn{padding:6px 18px;border-radius:10px;border:1.5px solid var(--border);background:#fff;color:var(--text-sec);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
 .lang-btn.active{border-color:var(--pink);background:var(--pink);color:#fff;}
 .loading{position:fixed;inset:0;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:14px;}
 .spinner{width:38px;height:38px;border-radius:50%;border:3px solid var(--pink-light);border-top-color:var(--pink);animation:spin 0.75s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .loading-text{font-size:14px;color:var(--text-sec);}
-.top-bar{background:var(--pink);padding:14px 18px 16px;padding-top:calc(14px + env(safe-area-inset-top,0px));flex-shrink:0;}
+
+/* TOP BAR */
+.top-bar{padding:14px 18px 16px;padding-top:calc(14px + env(safe-area-inset-top,0px));flex-shrink:0;transition:background 0.3s;}
+.top-bar.mode-normal{background:var(--pink);}
+.top-bar.mode-conception{background:var(--purple);}
+.top-bar.mode-grossesse{background:var(--blue);}
 .top-bar-row{display:flex;align-items:center;justify-content:space-between;}
 .top-bar-title{font-size:20px;font-weight:600;color:#fff;}
 .top-bar-email{font-size:12px;color:rgba(255,255,255,0.75);margin-top:2px;}
+.mode-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:#fff;margin-top:5px;}
 .logout-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;border-radius:20px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;}
 .logout-btn:active{background:rgba(255,255,255,0.35);}
 .content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:14px 12px;padding-bottom:calc(80px + env(safe-area-inset-bottom,0px));}
 .content::-webkit-scrollbar{display:none;}
 .tab-page{display:none;}
 .tab-page.active{display:block;}
-.next-banner{background:var(--pink);border-radius:16px;padding:18px 20px;margin-bottom:12px;display:none;position:relative;overflow:hidden;}
-.next-banner::after{content:'';position:absolute;right:-16px;top:-16px;width:90px;height:90px;background:rgba(255,255,255,0.1);border-radius:50%;}
-.nb-label{font-size:11px;color:rgba(255,255,255,0.8);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:5px;}
-.nb-date{font-size:22px;font-weight:600;color:#fff;}
-.nb-days{font-size:13px;color:rgba(255,255,255,0.85);margin-top:4px;}
-.nb-dot{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:28px;}
+
+/* BANNERS */
+.banner{border-radius:16px;padding:18px 20px;margin-bottom:12px;display:none;position:relative;overflow:hidden;}
+.banner::after{content:'';position:absolute;right:-16px;top:-16px;width:90px;height:90px;background:rgba(255,255,255,0.1);border-radius:50%;}
+.banner.normal{background:var(--pink);}
+.banner.conception{background:var(--purple);}
+.banner.grossesse{background:var(--blue);}
+.banner-label{font-size:11px;color:rgba(255,255,255,0.8);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:5px;}
+.banner-date{font-size:22px;font-weight:600;color:#fff;}
+.banner-days{font-size:13px;color:rgba(255,255,255,0.85);margin-top:4px;}
+.banner-sub{font-size:13px;color:rgba(255,255,255,0.85);margin-top:4px;line-height:1.5;}
+.banner-dpa{font-size:12px;color:rgba(255,255,255,0.7);margin-top:6px;}
+.banner-dot{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:28px;}
+
+/* BABY CARD */
+.baby-card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;border-left:4px solid var(--blue);display:none;}
+.baby-title{font-size:14px;font-weight:600;color:#1565C0;margin-bottom:6px;}
+.baby-text{font-size:13px;color:var(--text-sec);line-height:1.6;}
+
+/* STATS */
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
 .stat-tile{background:var(--card);border-radius:14px;padding:14px 6px;text-align:center;}
-.stat-num{font-size:26px;font-weight:600;color:var(--pink);line-height:1;}
+.stat-num{font-size:24px;font-weight:600;line-height:1;}
+.stat-num.pink{color:var(--pink);}
+.stat-num.purple{color:var(--purple);}
+.stat-num.blue{color:var(--blue);}
 .stat-lbl{font-size:10px;color:var(--text-sec);margin-top:5px;line-height:1.3;}
+
+/* CARD */
 .card{background:var(--card);border-radius:16px;margin-bottom:12px;overflow:hidden;}
 .card-head{padding:16px 16px 8px;display:flex;align-items:center;justify-content:space-between;}
 .card-title{font-size:14px;font-weight:600;color:var(--text);}
+
+/* CALENDAR */
 .cal-nav{display:flex;align-items:center;gap:4px;}
 .cal-nav-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--bg);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);font-family:inherit;}
 .cal-nav-btn:active{background:#e0e0e0;}
@@ -69,18 +96,24 @@ html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;back
 .day:active{transform:scale(0.82);}
 .day.empty{cursor:default;pointer-events:none;}
 .day.fertile{background:var(--green-light);color:#2E7D32;}
+.day.fertile.mc{background:var(--purple-light);color:#6A1B9A;}
 .day.ovulation{background:var(--green);color:#fff;font-weight:600;}
+.day.ovulation.mc{background:var(--purple);color:#fff;font-weight:600;}
 .day.period{background:var(--pink);color:#fff;font-weight:600;border-radius:10px;}
 .day.predicted{background:var(--pink-light);color:var(--pink-dark);border-radius:10px;}
+.day.preg-start{background:var(--purple);color:#fff;font-weight:600;}
+.day.preg-day{background:var(--blue-light);color:#1565C0;border-radius:10px;}
 .day.today:not(.period):not(.predicted){outline:2.5px solid var(--pink);outline-offset:-2px;}
-.day.selected:not(.period):not(.predicted):not(.ovulation):not(.fertile){background:#EEEEEE;}
+.day.today.mc:not(.period){outline-color:var(--purple);}
+.day.today.grossesse-mode:not(.period){outline-color:var(--blue);}
+.day.selected:not(.period):not(.predicted):not(.ovulation):not(.fertile):not(.preg-start):not(.preg-day){background:#EEEEEE;}
 .legend{display:flex;flex-wrap:wrap;gap:8px 14px;padding:2px 14px 14px;}
 .leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-sec);}
 .leg-dot{width:14px;height:8px;border-radius:4px;flex-shrink:0;}
 .cyc-wrap{padding:0 14px 14px;}
 .cyc-label{font-size:12px;color:var(--text-sec);margin-bottom:6px;font-weight:500;}
 .cyc-bar{height:6px;border-radius:3px;background:var(--border);overflow:hidden;}
-.cyc-fill{height:100%;border-radius:3px;background:var(--pink);transition:width 0.4s ease;}
+.cyc-fill{height:100%;border-radius:3px;transition:width 0.4s ease;}
 .log-section{padding:12px 14px 16px;border-top:1px solid var(--border);}
 .log-label{font-size:11px;font-weight:600;color:var(--text-sec);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;}
 .sel-date{font-size:15px;font-weight:500;color:var(--text);margin-bottom:14px;min-height:22px;}
@@ -88,12 +121,39 @@ html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;back
 .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .btn{padding:15px 8px;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:transform 0.1s;line-height:1.2;}
 .btn:active{transform:scale(0.95);}
-.btn-fill{background:var(--pink);color:#fff;}
-.btn-soft{background:var(--pink-light);color:var(--pink);}
+.btn-pink{background:var(--pink);color:#fff;}
+.btn-pink-soft{background:var(--pink-light);color:var(--pink);}
+.btn-purple{background:var(--purple);color:#fff;}
+.btn-blue{background:var(--blue);color:#fff;}
+
+/* PHASE */
 .phase-card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;border-left:4px solid var(--pink);display:none;}
 .phase-badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:8px;letter-spacing:0.04em;text-transform:uppercase;}
 .phase-name{font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px;}
 .phase-desc{font-size:13px;color:var(--text-sec);line-height:1.55;}
+
+/* MODE SELECTOR */
+.mode-option{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;}
+.mode-option:last-child{border-bottom:none;}
+.mode-option:active{background:var(--bg);}
+.mode-icon{font-size:24px;flex-shrink:0;}
+.mode-option-title{font-size:14px;font-weight:600;color:var(--text);}
+.mode-option-sub{font-size:11px;color:var(--text-sec);margin-top:2px;}
+.mode-check{margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0;}
+.mode-check.pink{background:var(--pink);border-color:var(--pink);}
+.mode-check.purple{background:var(--purple);border-color:var(--purple);}
+.mode-check.blue{background:var(--blue);border-color:var(--blue);}
+
+/* DATE INPUT */
+.date-input-card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;display:none;}
+.date-input-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.date-input-sub{font-size:12px;color:var(--text-sec);margin-bottom:12px;line-height:1.5;}
+.date-input{width:100%;padding:13px 14px;border:1.5px solid var(--border);border-radius:12px;font-size:15px;font-family:inherit;background:var(--bg);color:var(--text);outline:none;}
+.date-input:focus{border-color:var(--blue);}
+.date-confirm-btn{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:10px;}
+.date-confirm-btn:active{background:#1565C0;}
+
+/* HISTORY */
 .hist-item{padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
 .hist-item:last-child{border-bottom:none;}
 .hist-date{font-size:15px;font-weight:600;color:var(--text);}
@@ -105,6 +165,8 @@ html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;back
 .empty-state{padding:48px 20px;text-align:center;color:var(--text-sec);}
 .empty-icon{font-size:44px;margin-bottom:14px;opacity:0.35;}
 .empty-text{font-size:14px;}
+
+/* SETTINGS */
 .sett-section{font-size:11px;font-weight:600;color:var(--text-sec);letter-spacing:0.07em;text-transform:uppercase;padding:0 4px 8px;}
 .sett-item{padding:16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
 .sett-item:last-child{border-bottom:none;}
@@ -115,11 +177,13 @@ html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;back
 .sett-btn{width:34px;height:34px;border-radius:50%;border:2px solid var(--pink);background:#fff;font-size:20px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;color:var(--pink);font-weight:600;}
 .sett-btn:active{background:var(--pink-light);}
 .lang-toggle{display:flex;gap:8px;}
-.lang-toggle-btn{padding:8px 18px;border-radius:10px;border:2px solid var(--border);background:#fff;color:var(--text-sec);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.lang-toggle-btn{padding:8px 18px;border-radius:10px;border:2px solid var(--border);background:#fff;color:var(--text-sec);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
 .lang-toggle-btn.active{border-color:var(--pink);background:var(--pink);color:#fff;}
 .danger-btn{width:100%;padding:15px;background:#fff;border:1.5px solid #FFCDD2;color:#E53935;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
 .danger-btn:active{background:#FFF3F3;}
 .priv-note{margin-top:20px;text-align:center;font-size:12px;color:#bbb;line-height:1.7;}
+
+/* OVERLAY SCREENS */
 .overlay-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:500;flex-direction:column;}
 .overlay-screen.active{display:flex;}
 .overlay-header{background:var(--pink);padding:16px 18px;padding-top:calc(16px + env(safe-area-inset-top,0px));display:flex;align-items:center;gap:12px;flex-shrink:0;}
@@ -142,6 +206,8 @@ html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;back
 .about-val{font-size:14px;color:var(--text-sec);}
 .about-link{font-size:14px;color:var(--pink);cursor:pointer;}
 .about-credit{text-align:center;padding:24px 20px;font-size:12px;color:#bbb;line-height:1.8;}
+
+/* RESET SCREEN */
 #reset-screen{display:none;flex-direction:column;align-items:center;justify-content:center;width:100vw;height:100vh;height:100dvh;background:var(--bg);padding:32px 24px;}
 #reset-screen.active{display:flex;}
 .reset-icon{font-size:48px;margin-bottom:16px;}
@@ -150,6 +216,8 @@ html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;back
 .reset-form{width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px;}
 .reset-back{text-align:center;font-size:14px;color:var(--pink);cursor:pointer;font-weight:500;}
 .reset-success{background:#E8F5E9;border:1px solid #A5D6A7;color:#2E7D32;border-radius:12px;padding:12px 14px;font-size:13px;display:none;text-align:center;line-height:1.5;}
+
+/* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;padding:6px 0;padding-bottom:calc(6px + env(safe-area-inset-bottom,0px));z-index:100;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:5px 0;}
 .nav-item:active{opacity:0.6;}
@@ -170,42 +238,43 @@ html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;back
     <button class="lang-btn active" id="alb-fr" onclick="setLang('fr')">FR</button>
     <button class="lang-btn" id="alb-en" onclick="setLang('en')">EN</button>
   </div>
-  <div class="auth-sub" id="auth-sub">Connecte-toi pour retrouver ton suivi sur tous tes appareils</div>
+  <div class="auth-sub" id="auth-sub"></div>
   <div class="auth-form">
-    <div class="auth-mode-title" id="auth-mode-title">Connexion</div>
+    <div class="auth-mode-title" id="auth-mode-title"></div>
     <div class="auth-error" id="auth-error"></div>
     <input class="auth-input" type="email" id="auth-email" placeholder="Email" autocomplete="email">
-    <input class="auth-input" type="password" id="auth-password" placeholder="Mot de passe" autocomplete="current-password">
-    <button class="auth-btn" id="auth-submit" onclick="authSubmit()">Se connecter</button>
-    <div class="auth-forgot" id="auth-forgot" onclick="showReset()">Mot de passe oublié ?</div>
+    <input class="auth-input" type="password" id="auth-password" placeholder="Password" autocomplete="current-password">
+    <button class="auth-btn" id="auth-submit" onclick="authSubmit()"></button>
+    <div class="auth-forgot" id="auth-forgot" onclick="showReset()"></div>
     <div class="auth-divider">──────────</div>
-    <div class="auth-toggle" id="auth-toggle" onclick="toggleAuthMode()">Pas encore de compte ? <span>Créer un compte</span></div>
+    <div class="auth-toggle" id="auth-toggle" onclick="toggleAuthMode()"></div>
   </div>
 </div>
 
-<!-- RESET PASSWORD -->
+<!-- RESET -->
 <div id="reset-screen">
   <div class="reset-icon">🔑</div>
-  <div class="reset-title" id="rst-title">Mot de passe oublié</div>
-  <div class="reset-sub" id="rst-sub">Entre ton adresse email et on t'enverra un lien pour réinitialiser ton mot de passe.</div>
+  <div class="reset-title" id="rst-title"></div>
+  <div class="reset-sub" id="rst-sub"></div>
   <div class="reset-form">
     <div class="auth-error" id="reset-error"></div>
-    <div class="reset-success" id="reset-success">Email envoyé ! Vérifie ta boîte mail et tes spams.</div>
+    <div class="reset-success" id="reset-success"></div>
     <input class="auth-input" type="email" id="reset-email" placeholder="Email" autocomplete="email">
-    <button class="auth-btn" id="rst-btn" onclick="sendReset()">Envoyer le lien</button>
-    <div class="reset-back" id="rst-back" onclick="showAuth()">← Retour</div>
+    <button class="auth-btn" id="rst-btn" onclick="sendReset()"></button>
+    <div class="reset-back" id="rst-back" onclick="showAuth()"></div>
   </div>
 </div>
 
 <!-- APP -->
 <div class="app" id="main-app" style="display:none">
-  <div class="top-bar">
+  <div class="top-bar mode-normal" id="top-bar">
     <div class="top-bar-row">
       <div>
-        <div class="top-bar-title" id="page-title">Mon cycle</div>
+        <div class="top-bar-title" id="page-title"></div>
         <div class="top-bar-email" id="user-email"></div>
+        <div class="mode-badge" id="mode-badge" style="display:none"></div>
       </div>
-      <button class="logout-btn" id="logout-btn" onclick="doLogout()">Déconnexion</button>
+      <button class="logout-btn" id="logout-btn" onclick="doLogout()"></button>
     </div>
   </div>
 
@@ -213,22 +282,46 @@ html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;back
 
     <!-- HOME -->
     <div class="tab-page active" id="tab-home">
-      <div class="next-banner" id="next-banner">
-        <div class="nb-label" id="nb-label">Prochaines règles</div>
-        <div class="nb-date" id="nb-date">—</div>
-        <div class="nb-days" id="nb-days"></div>
-        <div class="nb-dot">🌸</div>
+      <!-- Banner normal (règles) -->
+      <div class="banner normal" id="banner-normal">
+        <div class="banner-label" id="nb-label"></div>
+        <div class="banner-date" id="nb-date">—</div>
+        <div class="banner-days" id="nb-days"></div>
+        <div class="banner-dot">🌸</div>
       </div>
+      <!-- Banner conception -->
+      <div class="banner conception" id="banner-conception">
+        <div class="banner-label" id="bc-label"></div>
+        <div class="banner-date" id="bc-title">—</div>
+        <div class="banner-sub" id="bc-sub"></div>
+        <div class="banner-dot">🌿</div>
+      </div>
+      <!-- Banner grossesse -->
+      <div class="banner grossesse" id="banner-grossesse">
+        <div class="banner-label" id="bg-label"></div>
+        <div class="banner-date" id="bg-week">—</div>
+        <div class="banner-days" id="bg-days"></div>
+        <div class="banner-dpa" id="bg-dpa"></div>
+        <div class="banner-dot">👶</div>
+      </div>
+      <!-- Baby info -->
+      <div class="baby-card" id="baby-card">
+        <div class="baby-title" id="baby-title"></div>
+        <div class="baby-text" id="baby-text"></div>
+      </div>
+
       <div class="stats-row">
-        <div class="stat-tile"><div class="stat-num" id="st-cycle">—</div><div class="stat-lbl" id="st-cycle-lbl">Jours<br>cycle</div></div>
-        <div class="stat-tile"><div class="stat-num" id="st-period">—</div><div class="stat-lbl" id="st-period-lbl">Jours<br>règles</div></div>
-        <div class="stat-tile"><div class="stat-num" id="st-count">0</div><div class="stat-lbl" id="st-count-lbl">Cycles<br>enregistrés</div></div>
+        <div class="stat-tile"><div class="stat-num pink" id="st-cycle">—</div><div class="stat-lbl" id="st-cycle-lbl"></div></div>
+        <div class="stat-tile"><div class="stat-num pink" id="st-period">—</div><div class="stat-lbl" id="st-period-lbl"></div></div>
+        <div class="stat-tile"><div class="stat-num pink" id="st-count">0</div><div class="stat-lbl" id="st-count-lbl"></div></div>
       </div>
+
       <div class="phase-card" id="phase-card">
         <span class="phase-badge" id="phase-badge"></span>
         <div class="phase-name" id="phase-name"></div>
         <div class="phase-desc" id="phase-desc"></div>
       </div>
+
       <div class="card">
         <div class="card-head">
           <div class="cal-month" id="cal-month"></div>
@@ -242,18 +335,13 @@ html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;back
           <div class="cyc-label" id="cyc-label"></div>
           <div class="cyc-bar"><div class="cyc-fill" id="cyc-fill" style="width:0%"></div></div>
         </div>
-        <div class="legend">
-          <div class="leg"><div class="leg-dot" style="background:#E91E8C"></div><span id="leg-period">Règles</span></div>
-          <div class="leg"><div class="leg-dot" style="background:#FCE4EC;border:1px solid #E91E8C"></div><span id="leg-predicted">Prévues</span></div>
-          <div class="leg"><div class="leg-dot" style="background:#4CAF50"></div><span id="leg-ovulation">Ovulation</span></div>
-          <div class="leg"><div class="leg-dot" style="background:#E8F5E9;border:1px solid #4CAF50"></div><span id="leg-fertile">Fertile</span></div>
-        </div>
+        <div class="legend" id="legend"></div>
         <div class="log-section">
-          <div class="log-label" id="log-label">Enregistrer</div>
-          <div class="sel-date ph" id="sel-show">Appuie sur un jour du calendrier</div>
-          <div class="btn-row">
-            <button class="btn btn-fill" id="btn-start" onclick="logStart()">+ Début règles</button>
-            <button class="btn btn-soft" id="btn-end" onclick="logEnd()">+ Fin règles</button>
+          <div class="log-label" id="log-label"></div>
+          <div class="sel-date ph" id="sel-show"></div>
+          <div class="btn-row" id="log-btns">
+            <button class="btn btn-pink" id="btn-start" onclick="logStart()"></button>
+            <button class="btn btn-pink-soft" id="btn-end" onclick="logEnd()"></button>
           </div>
         </div>
       </div>
@@ -266,38 +354,63 @@ html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;back
 
     <!-- SETTINGS -->
     <div class="tab-page" id="tab-sett">
-      <div class="sett-section" id="sett-params-title">Paramètres</div>
+
+      <div class="sett-section" id="sett-mode-title"></div>
       <div class="card" style="margin-bottom:16px">
-        <div class="sett-item">
-          <div><div class="sett-lbl" id="sett-cycle-lbl">Durée du cycle</div><div class="sett-sub" id="sett-cycle-sub">Jours entre les règles</div></div>
-          <div class="sett-ctrl">
-            <button class="sett-btn" onclick="adj('cycle',-1)">−</button>
-            <div class="sett-num" id="sv-cycle">28</div>
-            <button class="sett-btn" onclick="adj('cycle',1)">+</button>
+        <div class="mode-option" id="mode-opt-normal" onclick="setMode('normal')">
+          <div class="mode-icon">🌸</div>
+          <div>
+            <div class="mode-option-title" id="mode-normal-title"></div>
+            <div class="mode-option-sub" id="mode-normal-sub"></div>
           </div>
+          <div class="mode-check" id="check-normal"></div>
         </div>
-        <div class="sett-item">
-          <div><div class="sett-lbl" id="sett-period-lbl">Durée des règles</div><div class="sett-sub" id="sett-period-sub">Nombre de jours moyen</div></div>
-          <div class="sett-ctrl">
-            <button class="sett-btn" onclick="adj('period',-1)">−</button>
-            <div class="sett-num" id="sv-period">5</div>
-            <button class="sett-btn" onclick="adj('period',1)">+</button>
+        <div class="mode-option" id="mode-opt-conception" onclick="setMode('conception')">
+          <div class="mode-icon">🌿</div>
+          <div>
+            <div class="mode-option-title" id="mode-conception-title"></div>
+            <div class="mode-option-sub" id="mode-conception-sub"></div>
           </div>
+          <div class="mode-check" id="check-conception"></div>
         </div>
-        <div class="sett-item">
-          <div><div class="sett-lbl" id="sett-proj-lbl">Cycles à projeter</div><div class="sett-sub" id="sett-proj-sub">Cycles futurs affichés</div></div>
-          <div class="sett-ctrl">
-            <button class="sett-btn" onclick="adj('proj',-1)">−</button>
-            <div class="sett-num" id="sv-proj">3</div>
-            <button class="sett-btn" onclick="adj('proj',1)">+</button>
+        <div class="mode-option" id="mode-opt-grossesse" onclick="setMode('grossesse')">
+          <div class="mode-icon">👶</div>
+          <div>
+            <div class="mode-option-title" id="mode-grossesse-title"></div>
+            <div class="mode-option-sub" id="mode-grossesse-sub"></div>
           </div>
+          <div class="mode-check" id="check-grossesse"></div>
         </div>
       </div>
 
-      <div class="sett-section" id="sett-lang-title">Langue / Language</div>
+      <!-- Date DDR (grossesse) -->
+      <div class="date-input-card" id="date-input-card">
+        <div class="date-input-title" id="ddr-title"></div>
+        <div class="date-input-sub" id="ddr-sub"></div>
+        <input class="date-input" type="date" id="preg-start-date">
+        <button class="date-confirm-btn" id="ddr-btn" onclick="savePregDate()"></button>
+      </div>
+
+      <div class="sett-section" id="sett-params-title"></div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="sett-item">
+          <div><div class="sett-lbl" id="sett-cycle-lbl"></div><div class="sett-sub" id="sett-cycle-sub"></div></div>
+          <div class="sett-ctrl"><button class="sett-btn" onclick="adj('cycle',-1)">−</button><div class="sett-num" id="sv-cycle">28</div><button class="sett-btn" onclick="adj('cycle',1)">+</button></div>
+        </div>
+        <div class="sett-item">
+          <div><div class="sett-lbl" id="sett-period-lbl"></div><div class="sett-sub" id="sett-period-sub"></div></div>
+          <div class="sett-ctrl"><button class="sett-btn" onclick="adj('period',-1)">−</button><div class="sett-num" id="sv-period">5</div><button class="sett-btn" onclick="adj('period',1)">+</button></div>
+        </div>
+        <div class="sett-item">
+          <div><div class="sett-lbl" id="sett-proj-lbl"></div><div class="sett-sub" id="sett-proj-sub"></div></div>
+          <div class="sett-ctrl"><button class="sett-btn" onclick="adj('proj',-1)">−</button><div class="sett-num" id="sv-proj">3</div><button class="sett-btn" onclick="adj('proj',1)">+</button></div>
+        </div>
+      </div>
+
+      <div class="sett-section" id="sett-lang-title"></div>
       <div class="card" style="margin-bottom:16px">
         <div class="sett-item" style="border-bottom:none">
-          <div><div class="sett-lbl" id="sett-lang-lbl">Langue de l'application</div></div>
+          <div><div class="sett-lbl" id="sett-lang-lbl"></div></div>
           <div class="lang-toggle">
             <button class="lang-toggle-btn active" id="ltb-fr" onclick="setLang('fr')">FR</button>
             <button class="lang-toggle-btn" id="ltb-en" onclick="setLang('en')">EN</button>
@@ -305,127 +418,75 @@ html,body{width:100%;height:100%;font-family:'DM Sans',system-ui,sans-serif;back
         </div>
       </div>
 
-      <div class="sett-section" id="sett-info-title">Informations</div>
+      <div class="sett-section" id="sett-info-title"></div>
       <div class="card" style="margin-bottom:16px">
         <div class="sett-item" onclick="showPrivacy()" style="cursor:pointer">
-          <div><div class="sett-lbl" id="sett-privacy-lbl">🔒 Politique de confidentialité</div><div class="sett-sub" id="sett-privacy-sub">Données, RGPD, vie privée</div></div>
+          <div><div class="sett-lbl" id="sett-privacy-lbl"></div><div class="sett-sub" id="sett-privacy-sub"></div></div>
           <div style="color:var(--text-sec);font-size:18px">›</div>
         </div>
         <div class="sett-item" onclick="showAbout()" style="cursor:pointer">
-          <div><div class="sett-lbl" id="sett-about-lbl">ℹ️ À propos de l'app</div><div class="sett-sub" id="sett-about-sub">Version, contact, créateurs</div></div>
+          <div><div class="sett-lbl" id="sett-about-lbl"></div><div class="sett-sub" id="sett-about-sub"></div></div>
           <div style="color:var(--text-sec);font-size:18px">›</div>
         </div>
       </div>
 
-      <div class="sett-section" id="sett-data-title">Données</div>
+      <div class="sett-section" id="sett-data-title"></div>
       <div class="card" style="padding:14px">
-        <button class="danger-btn" id="clear-btn" onclick="clearAll()">Effacer toutes les données</button>
+        <button class="danger-btn" id="clear-btn" onclick="clearAll()"></button>
       </div>
-      <div class="priv-note" id="priv-note">Tes données sont sauvegardées de façon sécurisée sur Firebase.<br>Accessibles depuis n'importe quel appareil.</div>
+      <div class="priv-note" id="priv-note"></div>
     </div>
-
   </div>
 
   <div class="bottom-nav">
     <div class="nav-item active" id="nav-home" onclick="goTab('home')">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round">
-        <circle cx="12" cy="12" r="10" stroke="#E91E8C"/><path d="M12 6v6l4 2" stroke="#E91E8C"/>
-      </svg>
-      <div class="nav-lbl" id="nav-lbl-home" style="color:#E91E8C">Accueil</div>
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10" stroke="#E91E8C"/><path d="M12 6v6l4 2" stroke="#E91E8C"/></svg>
+      <div class="nav-lbl" id="nav-lbl-home" style="color:#E91E8C"></div>
     </div>
     <div class="nav-item" id="nav-hist" onclick="goTab('hist')">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
-        <rect x="9" y="3" width="6" height="4" rx="2"/>
-        <line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/>
-      </svg>
-      <div class="nav-lbl" id="nav-lbl-hist">Historique</div>
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>
+      <div class="nav-lbl" id="nav-lbl-hist"></div>
     </div>
     <div class="nav-item" id="nav-sett" onclick="goTab('sett')">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="3"/>
-        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
-      </svg>
-      <div class="nav-lbl" id="nav-lbl-sett">Réglages</div>
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <div class="nav-lbl" id="nav-lbl-sett"></div>
     </div>
   </div>
 </div>
 
-<!-- PRIVACY SCREEN -->
+<!-- PRIVACY -->
 <div class="overlay-screen" id="privacy-screen">
-  <div class="overlay-header">
-    <button class="overlay-back" onclick="hidePrivacy()">‹</button>
-    <div class="overlay-header-title" id="prv-header-title">Confidentialité</div>
-  </div>
-  <div class="overlay-body" id="prv-body">
-    <div class="prv-h1" id="prv-h1">Politique de confidentialité</div>
-    <div class="prv-updated" id="prv-updated">Dernière mise à jour : août 2026</div>
-    <div class="prv-h2" id="prv-s1-h">1. Qui sommes-nous ?</div>
-    <div class="prv-p" id="prv-s1-p">Mon Cycle est une application de suivi menstruel développée en Nouvelle-Calédonie. Pour toute question, contacte-nous via la section À propos.</div>
-    <div class="prv-h2" id="prv-s2-h">2. Données collectées</div>
-    <div class="prv-p" id="prv-s2-p">Nous collectons uniquement les données que tu fournis volontairement : adresse email (connexion), dates de règles, paramètres de cycle. Aucune localisation, contact, photo ou donnée bancaire n'est collectée.</div>
-    <div class="prv-h2" id="prv-s3-h">3. Utilisation des données</div>
-    <div class="prv-p" id="prv-s3-p">Tes données servent exclusivement au fonctionnement de l'app : calculer tes cycles et projections. Elles ne sont jamais vendues, partagées ou utilisées à des fins publicitaires.</div>
-    <div class="prv-h2" id="prv-s4-h">4. Hébergement et sécurité</div>
-    <div class="prv-p" id="prv-s4-p">Données stockées sur Firebase (Google Cloud), conforme au RGPD. Communication chiffrée HTTPS. Seule toi peux accéder à tes données via ton compte sécurisé.</div>
-    <div class="prv-h2" id="prv-s5-h">5. Tes droits (RGPD)</div>
-    <div class="prv-p" id="prv-s5-p">Tu as le droit d'accéder, corriger ou supprimer tes données (bouton "Effacer toutes les données" dans les Réglages), et de t'opposer à leur traitement.</div>
-    <div class="prv-h2" id="prv-s6-h">6. Données de santé</div>
-    <div class="prv-p" id="prv-s6-p">Les informations sur ton cycle sont des données de santé sensibles. Elles sont traitées avec le plus haut niveau de confidentialité et ne sont accessibles à aucun tiers.</div>
-    <div class="prv-h2" id="prv-s7-h">7. Contact</div>
-    <div class="prv-p" id="prv-s7-p">Pour toute question : contact@moncycle.nc</div>
+  <div class="overlay-header"><button class="overlay-back" onclick="hidePrivacy()">‹</button><div class="overlay-header-title" id="prv-header-title"></div></div>
+  <div class="overlay-body">
+    <div class="prv-h1" id="prv-h1"></div><div class="prv-updated" id="prv-updated"></div>
+    <div class="prv-h2" id="prv-s1-h"></div><div class="prv-p" id="prv-s1-p"></div>
+    <div class="prv-h2" id="prv-s2-h"></div><div class="prv-p" id="prv-s2-p"></div>
+    <div class="prv-h2" id="prv-s3-h"></div><div class="prv-p" id="prv-s3-p"></div>
+    <div class="prv-h2" id="prv-s4-h"></div><div class="prv-p" id="prv-s4-p"></div>
+    <div class="prv-h2" id="prv-s5-h"></div><div class="prv-p" id="prv-s5-p"></div>
+    <div class="prv-h2" id="prv-s6-h"></div><div class="prv-p" id="prv-s6-p"></div>
+    <div class="prv-h2" id="prv-s7-h"></div><div class="prv-p" id="prv-s7-p"></div>
   </div>
 </div>
 
-<!-- ABOUT SCREEN -->
+<!-- ABOUT -->
 <div class="overlay-screen" id="about-screen">
-  <div class="overlay-header">
-    <button class="overlay-back" onclick="hideAbout()">‹</button>
-    <div class="overlay-header-title" id="abt-header-title">À propos</div>
-  </div>
+  <div class="overlay-header"><button class="overlay-back" onclick="hideAbout()">‹</button><div class="overlay-header-title" id="abt-header-title"></div></div>
   <div class="overlay-body" style="padding:0 0 40px">
-    <div class="about-hero">
-      <div class="about-logo">🌸</div>
-      <div class="about-appname">Mon Cycle</div>
-      <div class="about-version" id="abt-version">Version 1.0 — Mars 2027</div>
-      <div class="about-tagline" id="abt-tagline">Fait en Nouvelle-Calédonie, pour les femmes du Pacifique</div>
-    </div>
+    <div class="about-hero"><div class="about-logo">🌸</div><div class="about-appname">Mon Cycle</div><div class="about-version" id="abt-version"></div><div class="about-tagline" id="abt-tagline"></div></div>
     <div class="card" style="border-radius:0;margin:0">
-      <div class="about-item">
-        <div class="about-lbl" id="abt-ver-lbl">Version</div>
-        <div class="about-val">1.0.0</div>
-      </div>
-      <div class="about-item">
-        <div class="about-lbl" id="abt-dev-lbl">Développé en</div>
-        <div class="about-val">Nouvelle-Calédonie 🇳🇨</div>
-      </div>
-      <div class="about-item">
-        <div class="about-lbl" id="abt-lang-lbl">Langue</div>
-        <div class="about-val">Français / English</div>
-      </div>
-      <div class="about-item">
-        <div class="about-lbl" id="abt-launch-lbl">Lancement</div>
-        <div class="about-val">8 mars 2027</div>
-      </div>
-      <div class="about-item">
-        <div class="about-lbl" id="abt-contact-lbl">Contact</div>
-        <div class="about-link" onclick="toast('contact@moncycle.nc')">contact@moncycle.nc</div>
-      </div>
-      <div class="about-item">
-        <div class="about-lbl" id="abt-privacy-lbl">Confidentialité</div>
-        <div class="about-link" id="abt-privacy-link" onclick="hideAbout();showPrivacy()">Voir la politique ›</div>
-      </div>
+      <div class="about-item"><div class="about-lbl" id="abt-ver-lbl"></div><div class="about-val">1.0.0</div></div>
+      <div class="about-item"><div class="about-lbl" id="abt-dev-lbl"></div><div class="about-val">Nouvelle-Calédonie 🇳🇨</div></div>
+      <div class="about-item"><div class="about-lbl" id="abt-lang-lbl"></div><div class="about-val">Français / English</div></div>
+      <div class="about-item"><div class="about-lbl" id="abt-launch-lbl"></div><div class="about-val">8 mars 2027</div></div>
+      <div class="about-item"><div class="about-lbl" id="abt-contact-lbl"></div><div class="about-link" onclick="toast('contact@moncycle.nc')">contact@moncycle.nc</div></div>
+      <div class="about-item"><div class="about-lbl" id="abt-privacy-lbl"></div><div class="about-link" id="abt-privacy-link" onclick="hideAbout();showPrivacy()"></div></div>
     </div>
-    <div class="about-credit" id="abt-credit">
-      Fait avec ❤️ en Nouvelle-Calédonie<br>
-      Journée internationale des droits des femmes<br>
-      8 mars 2027<br><br>
-      <span style="color:var(--pink)">Mon Cycle</span> — Aucune pub. Aucune revente. Jamais.
-    </div>
+    <div class="about-credit" id="abt-credit"></div>
   </div>
 </div>
 
-<div class="loading" id="loading"><div class="spinner"></div><div class="loading-text" id="loading-text">Chargement...</div></div>
+<div class="loading" id="loading"><div class="spinner"></div><div class="loading-text" id="loading-text"></div></div>
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -436,9 +497,11 @@ import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/fireb
 const fbApp=initializeApp({apiKey:"AIzaSyDU0ArCq7kz5G4fxO-1AsmXouM7WcOGns0",authDomain:"mon-cycle-737e5.firebaseapp.com",projectId:"mon-cycle-737e5",storageBucket:"mon-cycle-737e5.firebasestorage.app",messagingSenderId:"153621529995",appId:"1:153621529995:web:d52d9978751ee2063d1b8e"});
 const auth=getAuth(fbApp),db=getFirestore(fbApp);
 
-/* ══════════════════════════════════════════
-   TRADUCTIONS
-══════════════════════════════════════════ */
+/* ══ BABY WEEKS ══ */
+const BABY_FR={4:'Ton bébé est un embryon microscopique. Le tube neural commence à se former.',5:'Le cœur commence à battre ! Taille : un grain de sésame (2 mm).',6:'Le visage prend forme. Le cœur bat ~100 fois par minute.',7:'Les bras et jambes apparaissent. Taille : un haricot (1 cm).',8:'Tous les organes sont présents. Taille : un raisin (1,6 cm).',9:'Les doigts se forment. Le bébé bouge déjà dans l\'utérus.',10:'Le bébé est maintenant un fœtus. Taille : une fraise (3 cm).',11:'Les ongles apparaissent. Le bébé peut ouvrir et fermer les poings.',12:'Fin du 1er trimestre ! Taille : une prune (5,4 cm). Risque de fausse couche diminue.',13:'Le bébé peut sucer son pouce. Taille : une pêche (7,4 cm).',14:'Le bébé fait des grimaces. Le sexe devient visible à l\'échographie.',15:'Le bébé entend ta voix pour la première fois !',16:'Taille : un avocat (11,6 cm). Les premières sensations de mouvements arrivent.',17:'Le bébé développe une couche de graisse sous la peau.',18:'Taille : une mangue (14 cm). Échographie morphologique bientôt !',19:'Le bébé a maintenant ses propres empreintes digitales.',20:'Mi-parcours ! Taille : une banane (25 cm).',21:'Le bébé avale du liquide amniotique et développe son goût.',22:'Taille : un épi de maïs (27 cm). Il se retourne dans tous les sens.',23:'Le bébé peut percevoir la lumière à travers la paroi abdominale.',24:'Les poumons se développent. Taille : 30 cm.',25:'Le bébé prend du poids rapidement. Il réagit aux sons forts.',26:'Les yeux s\'ouvrent pour la première fois ! Taille : 35 cm.',27:'Fin du 2ème trimestre ! Le cerveau se développe rapidement.',28:'Le bébé se retourne souvent. Il a des cycles veille/sommeil.',29:'Taille : 38 cm. Les os se durcissent.',30:'Le bébé prend environ 200g par semaine.',31:'Le bébé peut tourner la tête. Taille : 41 cm.',32:'Les ongles sont formés. Le bébé se positionne tête en bas.',33:'Le bébé a les yeux bleus (la couleur définitive viendra plus tard).',34:'Les poumons sont presque matures. Taille : 45 cm.',35:'Le bébé prend de la place ! Les mouvements sont plus limités.',36:'Le bébé perd son duvet (lanugo). Taille : 47 cm.',37:'Le bébé est considéré à terme ! Il peut naître à tout moment.',38:'La tête descend dans le bassin. Le col commence à se préparer.',39:'Le bébé est prêt ! Taille : ~50 cm.',40:'C\'est la date prévue d\'accouchement ! Ton bébé arrive bientôt. 🎉'};
+const BABY_EN={4:'Your baby is a microscopic embryo. The neural tube is starting to form.',5:'The heart is starting to beat! Size: a sesame seed (2mm).',6:'The face is taking shape. Heart beats ~100 times per minute.',7:'Arms and legs are appearing. Size: a kidney bean (1cm).',8:'All organs are present. Size: a grape (1.6cm).',9:'Fingers are forming. Baby is already moving in the uterus.',10:'Baby is now a fetus. Size: a strawberry (3cm).',11:'Nails are appearing. Baby can open and close fists.',12:'End of 1st trimester! Size: a plum (5.4cm). Miscarriage risk decreases.',13:'Baby can suck thumb. Size: a peach (7.4cm).',14:'Baby is making faces. Gender can be seen on ultrasound.',15:'Baby can hear your voice for the first time!',16:'Size: an avocado (11.6cm). First movement sensations arriving.',17:'Baby is developing a layer of fat under the skin.',18:'Size: a mango (14cm). Morphology ultrasound coming soon!',19:'Baby now has their own fingerprints.',20:'Halfway there! Size: a banana (25cm).',21:'Baby swallows amniotic fluid and develops sense of taste.',22:'Size: a corn cob (27cm). Turning in all directions.',23:'Baby can sense light through the abdominal wall.',24:'Lungs are developing. Size: 30cm.',25:'Baby is gaining weight rapidly. Reacts to loud sounds.',26:'Eyes open for the first time! Size: 35cm.',27:'End of 2nd trimester! Brain is developing rapidly.',28:'Baby turns often. Has sleep/wake cycles.',29:'Size: 38cm. Bones are hardening.',30:'Baby gains about 200g per week.',31:'Baby can turn their head. Size: 41cm.',32:'Nails are formed. Baby is positioning head-down.',33:'Baby\'s eyes are blue (final color comes later).',34:'Lungs are almost mature. Size: 45cm.',35:'Baby is taking up space! Movements are more limited.',36:'Baby loses their lanugo. Size: 47cm.',37:'Baby is considered full-term! Can arrive any time.',38:'Head is descending into pelvis. Cervix begins to prepare.',39:'Baby is ready! Size: ~50cm.',40:'This is the due date! Your baby is arriving soon. 🎉'};
+
+/* ══ TRANSLATIONS ══ */
 const T={
   fr:{
     MONTHS:['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
@@ -449,58 +512,56 @@ const T={
       {name:'Ovulation',col:'#4CAF50',bg:'#E8F5E9',desc:"Ton ovule est libéré. C'est la période la plus fertile."},
       {name:'Phase lutéale',col:'#9C27B0',bg:'#F3E5F5',desc:'Le corps se prépare. Quelques symptômes du SPM peuvent apparaître.'}
     ],
+    BABY:BABY_FR,locale:'fr-FR',
     authSub:'Connecte-toi pour retrouver ton suivi sur tous tes appareils',
-    loginTitle:'Connexion',registerTitle:'Créer un compte',
-    signInBtn:'Se connecter',createBtn:'Créer le compte',
-    noAccount:'Pas encore de compte ?',createLink:'Créer un compte',
-    haveAccount:'Déjà un compte ?',signInLink:'Se connecter',
-    forgotPwd:'Mot de passe oublié ?',
-    loading:'Chargement...',loadingData:'Chargement de tes données...',
-    signingIn:'Connexion...',creating:'Création du compte...',
-    logout:'Déconnexion',
-    nextPeriod:'Prochaines règles',
+    loginTitle:'Connexion',registerTitle:'Créer un compte',signInBtn:'Se connecter',createBtn:'Créer le compte',
+    noAccount:'Pas encore de compte ?',createLink:'Créer un compte',haveAccount:'Déjà un compte ?',signInLink:'Se connecter',
+    forgotPwd:'Mot de passe oublié ?',loading:'Chargement...',loadingData:'Chargement de tes données...',signingIn:'Connexion...',creating:'Création du compte...',logout:'Déconnexion',
+    nextPeriod:'Prochaines règles',fertileWindow:'Fenêtre fertile',myPregnancy:'Ma grossesse',
     inDays:n=>n>0?`Dans ${n} jour${n>1?'s':''}`:n===0?"Aujourd'hui":`Il y a ${Math.abs(n)} jour${Math.abs(n)>1?'s':''}`,
     statCycleLbl:'Jours\ncycle',statPeriodLbl:'Jours\nrègles',statCountLbl:'Cycles\nenregistrés',
-    dayOf:(d,t)=>`Jour ${d} sur ${t}`,
+    statCycleConceptionLbl:'Jours\ncycle',statPeriodConceptionLbl:'Jours\nfertile',statCountConceptionLbl:'Cycles\nessayés',
+    statCycleGrossesseLbl:'Semaine\ngrossesse',statPeriodGrossesseLbl:'Jours\nrestants',statCountGrossesseLbl:'Date\nprévue',
+    dayOf:(d,tt)=>`Jour ${d} sur ${tt}`,pregProgress:(d)=>`Grossesse : ${d} jours sur 280`,
     legPeriod:'Règles',legPredicted:'Prévues',legOvulation:'Ovulation',legFertile:'Fertile',
+    legPregStart:'Début grossesse',legPregDay:'Période grossesse',
+    legPeriodConception:'Règles',legOvulationConception:'Ovulation',legFertileConception:'Fenêtre fertile',
     logLabel:'Enregistrer',selPrompt:'Appuie sur un jour du calendrier',
-    btnStart:'+ Début règles',btnEnd:'+ Fin règles',
+    btnStart:'+ Début règles',btnEnd:'+ Fin règles',btnModifyDdr:'📅 Modifier date DDR',
     tabHome:'Accueil',tabHist:'Historique',tabSett:'Réglages',
     pageHome:'Mon cycle',pageHist:'Historique',pageSett:'Réglages',
-    settParamsTitle:'Paramètres',
-    settCycleLbl:'Durée du cycle',settCycleSub:'Jours entre les règles',
-    settPeriodLbl:'Durée des règles',settPeriodSub:'Nombre de jours moyen',
-    settProjLbl:'Cycles à projeter',settProjSub:'Cycles futurs affichés',
+    modeSuiviTitle:'Mode de suivi',
+    modeNormalTitle:'Suivi normal',modeNormalSub:'Suivi de mes règles et projections',
+    modeConceptionTitle:'Tentative de conception',modeConceptionSub:'Fenêtre fertile et ovulation mis en avant',
+    modeGrossesseTitle:'Grossesse en cours',modeGrossesseSub:'Suivi semaine par semaine du bébé',
+    modeBadgeConception:'🌿 Mode conception',modeBadgeGrossesse:'👶 Mode grossesse',
+    ddrTitle:'📅 Date de début de grossesse',ddrSub:'Entre la date de tes dernières règles (DDR) pour calculer la semaine de grossesse et la date prévue d\'accouchement.',ddrBtn:'Confirmer la date',
+    settParamsTitle:'Paramètres',settCycleLbl:'Durée du cycle',settCycleSub:'Jours entre les règles',settPeriodLbl:'Durée des règles',settPeriodSub:'Nombre de jours moyen',settProjLbl:'Cycles à projeter',settProjSub:'Cycles futurs affichés',
     settLangTitle:'Langue / Language',settLangLbl:"Langue de l'application",
-    settInfoTitle:'Informations',
-    settPrivacyLbl:'🔒 Politique de confidentialité',settPrivacySub:'Données, RGPD, vie privée',
-    settAboutLbl:"ℹ️ À propos de l'app",settAboutSub:'Version, contact, créateurs',
+    settInfoTitle:'Informations',settPrivacyLbl:'🔒 Politique de confidentialité',settPrivacySub:'Données, RGPD, vie privée',settAboutLbl:"ℹ️ À propos de l'app",settAboutSub:'Version, contact, créateurs',
     settDataTitle:'Données',clearBtn:'Effacer toutes les données',
     privNote:'Tes données sont sauvegardées de façon sécurisée sur Firebase.\nAccessibles depuis n\'importe quel appareil.',
-    toastStart:'Début des règles enregistré ✓',toastEnd:'Fin des règles enregistrée ✓',
+    toastStart:'Début des règles enregistré ✓',toastEnd:'Fin des règles enregistrée ✓',toastPregSaved:'Date de grossesse enregistrée ✓',
     toastDeleted:'Cycle supprimé',toastCleared:'Données effacées',toastError:'Erreur de sauvegarde',
-    toastSelectDay:'Sélectionne d\'abord un jour',toastAlready:'Début déjà enregistré',
-    toastNeedStart:'Enregistre d\'abord un début',toastEndBefore:'La fin doit être après le début',
-    emptyHist:'Aucun cycle enregistré',
-    histDays:n=>n+' jours de règles',histNoEnd:'Fin non renseignée',
-    histCycle:n=>'Cycle : '+n+' jours',histLast:'Dernier cycle',
-    histBadge:n=>n+'j cycle',
-    confirmDelete:'Supprimer ce cycle ?',confirmClear:'Effacer toutes les données ?',
-    errEmpty:'Remplis tous les champs.',
+    toastSelectDay:'Sélectionne d\'abord un jour',toastAlready:'Début déjà enregistré',toastNeedStart:'Enregistre d\'abord un début',toastEndBefore:'La fin doit être après le début',toastSelectDate:'Sélectionne une date',toastGrossesseSett:'Entre ta date DDR dans les Réglages',
+    emptyHist:'Aucun cycle enregistré',histDays:n=>n+' jours de règles',histNoEnd:'Fin non renseignée',histCycle:n=>'Cycle : '+n+' jours',histLast:'Dernier cycle',histBadge:n=>n+'j cycle',
+    confirmDelete:'Supprimer ce cycle ?',confirmClear:'Effacer toutes les données ?',errEmpty:'Remplis tous les champs.',
     errMsgs:{'auth/invalid-email':'Email invalide.','auth/user-not-found':'Aucun compte avec cet email.','auth/wrong-password':'Mot de passe incorrect.','auth/invalid-credential':'Email ou mot de passe incorrect.','auth/email-already-in-use':'Cet email est déjà utilisé.','auth/weak-password':'Le mot de passe doit faire au moins 6 caractères.','auth/too-many-requests':'Trop de tentatives. Réessaie plus tard.'},
     rstTitle:'Mot de passe oublié',rstSub:"Entre ton email pour recevoir un lien de réinitialisation.",rstBtn:'Envoyer le lien',rstBack:'← Retour',rstSuccess:'Email envoyé ! Vérifie ta boîte mail et tes spams.',rstErrEmpty:'Entre ton adresse email.',rstSending:'Envoi en cours...',
     prvHeaderTitle:'Confidentialité',prvH1:'Politique de confidentialité',prvUpdated:'Dernière mise à jour : août 2026',
-    prvS1h:'1. Qui sommes-nous ?',prvS1p:"Mon Cycle est une application de suivi menstruel développée en Nouvelle-Calédonie. Pour toute question, contacte-nous via la section À propos.",
-    prvS2h:'2. Données collectées',prvS2p:'Nous collectons uniquement les données que tu fournis volontairement : adresse email, dates de règles, paramètres de cycle. Aucune localisation ni donnée bancaire.',
-    prvS3h:'3. Utilisation',prvS3p:'Tes données servent exclusivement au fonctionnement de l\'app. Elles ne sont jamais vendues ni partagées.',
-    prvS4h:'4. Sécurité',prvS4p:'Données stockées sur Firebase (Google Cloud), conforme RGPD. Communication chiffrée HTTPS.',
-    prvS5h:'5. Tes droits',prvS5p:'Tu peux accéder, corriger ou supprimer tes données via les Réglages de l\'app.',
-    prvS6h:'6. Données de santé',prvS6p:'Les informations sur ton cycle sont des données sensibles. Elles ne sont accessibles à aucun tiers.',
-    prvS7h:'7. Contact',prvS7p:'Pour toute question : contact@moncycle.nc',
+    prvS1h:'1. Qui sommes-nous ?',prvS1p:"Mon Cycle est une application de suivi menstruel développée en Nouvelle-Calédonie.",
+    prvS2h:'2. Données collectées',prvS2p:'Email, dates de règles, paramètres de cycle. Aucune localisation ni donnée bancaire.',
+    prvS3h:'3. Utilisation',prvS3p:'Tes données servent uniquement au fonctionnement de l\'app. Jamais vendues ni partagées.',
+    prvS4h:'4. Sécurité',prvS4p:'Stockées sur Firebase (Google Cloud), conforme RGPD. Communication chiffrée HTTPS.',
+    prvS5h:'5. Tes droits',prvS5p:'Accès, correction ou suppression via les Réglages de l\'app.',
+    prvS6h:'6. Données de santé',prvS6p:'Données sensibles. Non accessibles à des tiers.',
+    prvS7h:'7. Contact',prvS7p:'contact@moncycle.nc',
     abtHeaderTitle:'À propos',abtVersion:'Version 1.0 — Mars 2027',abtTagline:'Fait en Nouvelle-Calédonie, pour les femmes du Pacifique',
     abtVerLbl:'Version',abtDevLbl:'Développé en',abtLangLbl:'Langue',abtLaunchLbl:'Lancement',abtContactLbl:'Contact',abtPrivacyLbl:'Confidentialité',abtPrivacyLink:'Voir la politique ›',
     abtCredit:"Fait avec ❤️ en Nouvelle-Calédonie\nJournée internationale des droits des femmes\n8 mars 2027\n\nMon Cycle — Aucune pub. Aucune revente. Jamais.",
-    locale:'fr-FR'
+    babyWeekTitle:(w)=>`Semaine ${w} — Ton bébé`,dpaLabel:(d)=>`Date prévue d'accouchement : ${d}`,
+    ovulationInDays:(n)=>n>0?`Ovulation dans ${n} jour${n>1?'s':''}`:n===0?'Ovulation aujourd\'hui':'Fenêtre fertile passée',
+    enterCycleFirst:'Enregistre tes règles pour calculer ta fenêtre fertile.',
   },
   en:{
     MONTHS:['January','February','March','April','May','June','July','August','September','October','November','December'],
@@ -511,354 +572,271 @@ const T={
       {name:'Ovulation',col:'#4CAF50',bg:'#E8F5E9',desc:'Your egg is released. This is your most fertile time.'},
       {name:'Luteal phase',col:'#9C27B0',bg:'#F3E5F5',desc:'Your body is preparing. You may experience some PMS symptoms.'}
     ],
+    BABY:BABY_EN,locale:'en-GB',
     authSub:'Sign in to access your tracking from any device',
-    loginTitle:'Sign in',registerTitle:'Create account',
-    signInBtn:'Sign in',createBtn:'Create account',
-    noAccount:"Don't have an account?",createLink:'Create account',
-    haveAccount:'Already have an account?',signInLink:'Sign in',
-    forgotPwd:'Forgot password?',
-    loading:'Loading...',loadingData:'Loading your data...',
-    signingIn:'Signing in...',creating:'Creating account...',
-    logout:'Sign out',
-    nextPeriod:'Next period',
+    loginTitle:'Sign in',registerTitle:'Create account',signInBtn:'Sign in',createBtn:'Create account',
+    noAccount:"Don't have an account?",createLink:'Create account',haveAccount:'Already have an account?',signInLink:'Sign in',
+    forgotPwd:'Forgot password?',loading:'Loading...',loadingData:'Loading your data...',signingIn:'Signing in...',creating:'Creating account...',logout:'Sign out',
+    nextPeriod:'Next period',fertileWindow:'Fertile window',myPregnancy:'My pregnancy',
     inDays:n=>n>0?`In ${n} day${n>1?'s':''}`:n===0?'Today':`${Math.abs(n)} day${Math.abs(n)>1?'s':''} ago`,
     statCycleLbl:'Days\ncycle',statPeriodLbl:'Days\nperiod',statCountLbl:'Cycles\nlogged',
-    dayOf:(d,t)=>`Day ${d} of ${t}`,
+    statCycleConceptionLbl:'Days\ncycle',statPeriodConceptionLbl:'Fertile\ndays',statCountConceptionLbl:'Cycles\ntried',
+    statCycleGrossesseLbl:'Pregnancy\nweek',statPeriodGrossesseLbl:'Days\nleft',statCountGrossesseLbl:'Due\ndate',
+    dayOf:(d,tt)=>`Day ${d} of ${tt}`,pregProgress:(d)=>`Pregnancy: ${d} days of 280`,
     legPeriod:'Period',legPredicted:'Predicted',legOvulation:'Ovulation',legFertile:'Fertile',
+    legPregStart:'Pregnancy start',legPregDay:'Pregnancy period',
+    legPeriodConception:'Period',legOvulationConception:'Ovulation',legFertileConception:'Fertile window',
     logLabel:'Log',selPrompt:'Tap a day on the calendar',
-    btnStart:'+ Period start',btnEnd:'+ Period end',
+    btnStart:'+ Period start',btnEnd:'+ Period end',btnModifyDdr:'📅 Modify LMP date',
     tabHome:'Home',tabHist:'History',tabSett:'Settings',
     pageHome:'My cycle',pageHist:'History',pageSett:'Settings',
-    settParamsTitle:'Settings',
-    settCycleLbl:'Cycle length',settCycleSub:'Days between periods',
-    settPeriodLbl:'Period length',settPeriodSub:'Average number of days',
-    settProjLbl:'Cycles to show',settProjSub:'Future cycles displayed',
+    modeSuiviTitle:'Tracking mode',
+    modeNormalTitle:'Normal tracking',modeNormalSub:'Track my period and projections',
+    modeConceptionTitle:'Trying to conceive',modeConceptionSub:'Fertile window and ovulation highlighted',
+    modeGrossesseTitle:'Pregnancy',modeGrossesseSub:'Week by week baby tracking',
+    modeBadgeConception:'🌿 Conception mode',modeBadgeGrossesse:'👶 Pregnancy mode',
+    ddrTitle:'📅 Pregnancy start date',ddrSub:'Enter your Last Menstrual Period (LMP) date to calculate pregnancy week and due date.',ddrBtn:'Confirm date',
+    settParamsTitle:'Settings',settCycleLbl:'Cycle length',settCycleSub:'Days between periods',settPeriodLbl:'Period length',settPeriodSub:'Average number of days',settProjLbl:'Cycles to show',settProjSub:'Future cycles displayed',
     settLangTitle:'Langue / Language',settLangLbl:'App language',
-    settInfoTitle:'Information',
-    settPrivacyLbl:'🔒 Privacy policy',settPrivacySub:'Data, GDPR, privacy',
-    settAboutLbl:'ℹ️ About the app',settAboutSub:'Version, contact, creators',
+    settInfoTitle:'Information',settPrivacyLbl:'🔒 Privacy policy',settPrivacySub:'Data, GDPR, privacy',settAboutLbl:'ℹ️ About the app',settAboutSub:'Version, contact, creators',
     settDataTitle:'Data',clearBtn:'Clear all data',
     privNote:'Your data is securely saved on Firebase.\nAccessible from any device.',
-    toastStart:'Period start logged ✓',toastEnd:'Period end logged ✓',
+    toastStart:'Period start logged ✓',toastEnd:'Period end logged ✓',toastPregSaved:'Pregnancy date saved ✓',
     toastDeleted:'Cycle deleted',toastCleared:'Data cleared',toastError:'Save error',
-    toastSelectDay:'Select a day first',toastAlready:'Start already logged',
-    toastNeedStart:'Log a start first',toastEndBefore:'End must be after start',
-    emptyHist:'No cycles logged yet',
-    histDays:n=>n+' days of period',histNoEnd:'End not logged',
-    histCycle:n=>'Cycle: '+n+' days',histLast:'Latest cycle',
-    histBadge:n=>n+'d cycle',
-    confirmDelete:'Delete this cycle?',confirmClear:'Clear all data?',
-    errEmpty:'Please fill in all fields.',
+    toastSelectDay:'Select a day first',toastAlready:'Start already logged',toastNeedStart:'Log a start first',toastEndBefore:'End must be after start',toastSelectDate:'Select a date',toastGrossesseSett:'Enter your LMP date in Settings',
+    emptyHist:'No cycles logged yet',histDays:n=>n+' days of period',histNoEnd:'End not logged',histCycle:n=>'Cycle: '+n+' days',histLast:'Latest cycle',histBadge:n=>n+'d cycle',
+    confirmDelete:'Delete this cycle?',confirmClear:'Clear all data?',errEmpty:'Please fill in all fields.',
     errMsgs:{'auth/invalid-email':'Invalid email.','auth/user-not-found':'No account with this email.','auth/wrong-password':'Wrong password.','auth/invalid-credential':'Invalid email or password.','auth/email-already-in-use':'Email already in use.','auth/weak-password':'Password must be at least 6 characters.','auth/too-many-requests':'Too many attempts. Try again later.'},
-    rstTitle:'Forgot password',rstSub:'Enter your email and we\'ll send you a link to reset your password.',rstBtn:'Send link',rstBack:'← Back',rstSuccess:'Email sent! Check your inbox and spam folder.',rstErrEmpty:'Enter your email address.',rstSending:'Sending...',
+    rstTitle:'Forgot password',rstSub:"Enter your email and we'll send you a reset link.",rstBtn:'Send link',rstBack:'← Back',rstSuccess:'Email sent! Check your inbox and spam folder.',rstErrEmpty:'Enter your email address.',rstSending:'Sending...',
     prvHeaderTitle:'Privacy',prvH1:'Privacy Policy',prvUpdated:'Last updated: August 2026',
-    prvS1h:'1. Who are we?',prvS1p:'Mon Cycle is a menstrual tracking app developed in New Caledonia. For any questions, contact us via the About section.',
-    prvS2h:'2. Data collected',prvS2p:'We only collect data you voluntarily provide: email address, period dates, cycle settings. No location, contacts, photos or financial data.',
-    prvS3h:'3. How data is used',prvS3p:'Your data is used exclusively to run the app. It is never sold, shared or used for advertising.',
-    prvS4h:'4. Security',prvS4p:'Data stored on Firebase (Google Cloud), GDPR compliant. HTTPS encrypted communication.',
-    prvS5h:'5. Your rights',prvS5p:'You can access, correct or delete your data at any time via the app Settings.',
-    prvS6h:'6. Health data',prvS6p:'Your cycle information is sensitive health data. It is not accessible to any third party.',
-    prvS7h:'7. Contact',prvS7p:'For any questions: contact@moncycle.nc',
-    abtHeaderTitle:'About',abtVersion:'Version 1.0 — March 2027',abtTagline:'Made in New Caledonia, for women of the Pacific',
+    prvS1h:'1. Who are we?',prvS1p:'Mon Cycle is a menstrual tracking app developed in New Caledonia.',
+    prvS2h:'2. Data collected',prvS2p:'Email, period dates, cycle settings. No location or financial data.',
+    prvS3h:'3. How data is used',prvS3p:'Your data is used only to run the app. Never sold or shared.',
+    prvS4h:'4. Security',prvS4p:'Stored on Firebase (Google Cloud), GDPR compliant. HTTPS encrypted.',
+    prvS5h:'5. Your rights',prvS5p:'Access, correct or delete your data via app Settings.',
+    prvS6h:'6. Health data',prvS6p:'Sensitive data. Not accessible to any third party.',
+    prvS7h:'7. Contact',prvS7p:'contact@moncycle.nc',
+    abtHeaderTitle:'About',abtVersion:'Version 1.0 — March 2027',abtTagline:"Made in New Caledonia, for women of the Pacific",
     abtVerLbl:'Version',abtDevLbl:'Made in',abtLangLbl:'Language',abtLaunchLbl:'Launch',abtContactLbl:'Contact',abtPrivacyLbl:'Privacy',abtPrivacyLink:'View policy ›',
     abtCredit:"Made with ❤️ in New Caledonia\nInternational Women's Rights Day\nMarch 8, 2027\n\nMon Cycle — No ads. No data sales. Ever.",
-    locale:'en-GB'
+    babyWeekTitle:(w)=>`Week ${w} — Your baby`,dpaLabel:(d)=>`Estimated due date: ${d}`,
+    ovulationInDays:(n)=>n>0?`Ovulation in ${n} day${n>1?'s':''}`:n===0?'Ovulation today':'Fertile window passed',
+    enterCycleFirst:'Log your period to calculate your fertile window.',
   }
 };
 
 let lang=localStorage.getItem('moncycle_lang')||'fr';
 let t=T[lang];
 let authMode='login';
-let S={periods:[],settings:{cycle:28,period:5,proj:3},vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:null,uid:null};
+let S={periods:[],settings:{cycle:28,period:5,proj:3},mode:'normal',pregStartDate:null,vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:null,uid:null};
 
-/* ── Lang ── */
+/* ══ LANG ══ */
 window.setLang=function(l){
-  lang=l;t=T[l];
-  localStorage.setItem('moncycle_lang',l);
+  lang=l;t=T[l];localStorage.setItem('moncycle_lang',l);
   document.documentElement.lang=l;
-  ['alb-fr','alb-en','ltb-fr','ltb-en'].forEach(id=>{
-    const el=document.getElementById(id);if(el){el.classList.toggle('active',id.endsWith(l==='fr'?'fr':'en'));}
-  });
-  applyTranslations();
-  renderCal();
+  ['alb-fr','alb-en','ltb-fr','ltb-en'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle('active',id.endsWith(l==='fr'?'fr':'en'));});
+  applyT();renderCal();
   if(document.getElementById('tab-hist').classList.contains('active'))renderHist();
 };
 
-function applyTranslations(){
-  const el=id=>document.getElementById(id);
-  const isLogin=authMode==='login';
-  el('auth-sub').textContent=t.authSub;
-  el('auth-mode-title').textContent=isLogin?t.loginTitle:t.registerTitle;
-  el('auth-submit').textContent=isLogin?t.signInBtn:t.createBtn;
-  el('auth-toggle').innerHTML=isLogin?`${t.noAccount} <span>${t.createLink}</span>`:`${t.haveAccount} <span>${t.signInLink}</span>`;
-  el('auth-forgot').textContent=t.forgotPwd;
-  el('auth-password').placeholder=lang==='fr'?'Mot de passe':'Password';
-  if(el('logout-btn'))el('logout-btn').textContent=t.logout;
-  if(el('nb-label'))el('nb-label').textContent=t.nextPeriod;
-  if(el('st-cycle-lbl'))el('st-cycle-lbl').innerHTML=t.statCycleLbl.replace('\n','<br>');
-  if(el('st-period-lbl'))el('st-period-lbl').innerHTML=t.statPeriodLbl.replace('\n','<br>');
-  if(el('st-count-lbl'))el('st-count-lbl').innerHTML=t.statCountLbl.replace('\n','<br>');
-  if(el('leg-period'))el('leg-period').textContent=t.legPeriod;
-  if(el('leg-predicted'))el('leg-predicted').textContent=t.legPredicted;
-  if(el('leg-ovulation'))el('leg-ovulation').textContent=t.legOvulation;
-  if(el('leg-fertile'))el('leg-fertile').textContent=t.legFertile;
-  if(el('log-label'))el('log-label').textContent=t.logLabel;
-  if(el('btn-start'))el('btn-start').textContent=t.btnStart;
-  if(el('btn-end'))el('btn-end').textContent=t.btnEnd;
-  if(el('nav-lbl-home'))el('nav-lbl-home').textContent=t.tabHome;
-  if(el('nav-lbl-hist'))el('nav-lbl-hist').textContent=t.tabHist;
-  if(el('nav-lbl-sett'))el('nav-lbl-sett').textContent=t.tabSett;
-  if(el('sett-params-title'))el('sett-params-title').textContent=t.settParamsTitle;
-  if(el('sett-cycle-lbl'))el('sett-cycle-lbl').textContent=t.settCycleLbl;
-  if(el('sett-cycle-sub'))el('sett-cycle-sub').textContent=t.settCycleSub;
-  if(el('sett-period-lbl'))el('sett-period-lbl').textContent=t.settPeriodLbl;
-  if(el('sett-period-sub'))el('sett-period-sub').textContent=t.settPeriodSub;
-  if(el('sett-proj-lbl'))el('sett-proj-lbl').textContent=t.settProjLbl;
-  if(el('sett-proj-sub'))el('sett-proj-sub').textContent=t.settProjSub;
-  if(el('sett-lang-title'))el('sett-lang-title').textContent=t.settLangTitle;
-  if(el('sett-lang-lbl'))el('sett-lang-lbl').textContent=t.settLangLbl;
-  if(el('sett-info-title'))el('sett-info-title').textContent=t.settInfoTitle;
-  if(el('sett-privacy-lbl'))el('sett-privacy-lbl').textContent=t.settPrivacyLbl;
-  if(el('sett-privacy-sub'))el('sett-privacy-sub').textContent=t.settPrivacySub;
-  if(el('sett-about-lbl'))el('sett-about-lbl').textContent=t.settAboutLbl;
-  if(el('sett-about-sub'))el('sett-about-sub').textContent=t.settAboutSub;
-  if(el('sett-data-title'))el('sett-data-title').textContent=t.settDataTitle;
-  if(el('clear-btn'))el('clear-btn').textContent=t.clearBtn;
-  if(el('priv-note'))el('priv-note').textContent=t.privNote;
-  if(el('rst-title'))el('rst-title').textContent=t.rstTitle;
-  if(el('rst-sub'))el('rst-sub').textContent=t.rstSub;
-  if(el('rst-btn'))el('rst-btn').textContent=t.rstBtn;
-  if(el('rst-back'))el('rst-back').textContent=t.rstBack;
-  if(el('prv-header-title'))el('prv-header-title').textContent=t.prvHeaderTitle;
-  if(el('prv-h1'))el('prv-h1').textContent=t.prvH1;
-  if(el('prv-updated'))el('prv-updated').textContent=t.prvUpdated;
-  if(el('prv-s1-h'))el('prv-s1-h').textContent=t.prvS1h;if(el('prv-s1-p'))el('prv-s1-p').textContent=t.prvS1p;
-  if(el('prv-s2-h'))el('prv-s2-h').textContent=t.prvS2h;if(el('prv-s2-p'))el('prv-s2-p').textContent=t.prvS2p;
-  if(el('prv-s3-h'))el('prv-s3-h').textContent=t.prvS3h;if(el('prv-s3-p'))el('prv-s3-p').textContent=t.prvS3p;
-  if(el('prv-s4-h'))el('prv-s4-h').textContent=t.prvS4h;if(el('prv-s4-p'))el('prv-s4-p').textContent=t.prvS4p;
-  if(el('prv-s5-h'))el('prv-s5-h').textContent=t.prvS5h;if(el('prv-s5-p'))el('prv-s5-p').textContent=t.prvS5p;
-  if(el('prv-s6-h'))el('prv-s6-h').textContent=t.prvS6h;if(el('prv-s6-p'))el('prv-s6-p').textContent=t.prvS6p;
-  if(el('prv-s7-h'))el('prv-s7-h').textContent=t.prvS7h;if(el('prv-s7-p'))el('prv-s7-p').textContent=t.prvS7p;
-  if(el('abt-header-title'))el('abt-header-title').textContent=t.abtHeaderTitle;
-  if(el('abt-version'))el('abt-version').textContent=t.abtVersion;
-  if(el('abt-tagline'))el('abt-tagline').textContent=t.abtTagline;
-  if(el('abt-ver-lbl'))el('abt-ver-lbl').textContent=t.abtVerLbl;
-  if(el('abt-dev-lbl'))el('abt-dev-lbl').textContent=t.abtDevLbl;
-  if(el('abt-lang-lbl'))el('abt-lang-lbl').textContent=t.abtLangLbl;
-  if(el('abt-launch-lbl'))el('abt-launch-lbl').textContent=t.abtLaunchLbl;
-  if(el('abt-contact-lbl'))el('abt-contact-lbl').textContent=t.abtContactLbl;
-  if(el('abt-privacy-lbl'))el('abt-privacy-lbl').textContent=t.abtPrivacyLbl;
-  if(el('abt-privacy-link'))el('abt-privacy-link').textContent=t.abtPrivacyLink;
-  if(el('abt-credit'))el('abt-credit').textContent=t.abtCredit;
-  const selEl=el('sel-show');if(selEl&&selEl.classList.contains('ph'))selEl.textContent=t.selPrompt;
-  updatePageTitle();
-}
+function g(id){return document.getElementById(id);}
+function st(id,v){const el=g(id);if(el)el.textContent=v;}
+function shi(id,v){const el=g(id);if(el)el.innerHTML=v;}
 
+function applyT(){
+  const isL=authMode==='login';
+  st('auth-sub',t.authSub);st('auth-mode-title',isL?t.loginTitle:t.registerTitle);
+  g('auth-submit').textContent=isL?t.signInBtn:t.createBtn;
+  g('auth-forgot').textContent=t.forgotPwd;
+  g('auth-password').placeholder=lang==='fr'?'Mot de passe':'Password';
+  shi('auth-toggle',isL?`${t.noAccount} <span>${t.createLink}</span>`:`${t.haveAccount} <span>${t.signInLink}</span>`);
+  st('logout-btn',t.logout);st('rst-title',t.rstTitle);st('rst-sub',t.rstSub);st('rst-btn',t.rstBtn);st('rst-back',t.rstBack);
+  g('reset-success').textContent=t.rstSuccess;
+  st('nb-label',t.nextPeriod);st('bc-label',t.fertileWindow);st('bg-label',t.myPregnancy);
+  shi('st-cycle-lbl',t.statCycleLbl.replace('\n','<br>'));shi('st-period-lbl',t.statPeriodLbl.replace('\n','<br>'));shi('st-count-lbl',t.statCountLbl.replace('\n','<br>'));
+  st('log-label',t.logLabel);g('btn-start').textContent=t.btnStart;g('btn-end').textContent=t.btnEnd;
+  st('nav-lbl-home',t.tabHome);st('nav-lbl-hist',t.tabHist);st('nav-lbl-sett',t.tabSett);
+  st('sett-mode-title',t.modeSuiviTitle);
+  st('mode-normal-title',t.modeNormalTitle);st('mode-normal-sub',t.modeNormalSub);
+  st('mode-conception-title',t.modeConceptionTitle);st('mode-conception-sub',t.modeConceptionSub);
+  st('mode-grossesse-title',t.modeGrossesseTitle);st('mode-grossesse-sub',t.modeGrossesseSub);
+  st('ddr-title',t.ddrTitle);st('ddr-sub',t.ddrSub);st('ddr-btn',t.ddrBtn);
+  st('sett-params-title',t.settParamsTitle);st('sett-cycle-lbl',t.settCycleLbl);st('sett-cycle-sub',t.settCycleSub);
+  st('sett-period-lbl',t.settPeriodLbl);st('sett-period-sub',t.settPeriodSub);st('sett-proj-lbl',t.settProjLbl);st('sett-proj-sub',t.settProjSub);
+  st('sett-lang-title',t.settLangTitle);st('sett-lang-lbl',t.settLangLbl);
+  st('sett-info-title',t.settInfoTitle);st('sett-privacy-lbl',t.settPrivacyLbl);st('sett-privacy-sub',t.settPrivacySub);
+  st('sett-about-lbl',t.settAboutLbl);st('sett-about-sub',t.settAboutSub);
+  st('sett-data-title',t.settDataTitle);st('clear-btn',t.clearBtn);st('priv-note',t.privNote);
+  st('prv-header-title',t.prvHeaderTitle);st('prv-h1',t.prvH1);st('prv-updated',t.prvUpdated);
+  st('prv-s1-h',t.prvS1h);st('prv-s1-p',t.prvS1p);st('prv-s2-h',t.prvS2h);st('prv-s2-p',t.prvS2p);
+  st('prv-s3-h',t.prvS3h);st('prv-s3-p',t.prvS3p);st('prv-s4-h',t.prvS4h);st('prv-s4-p',t.prvS4p);
+  st('prv-s5-h',t.prvS5h);st('prv-s5-p',t.prvS5p);st('prv-s6-h',t.prvS6h);st('prv-s6-p',t.prvS6p);
+  st('prv-s7-h',t.prvS7h);st('prv-s7-p',t.prvS7p);
+  st('abt-header-title',t.abtHeaderTitle);st('abt-version',t.abtVersion);st('abt-tagline',t.abtTagline);
+  st('abt-ver-lbl',t.abtVerLbl);st('abt-dev-lbl',t.abtDevLbl);st('abt-lang-lbl',t.abtLangLbl);
+  st('abt-launch-lbl',t.abtLaunchLbl);st('abt-contact-lbl',t.abtContactLbl);st('abt-privacy-lbl',t.abtPrivacyLbl);st('abt-privacy-link',t.abtPrivacyLink);
+  st('abt-credit',t.abtCredit);st('loading-text',t.loading);
+  const selEl=g('sel-show');if(selEl&&selEl.classList.contains('ph'))selEl.textContent=t.selPrompt;
+  applyMode();updatePageTitle();
+}
 function updatePageTitle(){
-  const active=['home','hist','sett'].find(tab=>document.getElementById('tab-'+tab).classList.contains('active'))||'home';
-  const titles={home:t.pageHome,hist:t.pageHist,sett:t.pageSett};
-  const el=document.getElementById('page-title');if(el)el.textContent=titles[active];
+  const active=['home','hist','sett'].find(tab=>g('tab-'+tab).classList.contains('active'))||'home';
+  st('page-title',{home:t.pageHome,hist:t.pageHist,sett:t.pageSett}[active]);
 }
 
-/* ── UI helpers ── */
-function showLoading(v,msg){document.getElementById('loading').style.display=v?'flex':'none';document.getElementById('loading-text').textContent=msg||t.loading;}
-function showApp(v){document.getElementById('auth-screen').style.display=v?'none':'flex';document.getElementById('reset-screen').style.display='none';document.getElementById('reset-screen').classList.remove('active');document.getElementById('main-app').style.display=v?'flex':'none';}
+/* ══ UI helpers ══ */
+function showLoading(v,msg){g('loading').style.display=v?'flex':'none';st('loading-text',msg||t.loading);}
+function showApp(v){g('auth-screen').style.display=v?'none':'flex';g('reset-screen').style.display='none';g('reset-screen').classList.remove('active');g('main-app').style.display=v?'flex':'none';}
 let _tt;
-function toast(msg){clearTimeout(_tt);const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');_tt=setTimeout(()=>el.classList.remove('show'),2400);}
+function toast(msg){clearTimeout(_tt);const el=g('toast');el.textContent=msg;el.classList.add('show');_tt=setTimeout(()=>el.classList.remove('show'),2400);}
 window.toast=toast;
-function authError(id,msg){const el=document.getElementById(id);el.textContent=msg;el.style.display=msg?'block':'none';}
+function authErr(id,msg){const el=g(id);el.textContent=msg;el.style.display=msg?'block':'none';}
 
-/* ── Auth screens ── */
-window.showReset=()=>{
-  document.getElementById('auth-screen').style.display='none';
-  document.getElementById('reset-screen').classList.add('active');
-  document.getElementById('reset-screen').style.display='flex';
-  document.getElementById('reset-email').value=document.getElementById('auth-email').value||'';
-  authError('reset-error','');document.getElementById('reset-success').style.display='none';
-};
-window.showAuth=()=>{
-  document.getElementById('reset-screen').classList.remove('active');
-  document.getElementById('reset-screen').style.display='none';
-  document.getElementById('auth-screen').style.display='flex';
-};
+/* ══ Auth screens ══ */
+window.showReset=()=>{g('auth-screen').style.display='none';g('reset-screen').classList.add('active');g('reset-screen').style.display='flex';g('reset-email').value=g('auth-email').value||'';authErr('reset-error','');g('reset-success').style.display='none';};
+window.showAuth=()=>{g('reset-screen').classList.remove('active');g('reset-screen').style.display='none';g('auth-screen').style.display='flex';};
 window.sendReset=async()=>{
-  authError('reset-error','');
-  const email=document.getElementById('reset-email').value.trim();
-  if(!email){authError('reset-error',t.rstErrEmpty);return;}
+  authErr('reset-error','');const email=g('reset-email').value.trim();
+  if(!email){authErr('reset-error',t.rstErrEmpty);return;}
   showLoading(true,t.rstSending);
-  try{
-    await sendPasswordResetEmail(auth,email);
-    showLoading(false);
-    document.getElementById('reset-success').textContent=t.rstSuccess;
-    document.getElementById('reset-success').style.display='block';
-    document.getElementById('reset-email').value='';
-  }catch(e){showLoading(false);authError('reset-error',t.errMsgs[e.code]||'Error');}
+  try{await sendPasswordResetEmail(auth,email);showLoading(false);g('reset-success').style.display='block';g('reset-email').value='';}
+  catch(e){showLoading(false);authErr('reset-error',t.errMsgs[e.code]||'Error');}
 };
-
-/* ── Auth ── */
-window.toggleAuthMode=()=>{
-  authMode=authMode==='login'?'register':'login';
-  authError('auth-error','');applyTranslations();
-};
+window.toggleAuthMode=()=>{authMode=authMode==='login'?'register':'login';authErr('auth-error','');applyT();};
 window.authSubmit=async()=>{
-  authError('auth-error','');
-  const email=document.getElementById('auth-email').value.trim();
-  const pass=document.getElementById('auth-password').value;
-  if(!email||!pass){authError('auth-error',t.errEmpty);return;}
+  authErr('auth-error','');const email=g('auth-email').value.trim(),pass=g('auth-password').value;
+  if(!email||!pass){authErr('auth-error',t.errEmpty);return;}
   showLoading(true,authMode==='login'?t.signingIn:t.creating);
-  try{
-    if(authMode==='login')await signInWithEmailAndPassword(auth,email,pass);
-    else await createUserWithEmailAndPassword(auth,email,pass);
-  }catch(e){showLoading(false);authError('auth-error',t.errMsgs[e.code]||e.message);}
+  try{if(authMode==='login')await signInWithEmailAndPassword(auth,email,pass);else await createUserWithEmailAndPassword(auth,email,pass);}
+  catch(e){showLoading(false);authErr('auth-error',t.errMsgs[e.code]||e.message);}
 };
-window.doLogout=async()=>{await signOut(auth);S.periods=[];S.settings={cycle:28,period:5,proj:3};S.sel=null;S.uid=null;};
+window.doLogout=async()=>{await signOut(auth);S={periods:[],settings:{cycle:28,period:5,proj:3},mode:'normal',pregStartDate:null,vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:null,uid:null};};
 
-/* ── Overlay screens ── */
-window.showPrivacy=()=>document.getElementById('privacy-screen').classList.add('active');
-window.hidePrivacy=()=>document.getElementById('privacy-screen').classList.remove('active');
-window.showAbout=()=>document.getElementById('about-screen').classList.add('active');
-window.hideAbout=()=>document.getElementById('about-screen').classList.remove('active');
+/* ══ Overlays ══ */
+window.showPrivacy=()=>g('privacy-screen').classList.add('active');
+window.hidePrivacy=()=>g('privacy-screen').classList.remove('active');
+window.showAbout=()=>g('about-screen').classList.add('active');
+window.hideAbout=()=>g('about-screen').classList.remove('active');
 
-/* ── Firebase ── */
-async function loadData(uid){const snap=await getDoc(doc(db,'users',uid));if(snap.exists()){const d=snap.data();S.periods=d.periods||[];S.settings=Object.assign({cycle:28,period:5,proj:3},d.settings||{});}}
-async function saveData(){if(!S.uid)return;await setDoc(doc(db,'users',S.uid),{periods:S.periods,settings:S.settings},{merge:true});}
+/* ══ Firebase ══ */
+async function loadData(uid){
+  const snap=await getDoc(doc(db,'users',uid));
+  if(snap.exists()){const d=snap.data();S.periods=d.periods||[];S.settings=Object.assign({cycle:28,period:5,proj:3},d.settings||{});S.mode=d.mode||'normal';S.pregStartDate=d.pregStartDate||null;}
+}
+async function saveData(){if(!S.uid)return;await setDoc(doc(db,'users',S.uid),{periods:S.periods,settings:S.settings,mode:S.mode,pregStartDate:S.pregStartDate},{merge:true});}
 
 onAuthStateChanged(auth,async user=>{
   if(user){
-    S.uid=user.uid;document.getElementById('user-email').textContent=user.email;
-    showLoading(true,t.loadingData);
-    try{await loadData(user.uid);}catch(e){console.warn(e);}
-    showLoading(false);showApp(true);syncSett();applyTranslations();renderCal();
+    S.uid=user.uid;g('user-email').textContent=user.email;
+    showLoading(true,t.loadingData);try{await loadData(user.uid);}catch(e){console.warn(e);}
+    showLoading(false);showApp(true);syncSett();applyT();renderCal();
   }else{S.uid=null;showLoading(false);showApp(false);}
 });
 
-/* ── Tabs ── */
-window.goTab=tab=>{
-  ['home','hist','sett'].forEach(tt=>{
-    document.getElementById('tab-'+tt).classList.toggle('active',tt===tab);
-    const n=document.getElementById('nav-'+tt);const on=tt===tab;
-    n.classList.toggle('active',on);n.querySelector('.nav-lbl').style.color=on?'var(--pink)':'';
-    n.querySelectorAll('[stroke]').forEach(el=>el.setAttribute('stroke',on?'#E91E8C':'#bbb'));
-  });
-  updatePageTitle();document.getElementById('content').scrollTop=0;
-  if(tab==='hist')renderHist();
+/* ══ MODE ══ */
+window.setMode=async(mode)=>{S.mode=mode;applyMode();renderCal();try{await saveData();}catch(e){}};
+window.savePregDate=async()=>{
+  const val=g('preg-start-date').value;if(!val){toast(t.toastSelectDate);return;}
+  S.pregStartDate=val;applyMode();renderCal();toast(t.toastPregSaved);
+  try{await saveData();}catch(e){}
 };
 
-/* ── Data helpers ── */
+function applyMode(){
+  const tb=g('top-bar'),badge=g('mode-badge'),dateCard=g('date-input-card');
+  tb.className='top-bar mode-'+S.mode;
+  badge.style.display='none';
+  dateCard.style.display='none';
+  ['normal','conception','grossesse'].forEach(m=>{
+    const check=g('check-'+m);check.textContent='';check.className='mode-check';
+  });
+  if(S.mode==='conception'){
+    badge.style.display='flex';badge.textContent=t.modeBadgeConception;
+    g('check-conception').textContent='✓';g('check-conception').classList.add('purple');
+  } else if(S.mode==='grossesse'){
+    badge.style.display='flex';badge.textContent=t.modeBadgeGrossesse;
+    g('check-grossesse').textContent='✓';g('check-grossesse').classList.add('blue');
+    dateCard.style.display='block';if(S.pregStartDate)g('preg-start-date').value=S.pregStartDate;
+  } else {
+    g('check-normal').textContent='✓';g('check-normal').classList.add('pink');
+  }
+  // Stats labels
+  if(S.mode==='grossesse'){
+    shi('st-cycle-lbl',t.statCycleGrossesseLbl.replace('\n','<br>'));
+    shi('st-period-lbl',t.statPeriodGrossesseLbl.replace('\n','<br>'));
+    shi('st-count-lbl',t.statCountGrossesseLbl.replace('\n','<br>'));
+    g('st-cycle').className='stat-num blue';g('st-period').className='stat-num blue';g('st-count').className='stat-num blue';
+  } else if(S.mode==='conception'){
+    shi('st-cycle-lbl',t.statCycleConceptionLbl.replace('\n','<br>'));
+    shi('st-period-lbl',t.statPeriodConceptionLbl.replace('\n','<br>'));
+    shi('st-count-lbl',t.statCountConceptionLbl.replace('\n','<br>'));
+    g('st-cycle').className='stat-num purple';g('st-period').className='stat-num purple';g('st-count').className='stat-num purple';
+  } else {
+    shi('st-cycle-lbl',t.statCycleLbl.replace('\n','<br>'));
+    shi('st-period-lbl',t.statPeriodLbl.replace('\n','<br>'));
+    shi('st-count-lbl',t.statCountLbl.replace('\n','<br>'));
+    g('st-cycle').className='stat-num pink';g('st-period').className='stat-num pink';g('st-count').className='stat-num pink';
+  }
+  // Buttons
+  if(S.mode==='grossesse'){
+    g('btn-start').textContent=t.btnModifyDdr;g('btn-start').className='btn btn-blue';g('btn-end').style.display='none';
+  } else if(S.mode==='conception'){
+    g('btn-start').textContent=t.btnStart;g('btn-start').className='btn btn-purple';
+    g('btn-end').style.display='';g('btn-end').textContent=t.btnEnd;g('btn-end').className='btn btn-pink-soft';
+  } else {
+    g('btn-start').textContent=t.btnStart;g('btn-start').className='btn btn-pink';
+    g('btn-end').style.display='';g('btn-end').textContent=t.btnEnd;g('btn-end').className='btn btn-pink-soft';
+  }
+  updatePageTitle();
+}
+
+/* ══ Tabs ══ */
+window.goTab=tab=>{
+  ['home','hist','sett'].forEach(tt=>{
+    g('tab-'+tt).classList.toggle('active',tt===tab);
+    const n=g('nav-'+tt),on=tt===tab;n.classList.toggle('active',on);
+    n.querySelector('.nav-lbl').style.color=on?'var(--pink)':'';
+    n.querySelectorAll('[stroke]').forEach(el=>el.setAttribute('stroke',on?'#E91E8C':'#bbb'));
+  });
+  updatePageTitle();g('content').scrollTop=0;if(tab==='hist')renderHist();
+};
+
+/* ══ Data ══ */
 function periodDays(){const s=new Set();S.periods.forEach(p=>{const st=new Date(p.start);const dur=p.end?Math.round((new Date(p.end)-st)/86400000)+1:S.settings.period;for(let i=0;i<dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(d.toISOString().slice(0,10));}});return s;}
 function getProj(){if(!S.periods.length)return[];const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));let avg=S.settings.cycle;if(sorted.length>1){let tt=0;for(let i=1;i<sorted.length;i++)tt+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;avg=Math.round(tt/(sorted.length-1));}const last=new Date(sorted[sorted.length-1].start);return Array.from({length:S.settings.proj},(_,i)=>{const d=new Date(last);d.setDate(d.getDate()+avg*(i+1));return{start:d.toISOString().slice(0,10),dur:S.settings.period};});}
 function projDays(){const s=new Set();getProj().forEach(p=>{const st=new Date(p.start);for(let i=0;i<p.dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(d.toISOString().slice(0,10));}});return s;}
 function getFertile(){const f=new Set(),ov=new Set();[...S.periods.map(p=>p.start),...getProj().map(p=>p.start)].forEach(st=>{const ovd=new Date(st);ovd.setDate(ovd.getDate()+S.settings.cycle-14);ov.add(ovd.toISOString().slice(0,10));for(let i=-5;i<=1;i++){const fd=new Date(ovd);fd.setDate(fd.getDate()+i);const k=fd.toISOString().slice(0,10);if(!ov.has(k))f.add(k);}});return{f,ov};}
+function getPregInfo(){if(!S.pregStartDate)return null;const start=new Date(S.pregStartDate);const today=new Date();today.setHours(0,0,0,0);const days=Math.round((today-start)/86400000);const weeks=Math.floor(days/7);const rem=days%7;const dpa=new Date(start);dpa.setDate(dpa.getDate()+280);const daysLeft=Math.round((dpa-today)/86400000);return{weeks,rem,dpa,daysLeft,days};}
 
-/* ── Calendar ── */
+/* ══ Calendar ══ */
 function renderCal(){
-  const{vy:y,vm:m}=S;
-  document.getElementById('cal-month').textContent=`${t.MONTHS[m]} ${y}`;
+  const{vy:y,vm:m}=S;g('cal-month').textContent=`${t.MONTHS[m]} ${y}`;
   const pd=periodDays(),prd=projDays(),{f,ov}=getFertile();
   const today=new Date().toISOString().slice(0,10);
-  const grid=document.getElementById('cal-grid');grid.innerHTML='';
+  const isC=S.mode==='conception',isG=S.mode==='grossesse';
+  const grid=g('cal-grid');grid.innerHTML='';
   t.DAYS.forEach(d=>{const e=document.createElement('div');e.className='cal-hdr';e.textContent=d;grid.appendChild(e);});
   const off=(new Date(y,m,1).getDay()+6)%7;
   for(let i=0;i<off;i++){const e=document.createElement('div');e.className='day empty';grid.appendChild(e);}
   const dim=new Date(y,m+1,0).getDate();
+  // Pregnancy days
+  let pregSet=new Set();
+  if(isG&&S.pregStartDate){const ps=new Date(S.pregStartDate);const dpa=new Date(ps);dpa.setDate(dpa.getDate()+280);let cur=new Date(ps);while(cur<=dpa){pregSet.add(cur.toISOString().slice(0,10));cur.setDate(cur.getDate()+1);}}
   for(let d=1;d<=dim;d++){
     const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const e=document.createElement('div');e.className='day';e.textContent=d;
-    if(ov.has(ds))e.classList.add('ovulation');else if(f.has(ds))e.classList.add('fertile');
-    if(pd.has(ds))e.classList.add('period');else if(prd.has(ds))e.classList.add('predicted');
+    if(isG){
+      if(ds===S.pregStartDate)e.classList.add('preg-start');
+      else if(pregSet.has(ds))e.classList.add('preg-day');
+    } else {
+      if(ov.has(ds)){e.classList.add('ovulation');if(isC)e.classList.add('mc');}
+      else if(f.has(ds)){e.classList.add('fertile');if(isC)e.classList.add('mc');}
+      if(pd.has(ds))e.classList.add('period');
+      else if(prd.has(ds))e.classList.add('predicted');
+    }
     if(ds===today)e.classList.add('today');if(S.sel===ds)e.classList.add('selected');
     e.addEventListener('click',()=>selectDay(ds));grid.appendChild(e);
   }
-  updateBanner();updateStats();updatePhase();updateCycBar();
-}
-window.prevMonth=()=>{S.vm--;if(S.vm<0){S.vm=11;S.vy--;}renderCal();};
-window.nextMonth=()=>{S.vm++;if(S.vm>11){S.vm=0;S.vy++;}renderCal();};
-
-function selectDay(ds){
-  S.sel=ds;const[y,mo,d]=ds.split('-').map(Number);
-  const lbl=new Date(y,mo-1,d).toLocaleDateString(t.locale,{weekday:'long',day:'numeric',month:'long'});
-  const el=document.getElementById('sel-show');el.textContent=lbl.charAt(0).toUpperCase()+lbl.slice(1);el.classList.remove('ph');renderCal();
-}
-
-window.logStart=async()=>{
-  if(!S.sel){toast(t.toastSelectDay);return;}
-  if(S.periods.find(p=>p.start===S.sel)){toast(t.toastAlready);return;}
-  S.periods.push({start:S.sel,end:null});S.periods.sort((a,b)=>new Date(a.start)-new Date(b.start));
-  renderCal();toast(t.toastStart);try{await saveData();}catch(e){toast(t.toastError);}
-};
-window.logEnd=async()=>{
-  if(!S.sel){toast(t.toastSelectDay);return;}
-  const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));const last=sorted[sorted.length-1];
-  if(!last){toast(t.toastNeedStart);return;}if(new Date(S.sel)<new Date(last.start)){toast(t.toastEndBefore);return;}
-  S.periods[S.periods.findIndex(p=>p.start===last.start)].end=S.sel;
-  renderCal();toast(t.toastEnd);try{await saveData();}catch(e){toast(t.toastError);}
-};
-
-function updateBanner(){
-  const proj=getProj();const b=document.getElementById('next-banner');
-  if(!proj.length){b.style.display='none';return;}b.style.display='';
-  const next=new Date(proj[0].start);const today=new Date();today.setHours(0,0,0,0);
-  const diff=Math.round((next-today)/86400000);
-  document.getElementById('nb-date').textContent=next.toLocaleDateString(t.locale,{day:'numeric',month:'long',year:'numeric'});
-  document.getElementById('nb-days').textContent=t.inDays(diff);
-}
-function updateStats(){
-  const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
-  document.getElementById('st-count').textContent=sorted.length;
-  if(sorted.length>1){let tt=0;for(let i=1;i<sorted.length;i++)tt+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;document.getElementById('st-cycle').textContent=Math.round(tt/(sorted.length-1));}
-  else document.getElementById('st-cycle').textContent=S.settings.cycle;
-  const we=sorted.filter(p=>p.end);
-  if(we.length){let tt=0;we.forEach(p=>tt+=(new Date(p.end)-new Date(p.start))/86400000+1);document.getElementById('st-period').textContent=Math.round(tt/we.length);}
-  else document.getElementById('st-period').textContent=S.settings.period;
-}
-function updatePhase(){
-  if(!S.periods.length){document.getElementById('phase-card').style.display='none';return;}
-  const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
-  const last=new Date(sorted[sorted.length-1].start);const today=new Date();today.setHours(0,0,0,0);
-  let day=Math.round((today-last)/86400000)%S.settings.cycle;if(day<0)day+=S.settings.cycle;
-  const ph=day<S.settings.period?0:day<Math.round(S.settings.cycle*0.45)?1:day<Math.round(S.settings.cycle*0.55)?2:3;
-  const pc=document.getElementById('phase-card'),p=t.PHASES[ph];
-  pc.style.display='';pc.style.borderLeftColor=p.col;
-  const badge=document.getElementById('phase-badge');badge.textContent=p.name;badge.style.background=p.bg;badge.style.color=p.col;
-  document.getElementById('phase-name').textContent=p.name;document.getElementById('phase-name').style.color=p.col;
-  document.getElementById('phase-desc').textContent=p.desc;
-}
-function updateCycBar(){
-  if(!S.periods.length){document.getElementById('cyc-wrap').style.display='none';return;}
-  const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
-  const last=new Date(sorted[sorted.length-1].start);const today=new Date();today.setHours(0,0,0,0);
-  let day=Math.round((today-last)/86400000)%S.settings.cycle;if(day<0)day+=S.settings.cycle;
-  document.getElementById('cyc-wrap').style.display='';
-  document.getElementById('cyc-label').textContent=t.dayOf(day+1,S.settings.cycle);
-  document.getElementById('cyc-fill').style.width=Math.min(100,Math.round((day/S.settings.cycle)*100))+'%';
-}
-
-/* ── History ── */
-function renderHist(){
-  const asc=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
-  const sorted=[...asc].reverse();const list=document.getElementById('hist-list');
-  if(!sorted.length){list.innerHTML=`<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">${t.emptyHist}</div></div>`;return;}
-  list.innerHTML='';
-  sorted.forEach((p,i)=>{
-    const st=new Date(p.start);const dur=p.end?Math.round((new Date(p.end)-st)/86400000)+1:null;
-    const ascIdx=asc.length-1-i;let cycleDur=null;
-    if(ascIdx+1<asc.length)cycleDur=Math.round((new Date(asc[ascIdx+1].start)-new Date(asc[ascIdx].start))/86400000);
-    const el=document.createElement('div');el.className='hist-item';
-    el.innerHTML=`<div style="flex:1"><div class="hist-date">${st.toLocaleDateString(t.locale,{day:'numeric',month:'long',year:'numeric'})}</div><div class="hist-sub">${dur?t.histDays(dur):t.histNoEnd} · ${cycleDur?t.histCycle(cycleDur):t.histLast}</div></div><div class="hist-right"><span class="hist-badge">${cycleDur?t.histBadge(cycleDur):dur?dur+'j':'?'}</span><button class="del-btn" data-start="${p.start}">✕</button></div>`;
-    list.appendChild(el);
-  });
-  list.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',()=>delPeriod(btn.dataset.start)));
-}
-async function delPeriod(start){if(!confirm(t.confirmDelete))return;S.periods=S.periods.filter(p=>p.start!==start);renderHist();renderCal();toast(t.toastDeleted);try{await saveData();}catch(e){}}
-window.clearAll=async()=>{if(!confirm(t.confirmClear))return;S.periods=[];renderHist();renderCal();toast(t.toastCleared);try{await saveData();}catch(e){}};
-
-/* ── Settings ── */
-const LIM={cycle:[20,45],period:[1,10],proj:[1,12]};
-window.adj=async(k,d)=>{S.settings[k]=Math.max(LIM[k][0],Math.min(LIM[k][1],S.settings[k]+d));syncSett();renderCal();try{await saveData();}catch(e){}};
-function syncSett(){document.getElementById('sv-cycle').textContent=S.settings.cycle;document.getElementById('sv-period').textContent=S.settings.period;document.getElementById('sv-proj').textContent=S.settings.proj;}
-
-/* ── Init ── */
-applyTranslations();
-</script>
-</body>
-</html>
+  // Legend
+  const leg=g('legend');
+  if(isG){leg.innerHTML=`<div class="leg"><div class="leg-dot" style="background:#9C27B0;border-radius:50%"></div>${t.legPregStart}</div><div class="leg"><div class="leg-dot" style="background:#E3F2FD;border:1px solid #2196F3"></div>${t.legPregDay}</div>`;}
+  else if(isC){leg.innerHTML=`<div class="leg"><div class="leg-dot" style="background:#E91E8C"></div>${t.legPeriodConception}</div><div class="leg"><div class="leg-dot" style="background:#9C27B0;border-radius:50%"></div>${t.legOvulationConception}</div><div class="leg"><div cla
