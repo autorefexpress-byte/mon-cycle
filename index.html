@@ -556,8 +556,18 @@ function updateBanners(){
     const{f,ov}=getFertile();const today=new Date();today.setHours(0,0,0,0);const todayStr=today.toISOString().slice(0,10);
     const isInFertile=f.has(todayStr)||ov.has(todayStr);
     const isOvToday=ov.has(todayStr);
+    // Trouver TOUTES les ovulations (passées et futures) et prendre la plus proche de today
     let nextOv=null;
-    [...S.periods.map(p=>p.start),...getProj().map(p=>p.start)].forEach(st=>{const ovd=new Date(st);ovd.setDate(ovd.getDate()+S.settings.cycle-14);if(ovd>=today&&(!nextOv||ovd<nextOv))nextOv=ovd;});
+    const allOvStarts=[...S.periods.map(p=>p.start),...getProj().map(p=>p.start)];
+    let allOvDates=[];
+    allOvStarts.forEach(st=>{const ovd=new Date(st);ovd.setDate(ovd.getDate()+S.settings.cycle-14);allOvDates.push(ovd);});
+    if(allOvDates.length){
+      // Chercher d abord l ovulation en cours ou future la plus proche
+      const futureOv=allOvDates.filter(d=>Math.round((d-today)/86400000)>=0).sort((a,b)=>a-b);
+      const pastOv=allOvDates.filter(d=>Math.round((d-today)/86400000)<0).sort((a,b)=>b-a);
+      if(futureOv.length)nextOv=futureOv[0];
+      else if(pastOv.length)nextOv=pastOv[0];
+    }
     const isFR=lang==="fr";
 
     if(!S.periods.length){
