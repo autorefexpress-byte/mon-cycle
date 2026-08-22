@@ -113,6 +113,33 @@ html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;back
 .lang-toggle-btn.active{border-color:var(--pink);background:var(--pink);color:#fff;}
 .danger-btn{width:100%;padding:15px;background:#fff;border:1.5px solid #FFCDD2;color:#E53935;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
 .danger-btn:active{background:#FFF3F3;}.priv-note{margin-top:20px;text-align:center;font-size:12px;color:#bbb;line-height:1.7;}
+.fertile-detail{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;display:none;}
+.fd-title{font-size:11px;font-weight:600;color:var(--text-sec);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;}
+.fd-days-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
+.fd-day{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.fd-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;border:1px solid var(--border);color:var(--text-sec);}
+.fd-circle.fertile-c{background:#F3E5F5;color:#6A1B9A;border-color:#CE93D8;}
+.fd-circle.ovulation-c{background:#9C27B0;color:#fff;border-color:#9C27B0;font-weight:600;}
+.fd-circle.today-c{outline:2.5px solid #9C27B0;outline-offset:-2px;}
+.fd-day-lbl{font-size:9px;color:#9C27B0;text-align:center;font-weight:500;}
+.fd-prob-title{font-size:12px;color:var(--text-sec);margin-bottom:8px;font-weight:500;}
+.fd-prob-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.fd-prob-lbl{font-size:11px;color:var(--text-sec);width:72px;flex-shrink:0;}
+.fd-prob-bar{flex:1;height:7px;border-radius:4px;background:var(--border);overflow:hidden;}
+.fd-prob-fill{height:100%;border-radius:4px;}
+.fd-prob-pct{font-size:11px;font-weight:600;width:30px;text-align:right;color:#7B1FA2;flex-shrink:0;}
+.conception-tip{border-radius:14px;padding:13px 15px;margin-bottom:12px;border-left:4px solid #9C27B0;display:none;}
+.ct-badge{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;}
+.ct-text{font-size:13px;line-height:1.6;}
+.fertile-dates{background:var(--card);border-radius:16px;overflow:hidden;margin-bottom:12px;display:none;}
+.fdate-row{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.fdate-row:last-child{border-bottom:none;}
+.fdr-lbl{font-size:13px;color:var(--text-sec);}
+.fdr-val{font-size:13px;font-weight:500;color:var(--text);}
+.fdr-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;}
+.fdb-purple{background:#F3E5F5;color:#6A1B9A;}
+.fdb-star{background:#9C27B0;color:#fff;}
+.fdb-green{background:#E8F5E9;color:#2E7D32;}
 .overlay-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:500;flex-direction:column;}.overlay-screen.active{display:flex;}
 .overlay-header{background:var(--pink);padding:16px 18px;padding-top:calc(16px + env(safe-area-inset-top,0px));display:flex;align-items:center;gap:12px;flex-shrink:0;}
 .overlay-back{background:rgba(255,255,255,0.2);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;}
@@ -190,6 +217,30 @@ html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;back
         <div class="stat-tile"><div class="stat-num pink" id="st-count">0</div><div class="stat-lbl" id="st-count-lbl"></div></div>
       </div>
       <div class="phase-card" id="phase-card"><span class="phase-badge" id="phase-badge"></span><div class="phase-name" id="phase-name"></div><div class="phase-desc" id="phase-desc"></div></div>
+
+      <!-- CONCEPTION : conseil du jour -->
+      <div class="conception-tip" id="conception-tip">
+        <div class="ct-badge" id="ct-badge"></div>
+        <div class="ct-text" id="ct-text"></div>
+      </div>
+
+      <!-- CONCEPTION : fenêtre fertile visuelle + probabilités -->
+      <div class="fertile-detail" id="fertile-detail">
+        <div class="fd-title" id="fd-title">Fenêtre fertile du mois</div>
+        <div class="fd-days-row" id="fd-days-row"></div>
+        <div class="fd-prob-title" id="fd-prob-title">Probabilité de conception</div>
+        <div id="fd-prob-bars"></div>
+      </div>
+
+      <!-- CONCEPTION : dates clés -->
+      <div class="fertile-dates" id="fertile-dates">
+        <div class="fdate-row"><div class="fdr-lbl" id="fd-lbl-start"></div><div class="fdr-val" id="fd-val-start"></div></div>
+        <div class="fdate-row"><div class="fdr-lbl" id="fd-lbl-optimal"></div><div id="fd-val-optimal"><span class="fdr-badge fdb-purple" id="fd-badge-optimal"></span></div></div>
+        <div class="fdate-row"><div class="fdr-lbl" id="fd-lbl-ov"></div><div id="fd-val-ov"><span class="fdr-badge fdb-star" id="fd-badge-ov"></span></div></div>
+        <div class="fdate-row"><div class="fdr-lbl" id="fd-lbl-end"></div><div class="fdr-val" id="fd-val-end"></div></div>
+        <div class="fdate-row"><div class="fdr-lbl" id="fd-lbl-dur"></div><div><span class="fdr-badge fdb-green" id="fd-badge-dur"></span></div></div>
+      </div>
+
       <div class="card">
         <div class="card-head"><div class="cal-month" id="cal-month"></div><div class="cal-nav"><button class="cal-nav-btn" onclick="prevMonth()">&#8249;</button><button class="cal-nav-btn" onclick="nextMonth()">&#8250;</button></div></div>
         <div class="cal-grid" id="cal-grid"></div>
@@ -501,13 +552,126 @@ function updateBanners(){
     g("bg-dpa").textContent=t.dpaLabel(info.dpa.toLocaleDateString(t.locale,{day:"numeric",month:"long",year:"numeric"}));
     const w=Math.min(40,Math.max(4,info.weeks));g("baby-card").style.display="";g("baby-title").textContent=t.babyWeekTitle(info.weeks);g("baby-text").textContent=t.BABY[w]||t.BABY[40];
   }else if(S.mode==="conception"){
-    g("banner-conception").style.display="";const{f,ov}=getFertile();const today=new Date();today.setHours(0,0,0,0);const todayStr=today.toISOString().slice(0,10);
-    const isInFertile=f.has(todayStr)||ov.has(todayStr);let nextOv=null;
-    [...S.periods.map(p=>p.start),...getProj().map(p=>p.start)].forEach(st=>{const ovd=new Date(st);ovd.setDate(ovd.getDate()+S.settings.cycle-14);if(ovd>today&&(!nextOv||ovd<nextOv))nextOv=ovd;});
-    if(!S.periods.length){g("bc-title").textContent=lang==="fr"?"Enregistre tes regles":"Log your period";g("bc-sub").textContent=t.enterCycleFirst;}
-    else if(isInFertile){g("bc-title").textContent=lang==="fr"?"Tu es dans ta fenetre fertile !":"You're in your fertile window!";g("bc-sub").textContent=ov.has(todayStr)?(lang==="fr"?"Aujourd hui est ton jour d ovulation !":"Today is your ovulation day!"):(lang==="fr"?"Les prochains jours sont optimaux.":"The next few days are optimal.");}
-    else if(nextOv){const diff=Math.round((nextOv-today)/86400000);g("bc-title").textContent=t.ovInDays(diff);g("bc-sub").textContent=nextOv.toLocaleDateString(t.locale,{day:"numeric",month:"long"});}
-    else{g("bc-title").textContent=lang==="fr"?"Cycle en cours":"Cycle in progress";g("bc-sub").textContent="";}
+    g("banner-conception").style.display="";
+    const{f,ov}=getFertile();const today=new Date();today.setHours(0,0,0,0);const todayStr=today.toISOString().slice(0,10);
+    const isInFertile=f.has(todayStr)||ov.has(todayStr);
+    const isOvToday=ov.has(todayStr);
+    let nextOv=null;
+    [...S.periods.map(p=>p.start),...getProj().map(p=>p.start)].forEach(st=>{const ovd=new Date(st);ovd.setDate(ovd.getDate()+S.settings.cycle-14);if(ovd>=today&&(!nextOv||ovd<nextOv))nextOv=ovd;});
+    const isFR=lang==="fr";
+
+    if(!S.periods.length){
+      g("bc-title").textContent=isFR?"Enregistre tes regl":"Log your period";
+      g("bc-sub").textContent=t.enterCycleFirst;
+      g("conception-tip").style.display="none";g("fertile-detail").style.display="none";g("fertile-dates").style.display="none";
+    } else {
+      // Banner
+      if(isOvToday){
+        g("bc-title").textContent=isFR?"C'est ton jour d'ovulation !":"Today is your ovulation day!";
+        g("bc-sub").textContent=isFR?"Fertilite maximale aujourd'hui — probabilite de conception : 33%":"Maximum fertility today — conception probability: 33%";
+      } else if(isInFertile){
+        g("bc-title").textContent=isFR?"Tu es dans ta fenetre fertile !":"You're in your fertile window!";
+        g("bc-sub").textContent=isFR?"Les prochains jours sont optimaux pour concevoir.":"The next few days are optimal for conceiving.";
+      } else if(nextOv){
+        const diff=Math.round((nextOv-today)/86400000);
+        g("bc-title").textContent=t.ovInDays(diff);
+        g("bc-sub").textContent=nextOv.toLocaleDateString(t.locale,{day:"numeric",month:"long"});
+      } else {
+        g("bc-title").textContent=isFR?"Cycle en cours":"Cycle in progress";
+        g("bc-sub").textContent="";
+      }
+
+      // Conseil du jour
+      if(nextOv){
+        const diffOv=Math.round((nextOv-today)/86400000);
+        const tip=g("conception-tip");tip.style.display="";
+        let tipBg,tipBorder,tipBadgeColor,tipTextColor,badge,text;
+        if(diffOv>7){
+          tipBg="#FFF3E0";tipBorder="#FF9800";tipBadgeColor="#E65100";tipTextColor="#BF360C";
+          badge=isFR?"Phase folliculaire":"Follicular phase";
+          text=isFR?`La fenetre fertile ouvre dans ${diffOv-5} jours. Prends soin de toi et prepare-toi.`:`Fertile window opens in ${diffOv-5} days. Take care of yourself.`;
+        } else if(diffOv>=5){
+          tipBg="#F3E5F5";tipBorder="#AB47BC";tipBadgeColor="#7B1FA2";tipTextColor="#4A148C";
+          badge=isFR?"Fenetre fertile bientot":"Fertile window soon";
+          text=isFR?`Ovulation dans ${diffOv} jours. C'est le bon moment pour commencer — les spermatozoides survivent 3 a 5 jours.`:`Ovulation in ${diffOv} days. Good time to start — sperm survive 3-5 days.`;
+        } else if(diffOv>=3){
+          tipBg="#F3E5F5";tipBorder="#9C27B0";tipBadgeColor="#6A1B9A";tipTextColor="#4A148C";
+          badge=isFR?"Fenetre fertile ouverte":"Fertile window open";
+          text=isFR?`Tu es a ${diffOv} jours de l'ovulation. Probabilite de conception elevee — c'est le moment !`:`You are ${diffOv} days from ovulation. High conception probability — now is the time!`;
+        } else if(diffOv===2){
+          tipBg="#EDE7F6";tipBorder="#7B1FA2";tipBadgeColor="#4527A0";tipTextColor="#311B92";
+          badge=isFR?"Tres bientot":"Very soon";
+          text=isFR?"J-2 de l'ovulation — probabilite : 33%. Un des meilleurs jours du cycle !":"J-2 from ovulation — probability: 33%. One of the best days of the cycle!";
+        } else if(diffOv===1){
+          tipBg="#EDE7F6";tipBorder="#6A1B9A";tipBadgeColor="#4527A0";tipTextColor="#311B92";
+          badge=isFR?"Ovulation demain !":"Ovulation tomorrow!";
+          text=isFR?"Demain est ton jour de fertilite maximale — probabilite : 41%. Ne rate pas cette fenetre !":"Tomorrow is your peak fertility day — probability: 41%. Don't miss this window!";
+        } else if(diffOv===0){
+          tipBg="#EDE7F6";tipBorder="#4A148C";tipBadgeColor="#311B92";tipTextColor="#1A237E";
+          badge=isFR?"Ovulation !":"Ovulation!";
+          text=isFR?"Ton ovule est libere aujourd'hui ! Probabilite : 33%. J-1 et J-2 sont statistiquement legerement meilleurs mais aujourd'hui reste excellent.":"Your egg is released today! Probability: 33%. J-1 and J-2 are slightly better statistically but today is still excellent.";
+        } else {
+          tipBg="#E8F5E9";tipBorder="#4CAF50";tipBadgeColor="#2E7D32";tipTextColor="#1B5E20";
+          badge=isFR?"Phase luteal":"Luteal phase";
+          text=isFR?"La fenetre fertile est passee pour ce cycle. Repose-toi et prepare le prochain cycle.":"The fertile window has passed for this cycle. Rest and prepare for the next cycle.";
+        }
+        tip.style.background=tipBg;tip.style.borderLeftColor=tipBorder;
+        const ctb=g("ct-badge");ctb.textContent=badge;ctb.style.color=tipBadgeColor;
+        const ctt=g("ct-text");ctt.textContent=text;ctt.style.color=tipTextColor;
+      } else {
+        g("conception-tip").style.display="none";
+      }
+
+      // Fenetre fertile visuelle + probabilites
+      if(nextOv){
+        g("fertile-detail").style.display="";
+        g("fd-title").textContent=isFR?"Fenetre fertile du mois":"This month's fertile window";
+        g("fd-prob-title").textContent=isFR?"Probabilite de conception":"Conception probability";
+        // Jours fertiles autour de l'ovulation
+        const daysRow=g("fd-days-row");daysRow.innerHTML="";
+        const PROBS=[{d:-5,p:10},{d:-4,p:16},{d:-3,p:27},{d:-2,p:33},{d:-1,p:41},{d:0,p:33},{d:1,p:5}];
+        const todayD=today.getTime();
+        PROBS.forEach(item=>{
+          const dd=new Date(nextOv);dd.setDate(dd.getDate()+item.d);
+          const isToday=dd.getTime()===todayD;
+          const isOv=item.d===0;
+          const num=dd.getDate();
+          const lbl=item.d===0?(isFR?"Ov":"Ov"):item.d===1?(isFR?"J+1":"D+1"):`J${item.d}`;
+          const div=document.createElement("div");div.className="fd-day";
+          let cls="fd-circle"+(isOv?" ovulation-c":item.d>0?"":" fertile-c")+(isToday?" today-c":"");
+          div.innerHTML=`<div class="${cls}">${num}</div><div class="fd-day-lbl">${lbl}</div>`;
+          daysRow.appendChild(div);
+        });
+        // Barres de probabilite
+        const barsEl=g("fd-prob-bars");barsEl.innerHTML="";
+        PROBS.filter(x=>x.d<=0).forEach(item=>{
+          const dd=new Date(nextOv);dd.setDate(dd.getDate()+item.d);
+          const lbl=item.d===0?(isFR?"Ovulation":"Ovulation"):`J${item.d} (${dd.getDate()} ${t.MONTHS[dd.getMonth()].slice(0,3)})`;
+          const intensity=item.p>=40?"#6A1B9A":item.p>=30?"#7B1FA2":item.p>=20?"#9C27B0":"#AB47BC";
+          barsEl.innerHTML+=`<div class="fd-prob-row"><div class="fd-prob-lbl">${lbl}</div><div class="fd-prob-bar"><div class="fd-prob-fill" style="width:${item.p}%;background:${intensity}"></div></div><div class="fd-prob-pct">${item.p}%</div></div>`;
+        });
+
+        // Dates cles
+        g("fertile-dates").style.display="";
+        const fertStart=new Date(nextOv);fertStart.setDate(fertStart.getDate()-5);
+        const fertEnd=new Date(nextOv);fertEnd.setDate(fertEnd.getDate()+1);
+        const optimal=new Date(nextOv);optimal.setDate(optimal.getDate()-1);
+        const fmt=d=>d.toLocaleDateString(t.locale,{day:"numeric",month:"long"});
+        g("fd-lbl-start").textContent=isFR?"Debut fenetre fertile":"Fertile window start";
+        g("fd-val-start").textContent=fmt(fertStart);
+        g("fd-lbl-optimal").textContent=isFR?"Jour optimal (J-2)":"Optimal day (D-2)";
+        const opt2=new Date(nextOv);opt2.setDate(opt2.getDate()-2);
+        g("fd-badge-optimal").textContent=fmt(opt2);
+        g("fd-lbl-ov").textContent=isFR?"Ovulation prevue":"Estimated ovulation";
+        g("fd-badge-ov").textContent=fmt(nextOv);
+        g("fd-lbl-end").textContent=isFR?"Fin fenetre fertile":"Fertile window end";
+        g("fd-val-end").textContent=fmt(fertEnd);
+        g("fd-lbl-dur").textContent=isFR?"Duree fenetre":"Window duration";
+        g("fd-badge-dur").textContent=isFR?"7 jours":"7 days";
+      } else {
+        g("fertile-detail").style.display="none";g("fertile-dates").style.display="none";
+      }
+    }
   }else{
     const proj=getProj();if(!proj.length)return;g("banner-normal").style.display="";
     const next=new Date(proj[0].start);const today=new Date();today.setHours(0,0,0,0);const diff=Math.round((next-today)/86400000);
