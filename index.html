@@ -571,7 +571,7 @@ function updateBanners(){
     const isFR=lang==="fr";
 
     if(!S.periods.length){
-      g("bc-title").textContent=isFR?"Enregistre tes regl":"Log your period";
+      g("bc-title").textContent=isFR?"Enregistre tes regles":"Log your period";
       g("bc-sub").textContent=t.enterCycleFirst;
       g("conception-tip").style.display="none";g("fertile-detail").style.display="none";g("fertile-dates").style.display="none";
     } else {
@@ -648,7 +648,7 @@ function updateBanners(){
           const num=dd.getDate();
           const lbl=item.d===0?(isFR?"Ov":"Ov"):item.d===1?(isFR?"J+1":"D+1"):`J${item.d}`;
           const div=document.createElement("div");div.className="fd-day";
-          let cls="fd-circle"+(isOv?" ovulation-c":item.d>0?"":" fertile-c")+(isToday?" today-c":"");
+          let cls="fd-circle"+(isOv?" ovulation-c":" fertile-c")+(isToday?" today-c":"");
           div.innerHTML=`<div class="${cls}">${num}</div><div class="fd-day-lbl">${lbl}</div>`;
           daysRow.appendChild(div);
         });
