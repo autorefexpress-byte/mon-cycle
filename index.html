@@ -326,58 +326,58 @@ import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut
 import{getFirestore,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 const fbApp=initializeApp({apiKey:"AIzaSyDU0ArCq7kz5G4fxO-1AsmXouM7WcOGns0",authDomain:"mon-cycle-737e5.firebaseapp.com",projectId:"mon-cycle-737e5",storageBucket:"mon-cycle-737e5.firebasestorage.app",messagingSenderId:"153621529995",appId:"1:153621529995:web:d52d9978751ee2063d1b8e"});
 const auth=getAuth(fbApp),db=getFirestore(fbApp);
-const BFR={4:"Ton bebe est un embryon. Le tube neural commence a se former.",5:"Le coeur commence a battre ! Taille : un grain de sesame (2mm).",6:"Le visage prend forme. Le coeur bat ~100 fois par minute.",7:"Les bras et jambes apparaissent. Taille : un haricot (1cm).",8:"Tous les organes sont presents. Taille : un raisin (1,6cm).",9:"Les doigts se forment. Le bebe bouge dans l'utrus.",10:"Le bebe est maintenant un foetus. Taille : une fraise (3cm).",11:"Les ongles apparaissent. Le bebe peut ouvrir ses poings.",12:"Fin du 1er trimestre ! Taille : une prune (5,4cm).",13:"Le bebe peut sucer son pouce. Taille : une peche (7,4cm).",14:"Le bebe fait des grimaces. Le sexe visible a l'echographie.",15:"Le bebe entend ta voix pour la premiere fois !",16:"Taille : un avocat (11,6cm). Premieres sensations de mouvements.",17:"Le bebe developpe une couche de graisse.",18:"Taille : une mangue (14cm). Echographie morphologique bientot !",19:"Le bebe a ses propres empreintes digitales.",20:"Mi-parcours ! Taille : une banane (25cm).",21:"Le bebe avale du liquide amniotique.",22:"Taille : un epi de mais (27cm).",23:"Le bebe peut percevoir la lumiere.",24:"Les poumons se developpent. Taille : 30cm.",25:"Le bebe prend du poids. Il reagit aux sons.",26:"Les yeux s'ouvrent ! Taille : 35cm.",27:"Fin du 2eme trimestre ! Cerveau en plein developpement.",28:"Le bebe a des cycles veille/sommeil.",29:"Taille : 38cm. Les os se durcissent.",30:"Le bebe prend ~200g par semaine.",31:"Le bebe peut tourner la tete. Taille : 41cm.",32:"Le bebe se positionne tete en bas.",33:"Les yeux sont bleus (couleur definitive plus tard).",34:"Les poumons sont presque matures. Taille : 45cm.",35:"Les mouvements sont plus limites.",36:"Le bebe perd son duvet. Taille : 47cm.",37:"Le bebe est a terme ! Il peut naitre a tout moment.",38:"La tete descend dans le bassin.",39:"Le bebe est pret ! Taille : ~50cm.",40:"C'est la date prevue ! Ton bebe arrive bientot."};
+const BFR={4:"Ton bébé est un embryon. Le tube neural commence à se former.",5:"Le coeur commence à battre ! Taille : un grain de sésame (2mm).",6:"Le visage prend forme. Le coeur bat ~100 fois par minute.",7:"Les bras et jambes apparaissent. Taille : un haricot (1cm).",8:"Tous les organes sont présents. Taille : un raisin (1,6cm).",9:"Les doigts se forment. Le bébé bouge dans l'utérus.",10:"Le bébé est maintenant un foetus. Taille : une fraise (3cm).",11:"Les ongles apparaissent. Le bébé peut ouvrir ses poings.",12:"Fin du 1er trimestre ! Taille : une prune (5,4cm).",13:"Le bébé peut sucer son pouce. Taille : une pêche (7,4cm).",14:"Le bébé fait des grimaces. Le sexe visible à l'échographie.",15:"Le bébé entend ta voix pour la première fois !",16:"Taille : un avocat (11,6cm). Premières sensations de mouvements.",17:"Le bébé développe une couche de graisse.",18:"Taille : une mangue (14cm). Échographie morphologique bientôt !",19:"Le bébé a ses propres empreintes digitales.",20:"Mi-parcours ! Taille : une banane (25cm).",21:"Le bébé avale du liquide amniotique.",22:"Taille : un épi de maïs (27cm).",23:"Le bébé peut percevoir la lumière.",24:"Les poumons se développent. Taille : 30cm.",25:"Le bébé prend du poids. Il réagit aux sons.",26:"Les yeux s'ouvrent ! Taille : 35cm.",27:"Fin du 2e trimestre ! Cerveau en plein développement.",28:"Le bébé a des cycles veille/sommeil.",29:"Taille : 38cm. Les os se durcissent.",30:"Le bébé prend ~200g par semaine.",31:"Le bébé peut tourner la tête. Taille : 41cm.",32:"Le bébé se positionne tête en bas.",33:"Les yeux sont bleus (couleur définitive plus tard).",34:"Les poumons sont presque matures. Taille : 45cm.",35:"Les mouvements sont plus limités.",36:"Le bébé perd son duvet. Taille : 47cm.",37:"Le bébé est à terme ! Il peut naître à tout moment.",38:"La tête descend dans le bassin.",39:"Le bébé est prêt ! Taille : ~50cm.",40:"C'est la date prévue ! Ton bébé arrive bientôt."};
 const BEN={4:"Your baby is a microscopic embryo.",5:"The heart is starting to beat! Size: a sesame seed.",6:"The face is taking shape.",7:"Arms and legs are appearing. Size: a kidney bean.",8:"All organs are present. Size: a grape.",9:"Fingers are forming. Baby moves in the uterus.",10:"Baby is now a fetus. Size: a strawberry.",11:"Nails are appearing.",12:"End of 1st trimester! Size: a plum.",13:"Baby can suck thumb. Size: a peach.",14:"Baby is making faces. Gender visible on ultrasound.",15:"Baby can hear your voice for the first time!",16:"Size: an avocado. First movements arriving.",17:"Baby is developing fat under the skin.",18:"Size: a mango. Morphology ultrasound coming!",19:"Baby now has fingerprints.",20:"Halfway there! Size: a banana.",21:"Baby swallows amniotic fluid.",22:"Size: a corn cob.",23:"Baby can sense light.",24:"Lungs are developing. Size: 30cm.",25:"Baby gaining weight rapidly.",26:"Eyes open for the first time! Size: 35cm.",27:"End of 2nd trimester!",28:"Baby has sleep/wake cycles.",29:"Size: 38cm. Bones hardening.",30:"Baby gains ~200g per week.",31:"Baby can turn their head. Size: 41cm.",32:"Baby positioning head-down.",33:"Baby's eyes are blue.",34:"Lungs almost mature. Size: 45cm.",35:"Movements more limited.",36:"Baby loses lanugo. Size: 47cm.",37:"Baby is full-term!",38:"Head descending into pelvis.",39:"Baby is ready! Size: ~50cm.",40:"Due date! Your baby is arriving soon."};
 const T={
-fr:{MONTHS:["Janvier","Fevrier","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Decembre"],DAYS:["Lu","Ma","Me","Je","Ve","Sa","Di"],
-PHASES:[{name:"Menstruation",col:"#E91E8C",bg:"#FCE4EC",desc:"Tes regles ont lieu. Repose-toi."},{name:"Phase folliculaire",col:"#FF9800",bg:"#FFF3E0",desc:"Ton corps se prepare a l ovulation."},{name:"Ovulation",col:"#4CAF50",bg:"#E8F5E9",desc:"Ton ovule est libere. Periode la plus fertile."},{name:"Phase luteale",col:"#9C27B0",bg:"#F3E5F5",desc:"Le corps se prepare. Symptomes du SPM possibles."}],
+fr:{MONTHS:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],DAYS:["Lu","Ma","Me","Je","Ve","Sa","Di"],
+PHASES:[{name:"Menstruation",col:"#E91E8C",bg:"#FCE4EC",desc:"Tes règles ont lieu. Repose-toi."},{name:"Phase folliculaire",col:"#FF9800",bg:"#FFF3E0",desc:"Ton corps se prépare à l'ovulation."},{name:"Ovulation",col:"#4CAF50",bg:"#E8F5E9",desc:"Ton ovule est libéré. Période la plus fertile."},{name:"Phase lutéale",col:"#9C27B0",bg:"#F3E5F5",desc:"Le corps se prépare. Symptômes du SPM possibles."}],
 BABY:BFR,locale:"fr-FR",
-authSub:"Connecte-toi pour retrouver ton suivi",loginTitle:"Connexion",registerTitle:"Creer un compte",signInBtn:"Se connecter",createBtn:"Creer le compte",noAccount:"Pas encore de compte ?",createLink:"Creer un compte",haveAccount:"Deja un compte ?",signInLink:"Se connecter",forgotPwd:"Mot de passe oublie ?",loading:"Chargement...",loadingData:"Chargement de tes donnees...",signingIn:"Connexion...",creating:"Creation du compte...",logout:"Deconnexion",
-nextPeriod:"Prochaines regles",fertileWindow:"Fenetre fertile",myPregnancy:"Ma grossesse",
-inDays:n=>n>0?`Dans ${n} jour${n>1?"s":""}`:n===0?"Aujourd hui":`Il y a ${Math.abs(n)} jour${Math.abs(n)>1?"s":""}`,
-statCycleLbl:"Jours\ncycle",statPeriodLbl:"Jours\nregles",statCountLbl:"Cycles\nenregistres",
-statCycleConLbl:"Jours\ncycle",statPeriodConLbl:"Jours\nfertile",statCountConLbl:"Cycles\nessayes",
-statCycleGrLbl:"Semaine\ngrossesse",statPeriodGrLbl:"Jours\nrestants",statCountGrLbl:"Date\nprevue",
+authSub:"Connecte-toi pour retrouver ton suivi",loginTitle:"Connexion",registerTitle:"Créer un compte",signInBtn:"Se connecter",createBtn:"Créer le compte",noAccount:"Pas encore de compte ?",createLink:"Créer un compte",haveAccount:"Déjà un compte ?",signInLink:"Se connecter",forgotPwd:"Mot de passe oublié ?",loading:"Chargement...",loadingData:"Chargement de tes données...",signingIn:"Connexion...",creating:"Création du compte...",logout:"Déconnexion",
+nextPeriod:"Prochaines règles",fertileWindow:"Fenêtre fertile",myPregnancy:"Ma grossesse",
+inDays:n=>n>0?`Dans ${n} jour${n>1?"s":""}`:n===0?"Aujourd'hui":`Il y a ${Math.abs(n)} jour${Math.abs(n)>1?"s":""}`,
+statCycleLbl:"Jours\ncycle",statPeriodLbl:"Jours\nrègles",statCountLbl:"Cycles\nenregistrés",
+statCycleConLbl:"Jours\ncycle",statPeriodConLbl:"Jours\nfertile",statCountConLbl:"Cycles\nessayés",
+statCycleGrLbl:"Semaine\ngrossesse",statPeriodGrLbl:"Jours\nrestants",statCountGrLbl:"Date\nprévue",
 dayOf:(d,tt)=>`Jour ${d} sur ${tt}`,pregProg:d=>`Grossesse : ${d} jours sur 280`,
-legPeriod:"Regles",legPredicted:"Prevues",legOvulation:"Ovulation",legFertile:"Fertile",
-legPregStart:"Debut grossesse",legPregDay:"Periode grossesse",
-legPeriodC:"Regles",legOvC:"Ovulation",legFertileC:"Fenetre fertile",
+legPeriod:"Règles",legPredicted:"Prévues",legOvulation:"Ovulation",legFertile:"Fertile",
+legPregStart:"Début grossesse",legPregDay:"Période grossesse",
+legPeriodC:"Règles",legOvC:"Ovulation",legFertileC:"Fenêtre fertile",
 logLabel:"Enregistrer",selPrompt:"Appuie sur un jour du calendrier",
-btnStart:"+ Debut regles",btnEnd:"+ Fin regles",btnDdr:"Modifier date DDR",
-tabHome:"Accueil",tabHist:"Historique",tabSett:"Reglages",
-pageHome:"Mon cycle",pageHist:"Historique",pageSett:"Reglages",
+btnStart:"+ Début règles",btnEnd:"+ Fin règles",btnDdr:"Modifier date DDR",
+tabHome:"Accueil",tabHist:"Historique",tabSett:"Réglages",
+pageHome:"Mon cycle",pageHist:"Historique",pageSett:"Réglages",
 modeSuiviTitle:"Mode de suivi",
-modeNT:"Suivi normal",modeNS:"Suivi de mes regles et projections",
-modeCT:"Tentative de conception",modeCS:"Fenetre fertile et ovulation mis en avant",
-modeGT:"Grossesse en cours",modeGS:"Suivi semaine par semaine du bebe",
+modeNT:"Suivi normal",modeNS:"Suivi de mes règles et projections",
+modeCT:"Tentative de conception",modeCS:"Fenêtre fertile et ovulation mis en avant",
+modeGT:"Grossesse en cours",modeGS:"Suivi semaine par semaine du bébé",
 modeBadgeC:"Mode conception",modeBadgeG:"Mode grossesse",
-ddrTitle:"Date de debut de grossesse",ddrSub:"Entre la date de tes dernieres regles (DDR) pour calculer la semaine et la date d accouchement.",ddrBtn:"Confirmer la date",
-settParamsTitle:"Parametres",settCycleLbl:"Duree du cycle",settCycleSub:"Jours entre les regles",settPeriodLbl:"Duree des regles",settPeriodSub:"Nombre de jours moyen",settProjLbl:"Cycles a projeter",settProjSub:"Cycles futurs affiches",
-settLangTitle:"Langue / Language",settLangLbl:"Langue de l application",
-settInfoTitle:"Informations",settPrivacyLbl:"Politique de confidentialite",settPrivacySub:"Donnees, RGPD, vie privee",settAboutLbl:"A propos de l app",settAboutSub:"Version, contact, createurs",
-settDataTitle:"Donnees",clearBtn:"Effacer toutes les donnees",
-privNote:"Tes donnees sont sauvegardees sur Firebase.\nAccessibles depuis n importe quel appareil.",
-toastStart:"Debut des regles enregistre",toastEnd:"Fin des regles enregistree",toastPregSaved:"Date de grossesse enregistree",
-toastDeleted:"Cycle supprime",toastCleared:"Donnees effacees",toastError:"Erreur de sauvegarde",
-toastSelectDay:"Selectionne d abord un jour",toastAlready:"Debut deja enregistre",toastNeedStart:"Enregistre d abord un debut",toastEndBefore:"La fin doit etre apres le debut",toastSelectDate:"Selectionne une date",toastGrSett:"Entre ta date DDR dans les Reglages",
-emptyHist:"Aucun cycle enregistre",histDays:n=>n+" jours de regles",histNoEnd:"Fin non renseignee",histCycle:n=>"Cycle : "+n+" jours",histLast:"Dernier cycle",histBadge:n=>n+"j cycle",
-confirmDelete:"Supprimer ce cycle ?",confirmClear:"Effacer toutes les donnees ?",errEmpty:"Remplis tous les champs.",
-errMsgs:{"auth/invalid-email":"Email invalide.","auth/user-not-found":"Aucun compte.","auth/wrong-password":"Mot de passe incorrect.","auth/invalid-credential":"Email ou mot de passe incorrect.","auth/email-already-in-use":"Email deja utilise.","auth/weak-password":"Mot de passe trop court (6 car. min).","auth/too-many-requests":"Trop de tentatives."},
-rstTitle:"Mot de passe oublie",rstSub:"Entre ton email pour recevoir un lien.",rstBtn:"Envoyer le lien",rstBack:"Retour",rstSuccess:"Email envoye ! Verifie ta boite mail.",rstErrEmpty:"Entre ton email.",rstSending:"Envoi...",
-prvHeaderTitle:"Confidentialite",prvH1:"Politique de confidentialite",prvUpdated:"Aout 2026",
-prvS1h:"1. Qui sommes-nous ?",prvS1p:"Mon Cycle est developpe en Nouvelle-Caledonie.",
-prvS2h:"2. Donnees collectees",prvS2p:"Email, dates de regles, parametres. Pas de localisation.",
-prvS3h:"3. Utilisation",prvS3p:"Uniquement pour faire fonctionner l app. Jamais vendues.",
-prvS4h:"4. Securite",prvS4p:"Firebase (Google Cloud), conforme RGPD, HTTPS.",
-prvS5h:"5. Tes droits",prvS5p:"Acces, correction ou suppression via les Reglages.",
-prvS6h:"6. Donnees de sante",prvS6p:"Sensibles. Non accessibles a des tiers.",
+ddrTitle:"Date de début de grossesse",ddrSub:"Entre la date de tes dernières règles (DDR) pour calculer la semaine et la date d'accouchement.",ddrBtn:"Confirmer la date",
+settParamsTitle:"Paramètres",settCycleLbl:"Durée du cycle",settCycleSub:"Jours entre les règles",settPeriodLbl:"Durée des règles",settPeriodSub:"Nombre de jours moyen",settProjLbl:"Cycles à projeter",settProjSub:"Cycles futurs affichés",
+settLangTitle:"Langue / Language",settLangLbl:"Langue de l'application",
+settInfoTitle:"Informations",settPrivacyLbl:"Politique de confidentialité",settPrivacySub:"Données, RGPD, vie privée",settAboutLbl:"À propos de l'app",settAboutSub:"Version, contact, créateurs",
+settDataTitle:"Données",clearBtn:"Effacer toutes les données",
+privNote:"Tes données sont sauvegardées sur Firebase.\nAccessibles depuis n'importe quel appareil.",
+toastStart:"Début des règles enregistré",toastEnd:"Fin des règles enregistrée",toastPregSaved:"Date de grossesse enregistrée",
+toastDeleted:"Cycle supprimé",toastCleared:"Données effacées",toastError:"Erreur de sauvegarde",
+toastSelectDay:"Sélectionne d'abord un jour",toastAlready:"Début déjà enregistré",toastNeedStart:"Enregistre d'abord un début",toastEndBefore:"La fin doit être après le début",toastSelectDate:"Sélectionne une date",toastGrSett:"Entre ta date DDR dans les Réglages",
+emptyHist:"Aucun cycle enregistré",histDays:n=>n+" jours de règles",histNoEnd:"Fin non renseignée",histCycle:n=>"Cycle : "+n+" jours",histLast:"Dernier cycle",histBadge:n=>n+"j cycle",
+confirmDelete:"Supprimer ce cycle ?",confirmClear:"Effacer toutes les données ?",errEmpty:"Remplis tous les champs.",
+errMsgs:{"auth/invalid-email":"Email invalide.","auth/user-not-found":"Aucun compte.","auth/wrong-password":"Mot de passe incorrect.","auth/invalid-credential":"Email ou mot de passe incorrect.","auth/email-already-in-use":"Email déjà utilisé.","auth/weak-password":"Mot de passe trop court (6 car. min).","auth/too-many-requests":"Trop de tentatives."},
+rstTitle:"Mot de passe oublié",rstSub:"Entre ton email pour recevoir un lien.",rstBtn:"Envoyer le lien",rstBack:"Retour",rstSuccess:"Email envoyé ! Vérifie ta boîte mail.",rstErrEmpty:"Entre ton email.",rstSending:"Envoi...",
+prvHeaderTitle:"Confidentialité",prvH1:"Politique de confidentialité",prvUpdated:"Août 2026",
+prvS1h:"1. Qui sommes-nous ?",prvS1p:"Mon Cycle est développé en Nouvelle-Calédonie.",
+prvS2h:"2. Données collectées",prvS2p:"Email, dates de règles, paramètres. Pas de localisation.",
+prvS3h:"3. Utilisation",prvS3p:"Uniquement pour faire fonctionner l'app. Jamais vendues.",
+prvS4h:"4. Sécurité",prvS4p:"Firebase (Google Cloud), conforme RGPD, HTTPS.",
+prvS5h:"5. Tes droits",prvS5p:"Accès, correction ou suppression via les Réglages.",
+prvS6h:"6. Données de santé",prvS6p:"Sensibles. Non accessibles à des tiers.",
 prvS7h:"7. Contact",prvS7p:"contact@moncycle.nc",
-abtHeaderTitle:"A propos",abtVersion:"Version 1.0 - Mars 2027",abtTagline:"Fait en Nouvelle-Caledonie, pour les femmes du Pacifique",
-abtVerLbl:"Version",abtDevLbl:"Developpe en",abtLangLbl:"Langue",abtLaunchLbl:"Lancement",abtContactLbl:"Contact",abtPrivacyLbl:"Confidentialite",abtPrivacyLink:"Voir la politique",
-abtCredit:"Fait avec amour en Nouvelle-Caledonie\n8 mars 2027\nMon Cycle - Aucune pub. Jamais.",
-babyWeekTitle:w=>`Semaine ${w} - Ton bebe`,dpaLabel:d=>`Date prevue : ${d}`,
-ovInDays:n=>n>0?`Ovulation dans ${n} jour${n>1?"s":""}`:n===0?"Ovulation aujourd hui":"Fenetre fertile passee",
-enterCycleFirst:"Enregistre tes regles pour calculer ta fenetre fertile."
+abtHeaderTitle:"À propos",abtVersion:"Version 1.0 - Mars 2027",abtTagline:"Fait en Nouvelle-Calédonie, pour les femmes du Pacifique",
+abtVerLbl:"Version",abtDevLbl:"Développé en",abtLangLbl:"Langue",abtLaunchLbl:"Lancement",abtContactLbl:"Contact",abtPrivacyLbl:"Confidentialité",abtPrivacyLink:"Voir la politique",
+abtCredit:"Fait avec amour en Nouvelle-Calédonie\n8 mars 2027\nMon Cycle - Aucune pub. Jamais.",
+babyWeekTitle:w=>`Semaine ${w} - Ton bébé`,dpaLabel:d=>`Date prévue : ${d}`,
+ovInDays:n=>n>0?`Ovulation dans ${n} jour${n>1?"s":""}`:n===0?"Ovulation aujourd'hui":"Fenêtre fertile passée",
+enterCycleFirst:"Enregistre tes règles pour calculer ta fenêtre fertile."
 },
 en:{MONTHS:["January","February","March","April","May","June","July","August","September","October","November","December"],DAYS:["Mo","Tu","We","Th","Fr","Sa","Su"],
 PHASES:[{name:"Menstruation",col:"#E91E8C",bg:"#FCE4EC",desc:"Your period is happening. Rest and take care."},{name:"Follicular phase",col:"#FF9800",bg:"#FFF3E0",desc:"Your body is preparing for ovulation."},{name:"Ovulation",col:"#4CAF50",bg:"#E8F5E9",desc:"Your egg is released. Most fertile time."},{name:"Luteal phase",col:"#9C27B0",bg:"#F3E5F5",desc:"Body is preparing. Some PMS symptoms possible."}],
@@ -546,9 +546,9 @@ function updateBanners(){
   g("banner-normal").style.display="none";g("banner-conception").style.display="none";g("banner-grossesse").style.display="none";g("baby-card").style.display="none";
   if(S.mode==="grossesse"){
     g("banner-grossesse").style.display="block";const info=getPregInfo();
-    if(!info){g("bg-week").textContent=lang==="fr"?"Entre ta date DDR":"Enter your LMP date";g("bg-days").textContent=lang==="fr"?"Va dans Reglages":"Go to Settings";g("bg-dpa").textContent="";return;}
+    if(!info){g("bg-week").textContent=lang==="fr"?"Entre ta date DDR":"Enter your LMP date";g("bg-days").textContent=lang==="fr"?"Va dans Réglages":"Go to Settings";g("bg-dpa").textContent="";return;}
     g("bg-week").textContent=`${lang==="fr"?"Semaine":"Week"} ${info.weeks} + ${info.rem} ${lang==="fr"?"jour":"day"}${info.rem>1?"s":""}`;
-    g("bg-days").textContent=info.daysLeft>0?t.inDays(info.daysLeft):lang==="fr"?"Bebe arrive bientot !":"Baby arriving soon!";
+    g("bg-days").textContent=info.daysLeft>0?t.inDays(info.daysLeft):lang==="fr"?"Bébé arrive bientôt !":"Baby arriving soon!";
     g("bg-dpa").textContent=t.dpaLabel(info.dpa.toLocaleDateString(t.locale,{day:"numeric",month:"long",year:"numeric"}));
     const w=Math.min(40,Math.max(4,info.weeks));g("baby-card").style.display="block";g("baby-title").textContent=t.babyWeekTitle(info.weeks);g("baby-text").textContent=t.BABY[w]||t.BABY[40];
   }else if(S.mode==="conception"){
@@ -571,16 +571,16 @@ function updateBanners(){
     const isFR=lang==="fr";
 
     if(!S.periods.length){
-      g("bc-title").textContent=isFR?"Enregistre tes regles":"Log your period";
+      g("bc-title").textContent=isFR?"Enregistre tes règles":"Log your period";
       g("bc-sub").textContent=t.enterCycleFirst;
       g("conception-tip").style.display="none";g("fertile-detail").style.display="none";g("fertile-dates").style.display="none";
     } else {
       // Banner
       if(isOvToday){
         g("bc-title").textContent=isFR?"C'est ton jour d'ovulation !":"Today is your ovulation day!";
-        g("bc-sub").textContent=isFR?"Fertilite maximale aujourd'hui — probabilite de conception : 33%":"Maximum fertility today — conception probability: 33%";
+        g("bc-sub").textContent=isFR?"Fertilité maximale aujourd'hui — probabilité de conception : 33%":"Maximum fertility today — conception probability: 33%";
       } else if(isInFertile){
-        g("bc-title").textContent=isFR?"Tu es dans ta fenetre fertile !":"You're in your fertile window!";
+        g("bc-title").textContent=isFR?"Tu es dans ta fenêtre fertile !":"You're in your fertile window!";
         g("bc-sub").textContent=isFR?"Les prochains jours sont optimaux pour concevoir.":"The next few days are optimal for conceiving.";
       } else if(nextOv){
         const diff=Math.round((nextOv-today)/86400000);
@@ -599,31 +599,31 @@ function updateBanners(){
         if(diffOv>7){
           tipBg="#FFF3E0";tipBorder="#FF9800";tipBadgeColor="#E65100";tipTextColor="#BF360C";
           badge=isFR?"Phase folliculaire":"Follicular phase";
-          text=isFR?`La fenetre fertile ouvre dans ${diffOv-5} jours. Prends soin de toi et prepare-toi.`:`Fertile window opens in ${diffOv-5} days. Take care of yourself.`;
+          text=isFR?`La fenêtre fertile ouvre dans ${diffOv-5} jours. Prends soin de toi et prépare-toi.`:`Fertile window opens in ${diffOv-5} days. Take care of yourself.`;
         } else if(diffOv>=5){
           tipBg="#F3E5F5";tipBorder="#AB47BC";tipBadgeColor="#7B1FA2";tipTextColor="#4A148C";
-          badge=isFR?"Fenetre fertile bientot":"Fertile window soon";
-          text=isFR?`Ovulation dans ${diffOv} jours. C'est le bon moment pour commencer — les spermatozoides survivent 3 a 5 jours.`:`Ovulation in ${diffOv} days. Good time to start — sperm survive 3-5 days.`;
+          badge=isFR?"Fenêtre fertile bientôt":"Fertile window soon";
+          text=isFR?`Ovulation dans ${diffOv} jours. C'est le bon moment pour commencer — les spermatozoïdes survivent 3 à 5 jours.`:`Ovulation in ${diffOv} days. Good time to start — sperm survive 3-5 days.`;
         } else if(diffOv>=3){
           tipBg="#F3E5F5";tipBorder="#9C27B0";tipBadgeColor="#6A1B9A";tipTextColor="#4A148C";
-          badge=isFR?"Fenetre fertile ouverte":"Fertile window open";
-          text=isFR?`Tu es a ${diffOv} jours de l'ovulation. Probabilite de conception elevee — c'est le moment !`:`You are ${diffOv} days from ovulation. High conception probability — now is the time!`;
+          badge=isFR?"Fenêtre fertile ouverte":"Fertile window open";
+          text=isFR?`Tu es à ${diffOv} jours de l'ovulation. Probabilité de conception élevée — c'est le moment !`:`You are ${diffOv} days from ovulation. High conception probability — now is the time!`;
         } else if(diffOv===2){
           tipBg="#EDE7F6";tipBorder="#7B1FA2";tipBadgeColor="#4527A0";tipTextColor="#311B92";
-          badge=isFR?"Tres bientot":"Very soon";
-          text=isFR?"J-2 de l'ovulation — probabilite : 33%. Un des meilleurs jours du cycle !":"J-2 from ovulation — probability: 33%. One of the best days of the cycle!";
+          badge=isFR?"Très bientôt":"Very soon";
+          text=isFR?"J-2 de l'ovulation — probabilité : 33%. Un des meilleurs jours du cycle !":"J-2 from ovulation — probability: 33%. One of the best days of the cycle!";
         } else if(diffOv===1){
           tipBg="#EDE7F6";tipBorder="#6A1B9A";tipBadgeColor="#4527A0";tipTextColor="#311B92";
           badge=isFR?"Ovulation demain !":"Ovulation tomorrow!";
-          text=isFR?"Demain est ton jour de fertilite maximale — probabilite : 41%. Ne rate pas cette fenetre !":"Tomorrow is your peak fertility day — probability: 41%. Don't miss this window!";
+          text=isFR?"Demain est ton jour de fertilité maximale — probabilité : 41%. Ne rate pas cette fenêtre !":"Tomorrow is your peak fertility day — probability: 41%. Don't miss this window!";
         } else if(diffOv===0){
           tipBg="#EDE7F6";tipBorder="#4A148C";tipBadgeColor="#311B92";tipTextColor="#1A237E";
           badge=isFR?"Ovulation !":"Ovulation!";
-          text=isFR?"Ton ovule est libere aujourd'hui ! Probabilite : 33%. J-1 et J-2 sont statistiquement legerement meilleurs mais aujourd'hui reste excellent.":"Your egg is released today! Probability: 33%. J-1 and J-2 are slightly better statistically but today is still excellent.";
+          text=isFR?"Ton ovule est libéré aujourd'hui ! Probabilité : 33%. J-1 et J-2 sont statistiquement légèrement meilleurs mais aujourd'hui reste excellent.":"Your egg is released today! Probability: 33%. J-1 and J-2 are slightly better statistically but today is still excellent.";
         } else {
           tipBg="#E8F5E9";tipBorder="#4CAF50";tipBadgeColor="#2E7D32";tipTextColor="#1B5E20";
-          badge=isFR?"Phase luteal":"Luteal phase";
-          text=isFR?"La fenetre fertile est passee pour ce cycle. Repose-toi et prepare le prochain cycle.":"The fertile window has passed for this cycle. Rest and prepare for the next cycle.";
+          badge=isFR?"Phase lutéale":"Luteal phase";
+          text=isFR?"La fenêtre fertile est passée pour ce cycle. Repose-toi et prépare le prochain cycle.":"The fertile window has passed for this cycle. Rest and prepare for the next cycle.";
         }
         tip.style.background=tipBg;tip.style.borderLeftColor=tipBorder;
         const ctb=g("ct-badge");ctb.textContent=badge;ctb.style.color=tipBadgeColor;
@@ -635,8 +635,8 @@ function updateBanners(){
       // Fenetre fertile visuelle + probabilites
       if(nextOv){
         g("fertile-detail").style.display="block";
-        g("fd-title").textContent=isFR?"Fenetre fertile du mois":"This month's fertile window";
-        g("fd-prob-title").textContent=isFR?"Probabilite de conception":"Conception probability";
+        g("fd-title").textContent=isFR?"Fenêtre fertile du mois":"This month's fertile window";
+        g("fd-prob-title").textContent=isFR?"Probabilité de conception":"Conception probability";
         // Jours fertiles autour de l'ovulation
         const daysRow=g("fd-days-row");daysRow.innerHTML="";
         const PROBS=[{d:-5,p:10},{d:-4,p:16},{d:-3,p:27},{d:-2,p:33},{d:-1,p:41},{d:0,p:33},{d:1,p:5}];
@@ -667,16 +667,16 @@ function updateBanners(){
         const fertEnd=new Date(nextOv);fertEnd.setDate(fertEnd.getDate()+1);
         const optimal=new Date(nextOv);optimal.setDate(optimal.getDate()-1);
         const fmt=d=>d.toLocaleDateString(t.locale,{day:"numeric",month:"long"});
-        g("fd-lbl-start").textContent=isFR?"Debut fenetre fertile":"Fertile window start";
+        g("fd-lbl-start").textContent=isFR?"Début fenêtre fertile":"Fertile window start";
         g("fd-val-start").textContent=fmt(fertStart);
         g("fd-lbl-optimal").textContent=isFR?"Jour optimal (J-2)":"Optimal day (D-2)";
         const opt2=new Date(nextOv);opt2.setDate(opt2.getDate()-2);
         g("fd-badge-optimal").textContent=fmt(opt2);
-        g("fd-lbl-ov").textContent=isFR?"Ovulation prevue":"Estimated ovulation";
+        g("fd-lbl-ov").textContent=isFR?"Ovulation prévue":"Estimated ovulation";
         g("fd-badge-ov").textContent=fmt(nextOv);
-        g("fd-lbl-end").textContent=isFR?"Fin fenetre fertile":"Fertile window end";
+        g("fd-lbl-end").textContent=isFR?"Fin fenêtre fertile":"Fertile window end";
         g("fd-val-end").textContent=fmt(fertEnd);
-        g("fd-lbl-dur").textContent=isFR?"Duree fenetre":"Window duration";
+        g("fd-lbl-dur").textContent=isFR?"Durée fenêtre":"Window duration";
         g("fd-badge-dur").textContent=isFR?"7 jours":"7 days";
       } else {
         g("fertile-detail").style.display="none";g("fertile-dates").style.display="none";
