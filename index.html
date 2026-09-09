@@ -545,14 +545,14 @@ window.logEnd=async()=>{if(!S.sel){toast(t.toastSelectDay);return;}const sorted=
 function updateBanners(){
   g("banner-normal").style.display="none";g("banner-conception").style.display="none";g("banner-grossesse").style.display="none";g("baby-card").style.display="none";
   if(S.mode==="grossesse"){
-    g("banner-grossesse").style.display="";const info=getPregInfo();
+    g("banner-grossesse").style.display="block";const info=getPregInfo();
     if(!info){g("bg-week").textContent=lang==="fr"?"Entre ta date DDR":"Enter your LMP date";g("bg-days").textContent=lang==="fr"?"Va dans Reglages":"Go to Settings";g("bg-dpa").textContent="";return;}
     g("bg-week").textContent=`${lang==="fr"?"Semaine":"Week"} ${info.weeks} + ${info.rem} ${lang==="fr"?"jour":"day"}${info.rem>1?"s":""}`;
     g("bg-days").textContent=info.daysLeft>0?t.inDays(info.daysLeft):lang==="fr"?"Bebe arrive bientot !":"Baby arriving soon!";
     g("bg-dpa").textContent=t.dpaLabel(info.dpa.toLocaleDateString(t.locale,{day:"numeric",month:"long",year:"numeric"}));
-    const w=Math.min(40,Math.max(4,info.weeks));g("baby-card").style.display="";g("baby-title").textContent=t.babyWeekTitle(info.weeks);g("baby-text").textContent=t.BABY[w]||t.BABY[40];
+    const w=Math.min(40,Math.max(4,info.weeks));g("baby-card").style.display="block";g("baby-title").textContent=t.babyWeekTitle(info.weeks);g("baby-text").textContent=t.BABY[w]||t.BABY[40];
   }else if(S.mode==="conception"){
-    g("banner-conception").style.display="";
+    g("banner-conception").style.display="block";
     const{f,ov}=getFertile();const today=new Date();today.setHours(0,0,0,0);const todayStr=today.toISOString().slice(0,10);
     const isInFertile=f.has(todayStr)||ov.has(todayStr);
     const isOvToday=ov.has(todayStr);
@@ -594,7 +594,7 @@ function updateBanners(){
       // Conseil du jour
       if(nextOv){
         const diffOv=Math.round((nextOv-today)/86400000);
-        const tip=g("conception-tip");tip.style.display="";
+        const tip=g("conception-tip");tip.style.display="block";
         let tipBg,tipBorder,tipBadgeColor,tipTextColor,badge,text;
         if(diffOv>7){
           tipBg="#FFF3E0";tipBorder="#FF9800";tipBadgeColor="#E65100";tipTextColor="#BF360C";
@@ -634,7 +634,7 @@ function updateBanners(){
 
       // Fenetre fertile visuelle + probabilites
       if(nextOv){
-        g("fertile-detail").style.display="";
+        g("fertile-detail").style.display="block";
         g("fd-title").textContent=isFR?"Fenetre fertile du mois":"This month's fertile window";
         g("fd-prob-title").textContent=isFR?"Probabilite de conception":"Conception probability";
         // Jours fertiles autour de l'ovulation
@@ -662,7 +662,7 @@ function updateBanners(){
         });
 
         // Dates cles
-        g("fertile-dates").style.display="";
+        g("fertile-dates").style.display="block";
         const fertStart=new Date(nextOv);fertStart.setDate(fertStart.getDate()-5);
         const fertEnd=new Date(nextOv);fertEnd.setDate(fertEnd.getDate()+1);
         const optimal=new Date(nextOv);optimal.setDate(optimal.getDate()-1);
@@ -683,7 +683,7 @@ function updateBanners(){
       }
     }
   }else{
-    const proj=getProj();if(!proj.length)return;g("banner-normal").style.display="";
+    const proj=getProj();if(!proj.length)return;g("banner-normal").style.display="block";
     const next=new Date(proj[0].start);const today=new Date();today.setHours(0,0,0,0);const diff=Math.round((next-today)/86400000);
     g("nb-date").textContent=next.toLocaleDateString(t.locale,{day:"numeric",month:"long",year:"numeric"});g("nb-days").textContent=t.inDays(diff);
   }
@@ -699,7 +699,7 @@ function updatePhase(){
   const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));const last=new Date(sorted[sorted.length-1].start);const today=new Date();today.setHours(0,0,0,0);
   let day=Math.round((today-last)/86400000)%S.settings.cycle;if(day<0)day+=S.settings.cycle;
   const ph=day<S.settings.period?0:day<Math.round(S.settings.cycle*0.45)?1:day<Math.round(S.settings.cycle*0.55)?2:3;
-  const pc=g("phase-card"),p=t.PHASES[ph];pc.style.display="";pc.style.borderLeftColor=p.col;
+  const pc=g("phase-card"),p=t.PHASES[ph];pc.style.display="block";pc.style.borderLeftColor=p.col;
   const badge=g("phase-badge");badge.textContent=p.name;badge.style.background=p.bg;badge.style.color=p.col;
   g("phase-name").textContent=p.name;g("phase-name").style.color=p.col;g("phase-desc").textContent=p.desc;
 }
