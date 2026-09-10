@@ -544,6 +544,7 @@ window.logStart=async()=>{if(S.mode==="grossesse"){goTab("sett");toast(t.toastGr
 window.logEnd=async()=>{if(!S.sel){toast(t.toastSelectDay);return;}const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));const last=sorted[sorted.length-1];if(!last){toast(t.toastNeedStart);return;}if(new Date(S.sel)<new Date(last.start)){toast(t.toastEndBefore);return;}S.periods[S.periods.findIndex(p=>p.start===last.start)].end=S.sel;renderCal();toast(t.toastEnd);try{await saveData();}catch(e){toast(t.toastError);}};
 function updateBanners(){
   g("banner-normal").style.display="none";g("banner-conception").style.display="none";g("banner-grossesse").style.display="none";g("baby-card").style.display="none";
+  g("conception-tip").style.display="none";g("fertile-detail").style.display="none";g("fertile-dates").style.display="none";
   if(S.mode==="grossesse"){
     g("banner-grossesse").style.display="block";const info=getPregInfo();
     if(!info){g("bg-week").textContent=lang==="fr"?"Entre ta date DDR":"Enter your LMP date";g("bg-days").textContent=lang==="fr"?"Va dans Réglages":"Go to Settings";g("bg-dpa").textContent="";return;}
