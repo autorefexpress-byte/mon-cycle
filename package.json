@@ -1,0 +1,17 @@
+{
+  "name": "mon-cycle",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "auth:migrate": "auth migrate --config lib/auth.js -y",
+    "auth:generate": "auth generate --config lib/auth.js -y"
+  },
+  "dependencies": {
+    "better-auth": "^1.7.4",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "auth": "^1.7.4"
+  }
+}
