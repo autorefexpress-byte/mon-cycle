@@ -9,7 +9,6 @@
 <meta name="apple-mobile-web-app-title" content="Mon Cycle">
 <title>Mon Cycle</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
 :root{--pink:#E91E8C;--pink-dark:#C2185B;--pink-light:#FCE4EC;--green:#4CAF50;--green-light:#E8F5E9;--purple:#9C27B0;--purple-light:#F3E5F5;--blue:#2196F3;--blue-light:#E3F2FD;--bg:#F5F5F5;--card:#FFFFFF;--text:#1A1A1A;--text-sec:#757575;--border:#EEEEEE;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;background:var(--bg);overflow:hidden;}
@@ -113,6 +112,13 @@ html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;back
 .lang-toggle-btn.active{border-color:var(--pink);background:var(--pink);color:#fff;}
 .danger-btn{width:100%;padding:15px;background:#fff;border:1.5px solid #FFCDD2;color:#E53935;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
 .danger-btn:active{background:#FFF3F3;}.priv-note{margin-top:20px;text-align:center;font-size:12px;color:#bbb;line-height:1.7;}
+.neutral-btn{width:100%;padding:15px;background:#fff;border:1.5px solid var(--border);color:var(--text);border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+.neutral-btn:active{background:var(--bg);}
+.data-btns{display:flex;flex-direction:column;gap:10px;}
+.consent-row{display:flex;align-items:flex-start;gap:9px;padding:2px 2px;}
+.consent-row input{width:18px;height:18px;flex-shrink:0;margin-top:1px;accent-color:var(--pink);}
+.consent-row label{font-size:12px;color:var(--text-sec);line-height:1.5;}
+.consent-row label span{color:var(--pink);font-weight:600;cursor:pointer;}
 .fertile-detail{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;display:none;}
 .fd-title{font-size:11px;font-weight:600;color:var(--text-sec);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;}
 .fd-days-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
@@ -176,6 +182,10 @@ html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;back
     <div class="auth-error" id="auth-error"></div>
     <input class="auth-input" type="email" id="auth-email" placeholder="Email" autocomplete="email">
     <input class="auth-input" type="password" id="auth-password" placeholder="Password" autocomplete="current-password">
+    <div class="consent-row" id="consent-row" style="display:none">
+      <input type="checkbox" id="consent-check">
+      <label for="consent-check" id="consent-label"></label>
+    </div>
     <button class="auth-btn" id="auth-submit" onclick="authSubmit()"></button>
     <div class="auth-forgot" id="auth-forgot" onclick="showReset()"></div>
     <div class="auth-divider">&#8212;&#8212;&#8212;&#8212;</div>
@@ -279,7 +289,13 @@ html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;back
         <div class="sett-item" onclick="showAbout()" style="cursor:pointer"><div><div class="sett-lbl" id="sett-about-lbl"></div><div class="sett-sub" id="sett-about-sub"></div></div><div style="color:var(--text-sec);font-size:18px">&#8250;</div></div>
       </div>
       <div class="sett-section" id="sett-data-title"></div>
-      <div class="card" style="padding:14px"><button class="danger-btn" id="clear-btn" onclick="clearAll()"></button></div>
+      <div class="card" style="padding:14px">
+        <div class="data-btns">
+          <button class="neutral-btn" id="export-btn" onclick="exportData()"></button>
+          <button class="danger-btn" id="clear-btn" onclick="clearAll()"></button>
+          <button class="danger-btn" id="delete-account-btn" onclick="deleteAccount()"></button>
+        </div>
+      </div>
       <div class="priv-note" id="priv-note"></div>
     </div>
   </div>
@@ -300,7 +316,7 @@ html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;back
 </div>
 <div class="overlay-screen" id="privacy-screen">
   <div class="overlay-header"><button class="overlay-back" onclick="hidePrivacy()">&#8249;</button><div class="overlay-header-title" id="prv-header-title"></div></div>
-  <div class="overlay-body"><div class="prv-h1" id="prv-h1"></div><div class="prv-updated" id="prv-updated"></div><div class="prv-h2" id="prv-s1-h"></div><div class="prv-p" id="prv-s1-p"></div><div class="prv-h2" id="prv-s2-h"></div><div class="prv-p" id="prv-s2-p"></div><div class="prv-h2" id="prv-s3-h"></div><div class="prv-p" id="prv-s3-p"></div><div class="prv-h2" id="prv-s4-h"></div><div class="prv-p" id="prv-s4-p"></div><div class="prv-h2" id="prv-s5-h"></div><div class="prv-p" id="prv-s5-p"></div><div class="prv-h2" id="prv-s6-h"></div><div class="prv-p" id="prv-s6-p"></div><div class="prv-h2" id="prv-s7-h"></div><div class="prv-p" id="prv-s7-p"></div></div>
+  <div class="overlay-body"><div class="prv-h1" id="prv-h1"></div><div class="prv-updated" id="prv-updated"></div><div class="prv-h2" id="prv-s1-h"></div><div class="prv-p" id="prv-s1-p"></div><div class="prv-h2" id="prv-s2-h"></div><div class="prv-p" id="prv-s2-p"></div><div class="prv-h2" id="prv-s3-h"></div><div class="prv-p" id="prv-s3-p"></div><div class="prv-h2" id="prv-s4-h"></div><div class="prv-p" id="prv-s4-p"></div><div class="prv-h2" id="prv-s5-h"></div><div class="prv-p" id="prv-s5-p"></div><div class="prv-h2" id="prv-s6-h"></div><div class="prv-p" id="prv-s6-p"></div><div class="prv-h2" id="prv-s7-h"></div><div class="prv-p" id="prv-s7-p"></div><div class="prv-h2" id="prv-s8-h"></div><div class="prv-p" id="prv-s8-p"></div><div class="prv-h2" id="prv-s9-h"></div><div class="prv-p" id="prv-s9-p"></div></div>
 </div>
 <div class="overlay-screen" id="about-screen">
   <div class="overlay-header"><button class="overlay-back" onclick="hideAbout()">&#8249;</button><div class="overlay-header-title" id="abt-header-title"></div></div>
@@ -322,8 +338,8 @@ html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;back
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,sendPasswordResetEmail}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import{getFirestore,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,sendPasswordResetEmail,deleteUser,EmailAuthProvider,reauthenticateWithCredential}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc,deleteDoc}from"https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 const fbApp=initializeApp({apiKey:"AIzaSyDU0ArCq7kz5G4fxO-1AsmXouM7WcOGns0",authDomain:"mon-cycle-737e5.firebaseapp.com",projectId:"mon-cycle-737e5",storageBucket:"mon-cycle-737e5.firebasestorage.app",messagingSenderId:"153621529995",appId:"1:153621529995:web:d52d9978751ee2063d1b8e"});
 const auth=getAuth(fbApp),db=getFirestore(fbApp);
 const BFR={4:"Ton bébé est un embryon. Le tube neural commence à se former.",5:"Le coeur commence à battre ! Taille : un grain de sésame (2mm).",6:"Le visage prend forme. Le coeur bat ~100 fois par minute.",7:"Les bras et jambes apparaissent. Taille : un haricot (1cm).",8:"Tous les organes sont présents. Taille : un raisin (1,6cm).",9:"Les doigts se forment. Le bébé bouge dans l'utérus.",10:"Le bébé est maintenant un foetus. Taille : une fraise (3cm).",11:"Les ongles apparaissent. Le bébé peut ouvrir ses poings.",12:"Fin du 1er trimestre ! Taille : une prune (5,4cm).",13:"Le bébé peut sucer son pouce. Taille : une pêche (7,4cm).",14:"Le bébé fait des grimaces. Le sexe visible à l'échographie.",15:"Le bébé entend ta voix pour la première fois !",16:"Taille : un avocat (11,6cm). Premières sensations de mouvements.",17:"Le bébé développe une couche de graisse.",18:"Taille : une mangue (14cm). Échographie morphologique bientôt !",19:"Le bébé a ses propres empreintes digitales.",20:"Mi-parcours ! Taille : une banane (25cm).",21:"Le bébé avale du liquide amniotique.",22:"Taille : un épi de maïs (27cm).",23:"Le bébé peut percevoir la lumière.",24:"Les poumons se développent. Taille : 30cm.",25:"Le bébé prend du poids. Il réagit aux sons.",26:"Les yeux s'ouvrent ! Taille : 35cm.",27:"Fin du 2e trimestre ! Cerveau en plein développement.",28:"Le bébé a des cycles veille/sommeil.",29:"Taille : 38cm. Les os se durcissent.",30:"Le bébé prend ~200g par semaine.",31:"Le bébé peut tourner la tête. Taille : 41cm.",32:"Le bébé se positionne tête en bas.",33:"Les yeux sont bleus (couleur définitive plus tard).",34:"Les poumons sont presque matures. Taille : 45cm.",35:"Les mouvements sont plus limités.",36:"Le bébé perd son duvet. Taille : 47cm.",37:"Le bébé est à terme ! Il peut naître à tout moment.",38:"La tête descend dans le bassin.",39:"Le bébé est prêt ! Taille : ~50cm.",40:"C'est la date prévue ! Ton bébé arrive bientôt."};
@@ -355,23 +371,31 @@ ddrTitle:"Date de début de grossesse",ddrSub:"Entre la date de tes dernières r
 settParamsTitle:"Paramètres",settCycleLbl:"Durée du cycle",settCycleSub:"Jours entre les règles",settPeriodLbl:"Durée des règles",settPeriodSub:"Nombre de jours moyen",settProjLbl:"Cycles à projeter",settProjSub:"Cycles futurs affichés",
 settLangTitle:"Langue / Language",settLangLbl:"Langue de l'application",
 settInfoTitle:"Informations",settPrivacyLbl:"Politique de confidentialité",settPrivacySub:"Données, RGPD, vie privée",settAboutLbl:"À propos de l'app",settAboutSub:"Version, contact, créateurs",
-settDataTitle:"Données",clearBtn:"Effacer toutes les données",
-privNote:"Tes données sont sauvegardées sur Firebase.\nAccessibles depuis n'importe quel appareil.",
+settDataTitle:"Données",clearBtn:"Effacer les données du cycle",
+exportBtn:"⬇️ Exporter mes données (JSON)",deleteAccountBtn:"🗑️ Supprimer mon compte définitivement",
+privNote:"Tes données sont hébergées de façon sécurisée sur Firebase.\nTu peux les exporter ou supprimer ton compte à tout moment ci-dessus.",
+consentPre:"J'accepte la ",consentLink:"politique de confidentialité",consentPost:" et je consens explicitement au traitement de mes données de santé (cycle menstruel), conformément à l'article 9 du RGPD.",
+errConsent:"Tu dois accepter la politique de confidentialité pour créer un compte.",
+confirmDeleteAccount:"Supprimer définitivement ton compte et toutes tes données ? Cette action est irréversible.",
+reauthPrompt:"Pour confirmer la suppression, entre à nouveau ton mot de passe :",
+toastAccountDeleted:"Compte et données supprimés définitivement",toastExported:"Données exportées",
 toastStart:"Début des règles enregistré",toastEnd:"Fin des règles enregistrée",toastPregSaved:"Date de grossesse enregistrée",
-toastDeleted:"Cycle supprimé",toastCleared:"Données effacées",toastError:"Erreur de sauvegarde",
+toastDeleted:"Cycle supprimé",toastCleared:"Données du cycle effacées",toastError:"Erreur de sauvegarde",
 toastSelectDay:"Sélectionne d'abord un jour",toastAlready:"Début déjà enregistré",toastNeedStart:"Enregistre d'abord un début",toastEndBefore:"La fin doit être après le début",toastSelectDate:"Sélectionne une date",toastGrSett:"Entre ta date DDR dans les Réglages",
 emptyHist:"Aucun cycle enregistré",histDays:n=>n+" jours de règles",histNoEnd:"Fin non renseignée",histCycle:n=>"Cycle : "+n+" jours",histLast:"Dernier cycle",histBadge:n=>n+"j cycle",
-confirmDelete:"Supprimer ce cycle ?",confirmClear:"Effacer toutes les données ?",errEmpty:"Remplis tous les champs.",
-errMsgs:{"auth/invalid-email":"Email invalide.","auth/user-not-found":"Aucun compte.","auth/wrong-password":"Mot de passe incorrect.","auth/invalid-credential":"Email ou mot de passe incorrect.","auth/email-already-in-use":"Email déjà utilisé.","auth/weak-password":"Mot de passe trop court (6 car. min).","auth/too-many-requests":"Trop de tentatives."},
+confirmDelete:"Supprimer ce cycle ?",confirmClear:"Effacer toutes les données de cycle enregistrées ? (ton compte restera actif)",errEmpty:"Remplis tous les champs.",
+errMsgs:{"auth/invalid-email":"Email invalide.","auth/user-not-found":"Aucun compte.","auth/wrong-password":"Mot de passe incorrect.","auth/invalid-credential":"Email ou mot de passe incorrect.","auth/email-already-in-use":"Email déjà utilisé.","auth/weak-password":"Mot de passe trop court (6 car. min).","auth/too-many-requests":"Trop de tentatives.","auth/requires-recent-login":"Session trop ancienne, réessaie."},
 rstTitle:"Mot de passe oublié",rstSub:"Entre ton email pour recevoir un lien.",rstBtn:"Envoyer le lien",rstBack:"Retour",rstSuccess:"Email envoyé ! Vérifie ta boîte mail.",rstErrEmpty:"Entre ton email.",rstSending:"Envoi...",
-prvHeaderTitle:"Confidentialité",prvH1:"Politique de confidentialité",prvUpdated:"Août 2026",
-prvS1h:"1. Qui sommes-nous ?",prvS1p:"Mon Cycle est développé en Nouvelle-Calédonie.",
-prvS2h:"2. Données collectées",prvS2p:"Email, dates de règles, paramètres. Pas de localisation.",
-prvS3h:"3. Utilisation",prvS3p:"Uniquement pour faire fonctionner l'app. Jamais vendues.",
-prvS4h:"4. Sécurité",prvS4p:"Firebase (Google Cloud), conforme RGPD, HTTPS.",
-prvS5h:"5. Tes droits",prvS5p:"Accès, correction ou suppression via les Réglages.",
-prvS6h:"6. Données de santé",prvS6p:"Sensibles. Non accessibles à des tiers.",
-prvS7h:"7. Contact",prvS7p:"contact@moncycle.nc",
+prvHeaderTitle:"Confidentialité",prvH1:"Politique de confidentialité",prvUpdated:"Septembre 2026",
+prvS1h:"1. Responsable du traitement",prvS1p:"Mon Cycle est développé et édité en Nouvelle-Calédonie. Pour toute question relative à tes données personnelles, contacte-nous à contact@moncycle.nc.",
+prvS2h:"2. Données collectées",prvS2p:"Ton adresse email (compte), les dates de tes règles, ton mode de suivi (normal / conception / grossesse), la date de début de grossesse le cas échéant, et tes préférences (durée de cycle, langue). Aucune donnée de localisation ni identifiant publicitaire n'est collecté.",
+prvS3h:"3. Finalités et base légale",prvS3p:"Ces données servent uniquement à calculer et afficher tes prévisions de cycle, ta fenêtre fertile ou ton suivi de grossesse. Le traitement repose sur ton consentement explicite (art. 6.1.a et art. 9.2.a du RGPD), donné à la création de ton compte et que tu peux retirer à tout moment en supprimant ton compte.",
+prvS4h:"4. Destinataires et hébergement",prvS4p:"Tes données sont hébergées par Firebase (Google Cloud / Google Ireland Ltd), notre sous-traitant technique, avec chiffrement au repos et en transit. Elles ne sont ni vendues, ni partagées avec des tiers à des fins commerciales ou publicitaires, et aucun outil d'analyse ou de tracking n'est utilisé dans l'application.",
+prvS5h:"5. Durée de conservation",prvS5p:"Tes données sont conservées tant que ton compte est actif. Elles sont supprimées définitivement et immédiatement dès que tu supprimes ton compte depuis Réglages > Données, ou sur simple demande à contact@moncycle.nc.",
+prvS6h:"6. Sécurité",prvS6p:"Connexion chiffrée HTTPS, authentification sécurisée par email/mot de passe, accès aux données restreint à ton compte uniquement.",
+prvS7h:"7. Données de santé",prvS7p:"Les données relatives à ton cycle menstruel constituent une catégorie particulière de données au sens de l'article 9 du RGPD. Elles ne sont utilisées que pour le fonctionnement de l'app et ne sont jamais partagées ni réutilisées à d'autres fins.",
+prvS8h:"8. Tes droits",prvS8p:"Tu disposes d'un droit d'accès, de rectification, d'effacement, de portabilité (bouton « Exporter mes données ») et d'opposition, ainsi que du droit de retirer ton consentement à tout moment. Tu peux supprimer ton compte et toutes tes données depuis Réglages > Données. Tu peux aussi introduire une réclamation auprès de la CNIL (www.cnil.fr).",
+prvS9h:"9. Contact",prvS9p:"Pour toute question sur tes données ou pour exercer tes droits : contact@moncycle.nc.",
 abtHeaderTitle:"À propos",abtVersion:"Version 1.0 - Mars 2027",abtTagline:"Fait en Nouvelle-Calédonie, pour les femmes du Pacifique",
 abtVerLbl:"Version",abtDevLbl:"Développé en",abtLangLbl:"Langue",abtLaunchLbl:"Lancement",abtContactLbl:"Contact",abtPrivacyLbl:"Confidentialité",abtPrivacyLink:"Voir la politique",
 abtCredit:"Fait avec amour en Nouvelle-Calédonie\n8 mars 2027\nMon Cycle - Aucune pub. Jamais.",
@@ -405,23 +429,31 @@ ddrTitle:"Pregnancy start date",ddrSub:"Enter your Last Menstrual Period (LMP) t
 settParamsTitle:"Settings",settCycleLbl:"Cycle length",settCycleSub:"Days between periods",settPeriodLbl:"Period length",settPeriodSub:"Average number of days",settProjLbl:"Cycles to show",settProjSub:"Future cycles displayed",
 settLangTitle:"Langue / Language",settLangLbl:"App language",
 settInfoTitle:"Information",settPrivacyLbl:"Privacy policy",settPrivacySub:"Data, GDPR, privacy",settAboutLbl:"About the app",settAboutSub:"Version, contact, creators",
-settDataTitle:"Data",clearBtn:"Clear all data",
-privNote:"Your data is securely saved on Firebase.\nAccessible from any device.",
+settDataTitle:"Data",clearBtn:"Clear cycle data",
+exportBtn:"⬇️ Export my data (JSON)",deleteAccountBtn:"🗑️ Permanently delete my account",
+privNote:"Your data is securely hosted on Firebase.\nYou can export it or delete your account at any time above.",
+consentPre:"I accept the ",consentLink:"privacy policy",consentPost:" and I explicitly consent to the processing of my health data (menstrual cycle), in accordance with Article 9 of the GDPR.",
+errConsent:"You must accept the privacy policy to create an account.",
+confirmDeleteAccount:"Permanently delete your account and all your data? This action cannot be undone.",
+reauthPrompt:"To confirm deletion, please re-enter your password:",
+toastAccountDeleted:"Account and data permanently deleted",toastExported:"Data exported",
 toastStart:"Period start logged",toastEnd:"Period end logged",toastPregSaved:"Pregnancy date saved",
-toastDeleted:"Cycle deleted",toastCleared:"Data cleared",toastError:"Save error",
+toastDeleted:"Cycle deleted",toastCleared:"Cycle data cleared",toastError:"Save error",
 toastSelectDay:"Select a day first",toastAlready:"Start already logged",toastNeedStart:"Log a start first",toastEndBefore:"End must be after start",toastSelectDate:"Select a date",toastGrSett:"Enter your LMP date in Settings",
 emptyHist:"No cycles logged yet",histDays:n=>n+" days of period",histNoEnd:"End not logged",histCycle:n=>"Cycle: "+n+" days",histLast:"Latest cycle",histBadge:n=>n+"d cycle",
-confirmDelete:"Delete this cycle?",confirmClear:"Clear all data?",errEmpty:"Please fill in all fields.",
-errMsgs:{"auth/invalid-email":"Invalid email.","auth/user-not-found":"No account found.","auth/wrong-password":"Wrong password.","auth/invalid-credential":"Invalid email or password.","auth/email-already-in-use":"Email already in use.","auth/weak-password":"Password min 6 chars.","auth/too-many-requests":"Too many attempts."},
+confirmDelete:"Delete this cycle?",confirmClear:"Clear all logged cycle data? (your account will stay active)",errEmpty:"Please fill in all fields.",
+errMsgs:{"auth/invalid-email":"Invalid email.","auth/user-not-found":"No account found.","auth/wrong-password":"Wrong password.","auth/invalid-credential":"Invalid email or password.","auth/email-already-in-use":"Email already in use.","auth/weak-password":"Password min 6 chars.","auth/too-many-requests":"Too many attempts.","auth/requires-recent-login":"Session too old, please try again."},
 rstTitle:"Forgot password",rstSub:"Enter your email and we will send a reset link.",rstBtn:"Send link",rstBack:"Back",rstSuccess:"Email sent! Check your inbox.",rstErrEmpty:"Enter your email.",rstSending:"Sending...",
-prvHeaderTitle:"Privacy",prvH1:"Privacy Policy",prvUpdated:"August 2026",
-prvS1h:"1. Who are we?",prvS1p:"Mon Cycle is developed in New Caledonia.",
-prvS2h:"2. Data collected",prvS2p:"Email, period dates, cycle settings. No location data.",
-prvS3h:"3. How data is used",prvS3p:"Only to run the app. Never sold or shared.",
-prvS4h:"4. Security",prvS4p:"Firebase (Google Cloud), GDPR compliant, HTTPS.",
-prvS5h:"5. Your rights",prvS5p:"Access, correct or delete via app Settings.",
-prvS6h:"6. Health data",prvS6p:"Sensitive. Not accessible to third parties.",
-prvS7h:"7. Contact",prvS7p:"contact@moncycle.nc",
+prvHeaderTitle:"Privacy",prvH1:"Privacy Policy",prvUpdated:"September 2026",
+prvS1h:"1. Data controller",prvS1p:"Mon Cycle is developed and published in New Caledonia. For any question about your personal data, contact us at contact@moncycle.nc.",
+prvS2h:"2. Data collected",prvS2p:"Your email address (account), your period dates, your tracking mode (normal / conception / pregnancy), your pregnancy start date if applicable, and your preferences (cycle length, language). No location data or advertising identifier is collected.",
+prvS3h:"3. Purpose and legal basis",prvS3p:"This data is used only to calculate and display your cycle predictions, fertile window or pregnancy tracking. Processing relies on your explicit consent (GDPR art. 6.1.a and art. 9.2.a), given when you create your account, which you can withdraw at any time by deleting your account.",
+prvS4h:"4. Recipients and hosting",prvS4p:"Your data is hosted by Firebase (Google Cloud / Google Ireland Ltd), our technical processor, encrypted at rest and in transit. It is never sold or shared with third parties for commercial or advertising purposes, and no analytics or tracking tool is used in the app.",
+prvS5h:"5. Data retention",prvS5p:"Your data is kept as long as your account is active. It is permanently and immediately deleted as soon as you delete your account via Settings > Data, or upon request at contact@moncycle.nc.",
+prvS6h:"6. Security",prvS6p:"Encrypted HTTPS connection, secure email/password authentication, access to your data restricted to your account only.",
+prvS7h:"7. Health data",prvS7p:"Data relating to your menstrual cycle is a special category of data under Article 9 of the GDPR. It is used only to run the app and is never shared or reused for other purposes.",
+prvS8h:"8. Your rights",prvS8p:"You have the right to access, rectify, erase, port (\"Export my data\" button) and object, as well as the right to withdraw your consent at any time. You can delete your account and all your data via Settings > Data. You can also lodge a complaint with the CNIL (www.cnil.fr) or your local data protection authority.",
+prvS9h:"9. Contact",prvS9p:"For any question about your data or to exercise your rights: contact@moncycle.nc.",
 abtHeaderTitle:"About",abtVersion:"Version 1.0 - March 2027",abtTagline:"Made in New Caledonia, for women of the Pacific",
 abtVerLbl:"Version",abtDevLbl:"Made in",abtLangLbl:"Language",abtLaunchLbl:"Launch",abtContactLbl:"Contact",abtPrivacyLbl:"Privacy",abtPrivacyLink:"View policy",
 abtCredit:"Made with love in New Caledonia\nMarch 8, 2027\nMon Cycle - No ads. Never.",
@@ -444,6 +476,9 @@ function applyT(){
   g("auth-forgot").textContent=t.forgotPwd;
   g("auth-password").placeholder=lang==="fr"?"Mot de passe":"Password";
   shi("auth-toggle",isL?`${t.noAccount} <span>${t.createLink}</span>`:`${t.haveAccount} <span>${t.signInLink}</span>`);
+  g("consent-row").style.display=isL?"none":"flex";
+  shi("consent-label",`${t.consentPre}<span onclick="event.preventDefault();showPrivacy()">${t.consentLink}</span>${t.consentPost}`);
+  g("export-btn").textContent=t.exportBtn;g("delete-account-btn").textContent=t.deleteAccountBtn;
   st("logout-btn",t.logout);st("rst-title",t.rstTitle);st("rst-sub",t.rstSub);st("rst-btn",t.rstBtn);st("rst-back",t.rstBack);
   g("reset-success").textContent=t.rstSuccess;st("nb-label",t.nextPeriod);st("bc-label",t.fertileWindow);st("bg-label",t.myPregnancy);
   st("log-label",t.logLabel);g("btn-start").textContent=t.btnStart;g("btn-end").textContent=t.btnEnd;
@@ -459,7 +494,7 @@ function applyT(){
   st("sett-about-lbl","ℹ️ "+t.settAboutLbl);st("sett-about-sub",t.settAboutSub);
   st("sett-data-title",t.settDataTitle);st("clear-btn",t.clearBtn);st("priv-note",t.privNote);
   st("prv-header-title",t.prvHeaderTitle);st("prv-h1",t.prvH1);st("prv-updated",t.prvUpdated);
-  ["1","2","3","4","5","6","7"].forEach(n=>{st(`prv-s${n}-h`,t[`prvS${n}h`]);st(`prv-s${n}-p`,t[`prvS${n}p`]);});
+  ["1","2","3","4","5","6","7","8","9"].forEach(n=>{st(`prv-s${n}-h`,t[`prvS${n}h`]);st(`prv-s${n}-p`,t[`prvS${n}p`]);});
   st("abt-header-title",t.abtHeaderTitle);st("abt-version",t.abtVersion);st("abt-tagline",t.abtTagline);
   st("abt-ver-lbl",t.abtVerLbl);st("abt-dev-lbl",t.abtDevLbl);st("abt-lang-lbl",t.abtLangLbl);
   st("abt-launch-lbl",t.abtLaunchLbl);st("abt-contact-lbl",t.abtContactLbl);st("abt-privacy-lbl",t.abtPrivacyLbl);st("abt-privacy-link",t.abtPrivacyLink);
@@ -477,8 +512,8 @@ function authErr(id,msg){const el=g(id);el.textContent=msg;el.style.display=msg?
 window.showReset=()=>{g("auth-screen").style.display="none";g("reset-screen").classList.add("active");g("reset-screen").style.display="flex";g("reset-email").value=g("auth-email").value||"";authErr("reset-error","");g("reset-success").style.display="none";};
 window.showAuth=()=>{g("reset-screen").classList.remove("active");g("reset-screen").style.display="none";g("auth-screen").style.display="flex";};
 window.sendReset=async()=>{authErr("reset-error","");const email=g("reset-email").value.trim();if(!email){authErr("reset-error",t.rstErrEmpty);return;}showLoading(true,t.rstSending);try{await sendPasswordResetEmail(auth,email);showLoading(false);g("reset-success").style.display="block";g("reset-email").value="";}catch(e){showLoading(false);authErr("reset-error",t.errMsgs[e.code]||"Error");}};
-window.toggleAuthMode=()=>{authMode=authMode==="login"?"register":"login";authErr("auth-error","");applyT();};
-window.authSubmit=async()=>{authErr("auth-error","");const email=g("auth-email").value.trim(),pass=g("auth-password").value;if(!email||!pass){authErr("auth-error",t.errEmpty);return;}showLoading(true,authMode==="login"?t.signingIn:t.creating);try{if(authMode==="login")await signInWithEmailAndPassword(auth,email,pass);else await createUserWithEmailAndPassword(auth,email,pass);}catch(e){showLoading(false);authErr("auth-error",t.errMsgs[e.code]||e.message);}};
+window.toggleAuthMode=()=>{authMode=authMode==="login"?"register":"login";authErr("auth-error","");g("consent-check").checked=false;applyT();};
+window.authSubmit=async()=>{authErr("auth-error","");const email=g("auth-email").value.trim(),pass=g("auth-password").value;if(!email||!pass){authErr("auth-error",t.errEmpty);return;}if(authMode==="register"&&!g("consent-check").checked){authErr("auth-error",t.errConsent);return;}showLoading(true,authMode==="login"?t.signingIn:t.creating);try{if(authMode==="login")await signInWithEmailAndPassword(auth,email,pass);else await createUserWithEmailAndPassword(auth,email,pass);}catch(e){showLoading(false);authErr("auth-error",t.errMsgs[e.code]||e.message);}};
 window.doLogout=async()=>{await signOut(auth);S={periods:[],settings:{cycle:28,period:5,proj:3},mode:"normal",pregStartDate:null,vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:null,uid:null};};
 window.showPrivacy=()=>g("privacy-screen").classList.add("active");
 window.hidePrivacy=()=>g("privacy-screen").classList.remove("active");
@@ -721,6 +756,35 @@ function renderHist(){
 }
 async function delPeriod(start){if(!confirm(t.confirmDelete))return;S.periods=S.periods.filter(p=>p.start!==start);renderHist();renderCal();toast(t.toastDeleted);try{await saveData();}catch(e){}}
 window.clearAll=async()=>{if(!confirm(t.confirmClear))return;S.periods=[];S.mode="normal";S.pregStartDate=null;renderHist();renderCal();applyMode();toast(t.toastCleared);try{await saveData();}catch(e){}};
+window.exportData=()=>{
+  const data={email:auth.currentUser?auth.currentUser.email:null,periods:S.periods,settings:S.settings,mode:S.mode,pregStartDate:S.pregStartDate,exportedAt:new Date().toISOString()};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");a.href=url;a.download="mon-cycle-donnees.json";document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);toast(t.toastExported);
+};
+async function finishAccountDeletion(){
+  try{await deleteDoc(doc(db,"users",S.uid));}catch(e){}
+  await deleteUser(auth.currentUser);
+  toast(t.toastAccountDeleted);
+}
+window.deleteAccount=async()=>{
+  if(!S.uid||!auth.currentUser)return;
+  if(!confirm(t.confirmDeleteAccount))return;
+  try{
+    await finishAccountDeletion();
+  }catch(e){
+    if(e.code==="auth/requires-recent-login"){
+      const pass=prompt(t.reauthPrompt);
+      if(!pass)return;
+      try{
+        const cred=EmailAuthProvider.credential(auth.currentUser.email,pass);
+        await reauthenticateWithCredential(auth.currentUser,cred);
+        await finishAccountDeletion();
+      }catch(e2){toast(t.errMsgs[e2.code]||t.toastError);}
+    }else{toast(t.errMsgs[e.code]||t.toastError);}
+  }
+};
 const LIM={cycle:[20,45],period:[1,10],proj:[1,12]};
 window.adj=async(k,d)=>{S.settings[k]=Math.max(LIM[k][0],Math.min(LIM[k][1],S.settings[k]+d));syncSett();renderCal();try{await saveData();}catch(e){}};
 function syncSett(){g("sv-cycle").textContent=S.settings.cycle;g("sv-period").textContent=S.settings.period;g("sv-proj").textContent=S.settings.proj;}
