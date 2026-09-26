@@ -616,21 +616,24 @@ window.goTab=tab=>{
   ["home","hist","sett"].forEach(tt=>{g("tab-"+tt).classList.toggle("active",tt===tab);const n=g("nav-"+tt),on=tt===tab;n.classList.toggle("active",on);n.querySelector(".nav-lbl").style.color=on?"var(--pink)":"";n.querySelectorAll("[stroke]").forEach(el=>el.setAttribute("stroke",on?"#E91E8C":"#bbb"));});
   updatePageTitle();g("content").scrollTop=0;if(tab==="hist")renderHist();
 };
-function periodDays(){const s=new Set();S.periods.forEach(p=>{const st=new Date(p.start);const dur=p.end?Math.round((new Date(p.end)-st)/86400000)+1:S.settings.period;for(let i=0;i<dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(d.toISOString().slice(0,10));}});return s;}
-function getProj(){if(!S.periods.length)return[];const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));let avg=S.settings.cycle;if(sorted.length>1){let tt=0;for(let i=1;i<sorted.length;i++)tt+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;avg=Math.round(tt/(sorted.length-1));}const last=new Date(sorted[sorted.length-1].start);return Array.from({length:S.settings.proj},(_,i)=>{const d=new Date(last);d.setDate(d.getDate()+avg*(i+1));return{start:d.toISOString().slice(0,10),dur:S.settings.period};});}
-function projDays(){const s=new Set();getProj().forEach(p=>{const st=new Date(p.start);for(let i=0;i<p.dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(d.toISOString().slice(0,10));}});return s;}
-function getFertile(){const f=new Set(),ov=new Set();[...S.periods.map(p=>p.start),...getProj().map(p=>p.start)].forEach(st=>{const ovd=new Date(st);ovd.setDate(ovd.getDate()+S.settings.cycle-14);ov.add(ovd.toISOString().slice(0,10));for(let i=-5;i<=1;i++){const fd=new Date(ovd);fd.setDate(fd.getDate()+i);const k=fd.toISOString().slice(0,10);if(!ov.has(k))f.add(k);}});return{f,ov};}
-function getPregInfo(){if(!S.pregStartDate)return null;const start=new Date(S.pregStartDate);const today=new Date();today.setHours(0,0,0,0);const days=Math.round((today-start)/86400000);const weeks=Math.floor(days/7);const rem=days%7;const dpa=new Date(start);dpa.setDate(dpa.getDate()+280);const daysLeft=Math.round((dpa-today)/86400000);return{weeks,rem,dpa,daysLeft,days};}
+// Dates en heure LOCALE (pas UTC) : sinon, en Nouvelle-Calédonie (UTC+11), "aujourd'hui" est décalé d'un jour
+const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const pd=s=>{if(s instanceof Date)return new Date(s.getFullYear(),s.getMonth(),s.getDate());const[y,m,d]=String(s).slice(0,10).split("-").map(Number);return new Date(y,m-1,d);};
+function periodDays(){const s=new Set();S.periods.forEach(p=>{const st=pd(p.start);const dur=p.end?Math.round((pd(p.end)-st)/86400000)+1:S.settings.period;for(let i=0;i<dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(ymd(d));}});return s;}
+function getProj(){if(!S.periods.length)return[];const sorted=[...S.periods].sort((a,b)=>pd(a.start)-pd(b.start));let avg=S.settings.cycle;if(sorted.length>1){let tt=0;for(let i=1;i<sorted.length;i++)tt+=(pd(sorted[i].start)-pd(sorted[i-1].start))/86400000;avg=Math.round(tt/(sorted.length-1));}const last=pd(sorted[sorted.length-1].start);return Array.from({length:S.settings.proj},(_,i)=>{const d=new Date(last);d.setDate(d.getDate()+avg*(i+1));return{start:ymd(d),dur:S.settings.period};});}
+function projDays(){const s=new Set();getProj().forEach(p=>{const st=pd(p.start);for(let i=0;i<p.dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(ymd(d));}});return s;}
+function getFertile(){const f=new Set(),ov=new Set();[...S.periods.map(p=>p.start),...getProj().map(p=>p.start)].forEach(st=>{const ovd=pd(st);ovd.setDate(ovd.getDate()+S.settings.cycle-14);ov.add(ymd(ovd));for(let i=-5;i<=1;i++){const fd=new Date(ovd);fd.setDate(fd.getDate()+i);const k=ymd(fd);if(!ov.has(k))f.add(k);}});return{f,ov};}
+function getPregInfo(){if(!S.pregStartDate)return null;const start=pd(S.pregStartDate);const today=new Date();today.setHours(0,0,0,0);const days=Math.round((today-start)/86400000);const weeks=Math.floor(days/7);const rem=days%7;const dpa=new Date(start);dpa.setDate(dpa.getDate()+280);const daysLeft=Math.round((dpa-today)/86400000);return{weeks,rem,dpa,daysLeft,days};}
 function renderCal(){
   const{vy:y,vm:m}=S;g("cal-month").textContent=`${t.MONTHS[m]} ${y}`;
   const pd=periodDays(),prd=projDays(),{f,ov}=getFertile();
-  const today=new Date().toISOString().slice(0,10);
+  const today=ymd(new Date());
   const isC=S.mode==="conception",isG=S.mode==="grossesse";
   const grid=g("cal-grid");grid.innerHTML="";
   t.DAYS.forEach(d=>{const e=document.createElement("div");e.className="cal-hdr";e.textContent=d;grid.appendChild(e);});
   const off=(new Date(y,m,1).getDay()+6)%7;for(let i=0;i<off;i++){const e=document.createElement("div");e.className="day empty";grid.appendChild(e);}
   const dim=new Date(y,m+1,0).getDate();
-  let pregSet=new Set();if(isG&&S.pregStartDate){const ps=new Date(S.pregStartDate);const dpa=new Date(ps);dpa.setDate(dpa.getDate()+280);let cur=new Date(ps);while(cur<=dpa){pregSet.add(cur.toISOString().slice(0,10));cur.setDate(cur.getDate()+1);}}
+  let pregSet=new Set();if(isG&&S.pregStartDate){const ps=pd(S.pregStartDate);const dpa=new Date(ps);dpa.setDate(dpa.getDate()+280);let cur=new Date(ps);while(cur<=dpa){pregSet.add(ymd(cur));cur.setDate(cur.getDate()+1);}}
   for(let d=1;d<=dim;d++){
     const ds=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
     const e=document.createElement("div");e.className="day";e.textContent=d;
@@ -648,8 +651,8 @@ function renderCal(){
 window.prevMonth=()=>{S.vm--;if(S.vm<0){S.vm=11;S.vy--;}renderCal();};
 window.nextMonth=()=>{S.vm++;if(S.vm>11){S.vm=0;S.vy++;}renderCal();};
 function selectDay(ds){S.sel=ds;const[y,mo,d]=ds.split("-").map(Number);const lbl=new Date(y,mo-1,d).toLocaleDateString(t.locale,{weekday:"long",day:"numeric",month:"long"});const el=g("sel-show");el.textContent=lbl.charAt(0).toUpperCase()+lbl.slice(1);el.classList.remove("ph");renderCal();}
-window.logStart=async()=>{if(S.mode==="grossesse"){goTab("sett");toast(t.toastGrSett);return;}if(!S.sel){toast(t.toastSelectDay);return;}if(S.periods.find(p=>p.start===S.sel)){toast(t.toastAlready);return;}S.periods.push({start:S.sel,end:null});S.periods.sort((a,b)=>new Date(a.start)-new Date(b.start));renderCal();toast(t.toastStart);try{await saveData();}catch(e){toast(t.toastError);}};
-window.logEnd=async()=>{if(!S.sel){toast(t.toastSelectDay);return;}const candidates=S.periods.filter(p=>new Date(p.start)<=new Date(S.sel)).sort((a,b)=>new Date(b.start)-new Date(a.start));const target=candidates[0];if(!target){toast(t.toastNeedStart);return;}S.periods[S.periods.findIndex(p=>p.start===target.start)].end=S.sel;renderCal();toast(t.toastEnd);try{await saveData();}catch(e){toast(t.toastError);}};
+window.logStart=async()=>{if(S.mode==="grossesse"){goTab("sett");toast(t.toastGrSett);return;}if(!S.sel){toast(t.toastSelectDay);return;}if(S.periods.find(p=>p.start===S.sel)){toast(t.toastAlready);return;}S.periods.push({start:S.sel,end:null});S.periods.sort((a,b)=>pd(a.start)-pd(b.start));renderCal();toast(t.toastStart);try{await saveData();}catch(e){toast(t.toastError);}};
+window.logEnd=async()=>{if(!S.sel){toast(t.toastSelectDay);return;}const candidates=S.periods.filter(p=>pd(p.start)<=pd(S.sel)).sort((a,b)=>pd(b.start)-pd(a.start));const target=candidates[0];if(!target){toast(t.toastNeedStart);return;}S.periods[S.periods.findIndex(p=>p.start===target.start)].end=S.sel;renderCal();toast(t.toastEnd);try{await saveData();}catch(e){toast(t.toastError);}};
 function updateBanners(){
   g("banner-normal").style.display="none";g("banner-conception").style.display="none";g("banner-grossesse").style.display="none";g("baby-card").style.display="none";
   g("conception-tip").style.display="none";g("fertile-detail").style.display="none";g("fertile-dates").style.display="none";
@@ -662,14 +665,14 @@ function updateBanners(){
     const w=Math.min(40,Math.max(4,info.weeks));g("baby-card").style.display="block";g("baby-title").textContent=t.babyWeekTitle(info.weeks);g("baby-text").textContent=t.BABY[w]||t.BABY[40];
   }else if(S.mode==="conception"){
     g("banner-conception").style.display="block";
-    const{f,ov}=getFertile();const today=new Date();today.setHours(0,0,0,0);const todayStr=today.toISOString().slice(0,10);
+    const{f,ov}=getFertile();const today=new Date();today.setHours(0,0,0,0);const todayStr=ymd(today);
     const isInFertile=f.has(todayStr)||ov.has(todayStr);
     const isOvToday=ov.has(todayStr);
     // Trouver TOUTES les ovulations (passées et futures) et prendre la plus proche de today
     let nextOv=null;
     const allOvStarts=[...S.periods.map(p=>p.start),...getProj().map(p=>p.start)];
     let allOvDates=[];
-    allOvStarts.forEach(st=>{const ovd=new Date(st);ovd.setDate(ovd.getDate()+S.settings.cycle-14);allOvDates.push(ovd);});
+    allOvStarts.forEach(st=>{const ovd=pd(st);ovd.setDate(ovd.getDate()+S.settings.cycle-14);allOvDates.push(ovd);});
     if(allOvDates.length){
       // Chercher d abord l ovulation en cours ou future la plus proche
       const futureOv=allOvDates.filter(d=>Math.round((d-today)/86400000)>=0).sort((a,b)=>a-b);
@@ -793,19 +796,19 @@ function updateBanners(){
     }
   }else{
     const proj=getProj();if(!proj.length)return;g("banner-normal").style.display="block";
-    const next=new Date(proj[0].start);const today=new Date();today.setHours(0,0,0,0);const diff=Math.round((next-today)/86400000);
+    const next=pd(proj[0].start);const today=new Date();today.setHours(0,0,0,0);const diff=Math.round((next-today)/86400000);
     g("nb-date").textContent=next.toLocaleDateString(t.locale,{day:"numeric",month:"long",year:"numeric"});g("nb-days").textContent=t.inDays(diff);
   }
 }
 function updateStats(){
-  const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
+  const sorted=[...S.periods].sort((a,b)=>pd(a.start)-pd(b.start));
   if(S.mode==="grossesse"){const info=getPregInfo();g("st-cycle").textContent=info?`S${info.weeks}`:"—";g("st-period").textContent=info?(info.daysLeft>0?info.daysLeft:0):"—";g("st-count").textContent=info?info.dpa.toLocaleDateString(t.locale,{day:"numeric",month:"short"}):"—";}
-  else if(S.mode==="conception"){g("st-count").textContent=sorted.length;if(sorted.length>1){let tt=0;for(let i=1;i<sorted.length;i++)tt+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;g("st-cycle").textContent=Math.round(tt/(sorted.length-1));}else g("st-cycle").textContent=S.settings.cycle;g("st-period").textContent=6;}
-  else{g("st-count").textContent=sorted.length;if(sorted.length>1){let tt=0;for(let i=1;i<sorted.length;i++)tt+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;g("st-cycle").textContent=Math.round(tt/(sorted.length-1));}else g("st-cycle").textContent=S.settings.cycle;const we=sorted.filter(p=>p.end);if(we.length){let tt=0;we.forEach(p=>tt+=(new Date(p.end)-new Date(p.start))/86400000+1);g("st-period").textContent=Math.round(tt/we.length);}else g("st-period").textContent=S.settings.period;}
+  else if(S.mode==="conception"){g("st-count").textContent=sorted.length;if(sorted.length>1){let tt=0;for(let i=1;i<sorted.length;i++)tt+=(pd(sorted[i].start)-pd(sorted[i-1].start))/86400000;g("st-cycle").textContent=Math.round(tt/(sorted.length-1));}else g("st-cycle").textContent=S.settings.cycle;g("st-period").textContent=6;}
+  else{g("st-count").textContent=sorted.length;if(sorted.length>1){let tt=0;for(let i=1;i<sorted.length;i++)tt+=(pd(sorted[i].start)-pd(sorted[i-1].start))/86400000;g("st-cycle").textContent=Math.round(tt/(sorted.length-1));}else g("st-cycle").textContent=S.settings.cycle;const we=sorted.filter(p=>p.end);if(we.length){let tt=0;we.forEach(p=>tt+=(pd(p.end)-pd(p.start))/86400000+1);g("st-period").textContent=Math.round(tt/we.length);}else g("st-period").textContent=S.settings.period;}
 }
 function updatePhase(){
   if(S.mode==="grossesse"||!S.periods.length){g("phase-card").style.display="none";return;}
-  const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));const last=new Date(sorted[sorted.length-1].start);const today=new Date();today.setHours(0,0,0,0);
+  const sorted=[...S.periods].sort((a,b)=>pd(a.start)-pd(b.start));const last=pd(sorted[sorted.length-1].start);const today=new Date();today.setHours(0,0,0,0);
   let day=Math.round((today-last)/86400000)%S.settings.cycle;if(day<0)day+=S.settings.cycle;
   const ph=day<S.settings.period?0:day<Math.round(S.settings.cycle*0.45)?1:day<Math.round(S.settings.cycle*0.55)?2:3;
   const pc=g("phase-card"),p=t.PHASES[ph];pc.style.display="block";pc.style.borderLeftColor=p.col;
@@ -815,16 +818,16 @@ function updatePhase(){
 function updateCycBar(){
   if(S.mode==="grossesse"){const info=getPregInfo();if(!info){g("cyc-wrap").style.display="none";return;}g("cyc-wrap").style.display="";g("cyc-label").textContent=t.pregProg(info.days);g("cyc-fill").style.background="#2196F3";g("cyc-fill").style.width=Math.min(100,Math.round((info.days/280)*100))+"%";return;}
   if(!S.periods.length){g("cyc-wrap").style.display="none";return;}
-  const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));const last=new Date(sorted[sorted.length-1].start);const today=new Date();today.setHours(0,0,0,0);
+  const sorted=[...S.periods].sort((a,b)=>pd(a.start)-pd(b.start));const last=pd(sorted[sorted.length-1].start);const today=new Date();today.setHours(0,0,0,0);
   let day=Math.round((today-last)/86400000)%S.settings.cycle;if(day<0)day+=S.settings.cycle;
   g("cyc-wrap").style.display="";g("cyc-label").textContent=t.dayOf(day+1,S.settings.cycle);
   g("cyc-fill").style.background=S.mode==="conception"?"#9C27B0":"#E91E8C";g("cyc-fill").style.width=Math.min(100,Math.round((day/S.settings.cycle)*100))+"%";
 }
 function renderHist(){
-  const asc=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));const sorted=[...asc].reverse();const list=g("hist-list");
+  const asc=[...S.periods].sort((a,b)=>pd(a.start)-pd(b.start));const sorted=[...asc].reverse();const list=g("hist-list");
   if(!sorted.length){list.innerHTML=`<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">${t.emptyHist}</div></div>`;return;}
   list.innerHTML="";
-  sorted.forEach((p,i)=>{const st=new Date(p.start);const dur=p.end?Math.round((new Date(p.end)-st)/86400000)+1:null;const ascIdx=asc.length-1-i;let cycleDur=null;if(ascIdx+1<asc.length)cycleDur=Math.round((new Date(asc[ascIdx+1].start)-new Date(asc[ascIdx].start))/86400000);const el=document.createElement("div");el.className="hist-item";el.innerHTML=`<div style="flex:1"><div class="hist-date">${st.toLocaleDateString(t.locale,{day:"numeric",month:"long",year:"numeric"})}</div><div class="hist-sub">${dur?t.histDays(dur):t.histNoEnd} · ${cycleDur?t.histCycle(cycleDur):t.histLast}</div></div><div class="hist-right"><span class="hist-badge">${cycleDur?t.histBadge(cycleDur):dur?dur+"j":"?"}</span><button class="del-btn" data-start="${p.start}">✕</button></div>`;list.appendChild(el);});
+  sorted.forEach((p,i)=>{const st=pd(p.start);const dur=p.end?Math.round((pd(p.end)-st)/86400000)+1:null;const ascIdx=asc.length-1-i;let cycleDur=null;if(ascIdx+1<asc.length)cycleDur=Math.round((new Date(asc[ascIdx+1].start)-pd(asc[ascIdx].start))/86400000);const el=document.createElement("div");el.className="hist-item";el.innerHTML=`<div style="flex:1"><div class="hist-date">${st.toLocaleDateString(t.locale,{day:"numeric",month:"long",year:"numeric"})}</div><div class="hist-sub">${dur?t.histDays(dur):t.histNoEnd} · ${cycleDur?t.histCycle(cycleDur):t.histLast}</div></div><div class="hist-right"><span class="hist-badge">${cycleDur?t.histBadge(cycleDur):dur?dur+"j":"?"}</span><button class="del-btn" data-start="${p.start}">✕</button></div>`;list.appendChild(el);});
   list.querySelectorAll(".del-btn").forEach(btn=>btn.addEventListener("click",()=>delPeriod(btn.dataset.start)));
 }
 async function delPeriod(start){if(!confirm(t.confirmDelete))return;S.periods=S.periods.filter(p=>p.start!==start);renderHist();renderCal();toast(t.toastDeleted);try{await saveData();}catch(e){}}
