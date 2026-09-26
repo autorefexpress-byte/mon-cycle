@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Mon Cycle">
 <title>Mon Cycle</title>
 <style>
-:root{--pink:#E91E8C;--pink-dark:#C2185B;--pink-light:#FCE4EC;--green:#4CAF50;--green-light:#E8F5E9;--purple:#9C27B0;--purple-light:#F3E5F5;--blue:#2196F3;--blue-light:#E3F2FD;--bg:#F5F5F5;--card:#FFFFFF;--text:#1A1A1A;--text-sec:#757575;--border:#EEEEEE;}
+:root{--pink:#E91E8C;--pink-dark:#C2185B;--pink-light:#FCE4EC;--green:#4CAF50;--green-light:#E8F5E9;--purple:#FF7043;--purple-light:#FFE0D6;--blue:#2196F3;--blue-light:#E3F2FD;--bg:#F5F5F5;--card:#FFFFFF;--text:#1A1A1A;--text-sec:#757575;--border:#EEEEEE;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;background:var(--bg);overflow:hidden;}
 .app{display:flex;flex-direction:column;width:100vw;height:100vh;height:100dvh;}
@@ -66,10 +66,10 @@ html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;back
 .cal-hdr{font-size:10px;color:var(--text-sec);text-align:center;padding:4px 0 6px;font-weight:600;}
 .day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:13px;cursor:pointer;color:var(--text);transition:transform 0.1s;-webkit-user-select:none;user-select:none;}
 .day:active{transform:scale(0.82);}.day.empty{cursor:default;pointer-events:none;}
-.day.fertile{background:var(--green-light);color:#2E7D32;}.day.fertile.mc{background:var(--purple-light);color:#6A1B9A;}
+.day.fertile{background:var(--green-light);color:#2E7D32;}.day.fertile.mc{background:var(--purple-light);color:#BF360C;}
 .day.ovulation{background:var(--green);color:#fff;font-weight:600;}.day.ovulation.mc{background:var(--purple);color:#fff;font-weight:600;}
 .day.period{background:var(--pink);color:#fff;font-weight:600;border-radius:10px;}.day.predicted{background:var(--pink-light);color:var(--pink-dark);border-radius:10px;}
-.day.preg-start{background:var(--purple);color:#fff;font-weight:600;border-radius:50%;}.day.preg-day{background:var(--blue-light);color:#1565C0;border-radius:10px;}
+.day.preg-start{background:#9C27B0;color:#fff;font-weight:600;border-radius:50%;}.day.preg-day{background:var(--blue-light);color:#1565C0;border-radius:10px;}
 .day.today:not(.period):not(.predicted){outline:2.5px solid var(--pink);outline-offset:-2px;}
 .day.selected:not(.period):not(.predicted):not(.ovulation):not(.fertile):not(.preg-start):not(.preg-day){background:#EEEEEE;}
 .legend{display:flex;flex-wrap:wrap;gap:8px 14px;padding:2px 14px 14px;}
@@ -124,17 +124,17 @@ html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;back
 .fd-days-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
 .fd-day{display:flex;flex-direction:column;align-items:center;gap:3px;}
 .fd-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;border:1px solid var(--border);color:var(--text-sec);}
-.fd-circle.fertile-c{background:#F3E5F5;color:#6A1B9A;border-color:#CE93D8;}
-.fd-circle.ovulation-c{background:#9C27B0;color:#fff;border-color:#9C27B0;font-weight:600;}
-.fd-circle.today-c{outline:2.5px solid #9C27B0;outline-offset:-2px;}
-.fd-day-lbl{font-size:9px;color:#9C27B0;text-align:center;font-weight:500;}
+.fd-circle.fertile-c{background:#FFE0D6;color:#BF360C;border-color:#FFAB91;}
+.fd-circle.ovulation-c{background:#FF7043;color:#fff;border-color:#FF7043;font-weight:600;}
+.fd-circle.today-c{outline:2.5px solid #FF7043;outline-offset:-2px;}
+.fd-day-lbl{font-size:9px;color:#FF7043;text-align:center;font-weight:500;}
 .fd-prob-title{font-size:12px;color:var(--text-sec);margin-bottom:8px;font-weight:500;}
 .fd-prob-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
 .fd-prob-lbl{font-size:11px;color:var(--text-sec);width:72px;flex-shrink:0;}
 .fd-prob-bar{flex:1;height:7px;border-radius:4px;background:var(--border);overflow:hidden;}
 .fd-prob-fill{height:100%;border-radius:4px;}
-.fd-prob-pct{font-size:11px;font-weight:600;width:30px;text-align:right;color:#7B1FA2;flex-shrink:0;}
-.conception-tip{border-radius:14px;padding:13px 15px;margin-bottom:12px;border-left:4px solid #9C27B0;display:none;}
+.fd-prob-pct{font-size:11px;font-weight:600;width:30px;text-align:right;color:#E64A19;flex-shrink:0;}
+.conception-tip{border-radius:14px;padding:13px 15px;margin-bottom:12px;border-left:4px solid #FF7043;display:none;}
 .ct-badge{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;}
 .ct-text{font-size:13px;line-height:1.6;}
 .fertile-dates{background:var(--card);border-radius:16px;overflow:hidden;margin-bottom:12px;display:none;}
@@ -143,8 +143,8 @@ html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;back
 .fdr-lbl{font-size:13px;color:var(--text-sec);}
 .fdr-val{font-size:13px;font-weight:500;color:var(--text);}
 .fdr-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;}
-.fdb-purple{background:#F3E5F5;color:#6A1B9A;}
-.fdb-star{background:#9C27B0;color:#fff;}
+.fdb-purple{background:#FFE0D6;color:#BF360C;}
+.fdb-star{background:#FF7043;color:#fff;}
 .fdb-green{background:#E8F5E9;color:#2E7D32;}
 .overlay-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:500;flex-direction:column;}.overlay-screen.active{display:flex;}
 .overlay-header{background:var(--pink);padding:16px 18px;padding-top:calc(16px + env(safe-area-inset-top,0px));display:flex;align-items:center;gap:12px;flex-shrink:0;}
@@ -344,7 +344,7 @@ const BFR={4:"Ton bébé est un embryon. Le tube neural commence à se former.",
 const BEN={4:"Your baby is a microscopic embryo.",5:"The heart is starting to beat! Size: a sesame seed.",6:"The face is taking shape.",7:"Arms and legs are appearing. Size: a kidney bean.",8:"All organs are present. Size: a grape.",9:"Fingers are forming. Baby moves in the uterus.",10:"Baby is now a fetus. Size: a strawberry.",11:"Nails are appearing.",12:"End of 1st trimester! Size: a plum.",13:"Baby can suck thumb. Size: a peach.",14:"Baby is making faces. Gender visible on ultrasound.",15:"Baby can hear your voice for the first time!",16:"Size: an avocado. First movements arriving.",17:"Baby is developing fat under the skin.",18:"Size: a mango. Morphology ultrasound coming!",19:"Baby now has fingerprints.",20:"Halfway there! Size: a banana.",21:"Baby swallows amniotic fluid.",22:"Size: a corn cob.",23:"Baby can sense light.",24:"Lungs are developing. Size: 30cm.",25:"Baby gaining weight rapidly.",26:"Eyes open for the first time! Size: 35cm.",27:"End of 2nd trimester!",28:"Baby has sleep/wake cycles.",29:"Size: 38cm. Bones hardening.",30:"Baby gains ~200g per week.",31:"Baby can turn their head. Size: 41cm.",32:"Baby positioning head-down.",33:"Baby's eyes are blue.",34:"Lungs almost mature. Size: 45cm.",35:"Movements more limited.",36:"Baby loses lanugo. Size: 47cm.",37:"Baby is full-term!",38:"Head descending into pelvis.",39:"Baby is ready! Size: ~50cm.",40:"Due date! Your baby is arriving soon."};
 const T={
 fr:{MONTHS:["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],DAYS:["Lu","Ma","Me","Je","Ve","Sa","Di"],
-PHASES:[{name:"Menstruation",col:"#E91E8C",bg:"#FCE4EC",desc:"Tes règles ont lieu. Repose-toi."},{name:"Phase folliculaire",col:"#FF9800",bg:"#FFF3E0",desc:"Ton corps se prépare à l'ovulation."},{name:"Ovulation",col:"#4CAF50",bg:"#E8F5E9",desc:"Ton ovule est libéré. Période la plus fertile."},{name:"Phase lutéale",col:"#9C27B0",bg:"#F3E5F5",desc:"Le corps se prépare. Symptômes du SPM possibles."}],
+PHASES:[{name:"Menstruation",col:"#E91E8C",bg:"#FCE4EC",desc:"Tes règles ont lieu. Repose-toi."},{name:"Phase folliculaire",col:"#FF9800",bg:"#FFF3E0",desc:"Ton corps se prépare à l'ovulation."},{name:"Ovulation",col:"#4CAF50",bg:"#E8F5E9",desc:"Ton ovule est libéré. Période la plus fertile."},{name:"Phase lutéale",col:"#FF7043",bg:"#FFE0D6",desc:"Le corps se prépare. Symptômes du SPM possibles."}],
 BABY:BFR,locale:"fr-FR",
 authSub:"Connecte-toi pour retrouver ton suivi",loginTitle:"Connexion",registerTitle:"Créer un compte",signInBtn:"Se connecter",createBtn:"Créer le compte",noAccount:"Pas encore de compte ?",createLink:"Créer un compte",haveAccount:"Déjà un compte ?",signInLink:"Se connecter",forgotPwd:"Mot de passe oublié ?",loading:"Chargement...",loadingData:"Chargement de tes données...",signingIn:"Connexion...",creating:"Création du compte...",logout:"Déconnexion",
 nextPeriod:"Prochaines règles",fertileWindow:"Fenêtre fertile",myPregnancy:"Ma grossesse",
@@ -403,7 +403,7 @@ ovInDays:n=>n>0?`Ovulation dans ${n} jour${n>1?"s":""}`:n===0?"Ovulation aujourd
 enterCycleFirst:"Enregistre tes règles pour calculer ta fenêtre fertile."
 },
 en:{MONTHS:["January","February","March","April","May","June","July","August","September","October","November","December"],DAYS:["Mo","Tu","We","Th","Fr","Sa","Su"],
-PHASES:[{name:"Menstruation",col:"#E91E8C",bg:"#FCE4EC",desc:"Your period is happening. Rest and take care."},{name:"Follicular phase",col:"#FF9800",bg:"#FFF3E0",desc:"Your body is preparing for ovulation."},{name:"Ovulation",col:"#4CAF50",bg:"#E8F5E9",desc:"Your egg is released. Most fertile time."},{name:"Luteal phase",col:"#9C27B0",bg:"#F3E5F5",desc:"Body is preparing. Some PMS symptoms possible."}],
+PHASES:[{name:"Menstruation",col:"#E91E8C",bg:"#FCE4EC",desc:"Your period is happening. Rest and take care."},{name:"Follicular phase",col:"#FF9800",bg:"#FFF3E0",desc:"Your body is preparing for ovulation."},{name:"Ovulation",col:"#4CAF50",bg:"#E8F5E9",desc:"Your egg is released. Most fertile time."},{name:"Luteal phase",col:"#FF7043",bg:"#FFE0D6",desc:"Body is preparing. Some PMS symptoms possible."}],
 BABY:BEN,locale:"en-GB",
 authSub:"Sign in to access your tracking",loginTitle:"Sign in",registerTitle:"Create account",signInBtn:"Sign in",createBtn:"Create account",noAccount:"Don't have an account?",createLink:"Create account",haveAccount:"Already have an account?",signInLink:"Sign in",forgotPwd:"Forgot password?",loading:"Loading...",loadingData:"Loading your data...",signingIn:"Signing in...",creating:"Creating account...",logout:"Sign out",
 nextPeriod:"Next period",fertileWindow:"Fertile window",myPregnancy:"My pregnancy",
@@ -644,7 +644,7 @@ function renderCal(){
   }
   const leg=g("legend");
   if(isG)leg.innerHTML=`<div class="leg"><div class="leg-dot" style="background:#9C27B0;border-radius:50%"></div>${t.legPregStart}</div><div class="leg"><div class="leg-dot" style="background:#E3F2FD;border:1px solid #2196F3"></div>${t.legPregDay}</div>`;
-  else if(isC)leg.innerHTML=`<div class="leg"><div class="leg-dot" style="background:#E91E8C"></div>${t.legPeriodC}</div><div class="leg"><div class="leg-dot" style="background:#9C27B0;border-radius:50%"></div>${t.legOvC}</div><div class="leg"><div class="leg-dot" style="background:#F3E5F5;border:1px solid #9C27B0"></div>${t.legFertileC}</div>`;
+  else if(isC)leg.innerHTML=`<div class="leg"><div class="leg-dot" style="background:#E91E8C"></div>${t.legPeriodC}</div><div class="leg"><div class="leg-dot" style="background:#FF7043;border-radius:50%"></div>${t.legOvC}</div><div class="leg"><div class="leg-dot" style="background:#FFE0D6;border:1px solid #FF7043"></div>${t.legFertileC}</div>`;
   else leg.innerHTML=`<div class="leg"><div class="leg-dot" style="background:#E91E8C"></div>${t.legPeriod}</div><div class="leg"><div class="leg-dot" style="background:#FCE4EC;border:1px solid #E91E8C"></div>${t.legPredicted}</div><div class="leg"><div class="leg-dot" style="background:#4CAF50"></div>${t.legOvulation}</div><div class="leg"><div class="leg-dot" style="background:#E8F5E9;border:1px solid #4CAF50"></div>${t.legFertile}</div>`;
   updateBanners();updateStats();updatePhase();updateCycBar();
 }
@@ -713,23 +713,23 @@ function updateBanners(){
           badge=isFR?"Phase folliculaire":"Follicular phase";
           text=isFR?`La fenêtre fertile ouvre dans ${diffOv-5} jours. Prends soin de toi et prépare-toi.`:`Fertile window opens in ${diffOv-5} days. Take care of yourself.`;
         } else if(diffOv>=5){
-          tipBg="#F3E5F5";tipBorder="#AB47BC";tipBadgeColor="#7B1FA2";tipTextColor="#4A148C";
+          tipBg="#FFE0D6";tipBorder="#FF8A65";tipBadgeColor="#E64A19";tipTextColor="#8C2A0A";
           badge=isFR?"Fenêtre fertile bientôt":"Fertile window soon";
           text=isFR?`Ovulation dans ${diffOv} jours. C'est le bon moment pour commencer — les spermatozoïdes survivent 3 à 5 jours.`:`Ovulation in ${diffOv} days. Good time to start — sperm survive 3-5 days.`;
         } else if(diffOv>=3){
-          tipBg="#F3E5F5";tipBorder="#9C27B0";tipBadgeColor="#6A1B9A";tipTextColor="#4A148C";
+          tipBg="#FFE0D6";tipBorder="#FF7043";tipBadgeColor="#BF360C";tipTextColor="#8C2A0A";
           badge=isFR?"Fenêtre fertile ouverte":"Fertile window open";
           text=isFR?`Tu es à ${diffOv} jours de l'ovulation. Probabilité de conception élevée — c'est le moment !`:`You are ${diffOv} days from ovulation. High conception probability — now is the time!`;
         } else if(diffOv===2){
-          tipBg="#EDE7F6";tipBorder="#7B1FA2";tipBadgeColor="#4527A0";tipTextColor="#311B92";
+          tipBg="#FFD5C7";tipBorder="#E64A19";tipBadgeColor="#D84315";tipTextColor="#8C2A0A";
           badge=isFR?"Très bientôt":"Very soon";
           text=isFR?"J-2 de l'ovulation — probabilité : 33%. Un des meilleurs jours du cycle !":"J-2 from ovulation — probability: 33%. One of the best days of the cycle!";
         } else if(diffOv===1){
-          tipBg="#EDE7F6";tipBorder="#6A1B9A";tipBadgeColor="#4527A0";tipTextColor="#311B92";
+          tipBg="#FFD5C7";tipBorder="#BF360C";tipBadgeColor="#D84315";tipTextColor="#8C2A0A";
           badge=isFR?"Ovulation demain !":"Ovulation tomorrow!";
           text=isFR?"Demain est ton jour de fertilité maximale — probabilité : 41%. Ne rate pas cette fenêtre !":"Tomorrow is your peak fertility day — probability: 41%. Don't miss this window!";
         } else if(diffOv===0){
-          tipBg="#EDE7F6";tipBorder="#4A148C";tipBadgeColor="#311B92";tipTextColor="#1A237E";
+          tipBg="#FFD5C7";tipBorder="#8C2A0A";tipBadgeColor="#8C2A0A";tipTextColor="#6D1F06";
           badge=isFR?"Ovulation !":"Ovulation!";
           text=isFR?"Ton ovule est libéré aujourd'hui ! Probabilité : 33%. J-1 et J-2 sont statistiquement légèrement meilleurs mais aujourd'hui reste excellent.":"Your egg is released today! Probability: 33%. J-1 and J-2 are slightly better statistically but today is still excellent.";
         } else {
@@ -769,7 +769,7 @@ function updateBanners(){
         PROBS.filter(x=>x.d<=0).forEach(item=>{
           const dd=new Date(nextOv);dd.setDate(dd.getDate()+item.d);
           const lbl=item.d===0?(isFR?"Ovulation":"Ovulation"):`J${item.d} (${dd.getDate()} ${t.MONTHS[dd.getMonth()].slice(0,3)})`;
-          const intensity=item.p>=40?"#6A1B9A":item.p>=30?"#7B1FA2":item.p>=20?"#9C27B0":"#AB47BC";
+          const intensity=item.p>=40?"#BF360C":item.p>=30?"#E64A19":item.p>=20?"#FF7043":"#FF8A65";
           barsEl.innerHTML+=`<div class="fd-prob-row"><div class="fd-prob-lbl">${lbl}</div><div class="fd-prob-bar"><div class="fd-prob-fill" style="width:${item.p}%;background:${intensity}"></div></div><div class="fd-prob-pct">${item.p}%</div></div>`;
         });
 
@@ -821,7 +821,7 @@ function updateCycBar(){
   const sorted=[...S.periods].sort((a,b)=>pd(a.start)-pd(b.start));const last=pd(sorted[sorted.length-1].start);const today=new Date();today.setHours(0,0,0,0);
   let day=Math.round((today-last)/86400000)%S.settings.cycle;if(day<0)day+=S.settings.cycle;
   g("cyc-wrap").style.display="";g("cyc-label").textContent=t.dayOf(day+1,S.settings.cycle);
-  g("cyc-fill").style.background=S.mode==="conception"?"#9C27B0":"#E91E8C";g("cyc-fill").style.width=Math.min(100,Math.round((day/S.settings.cycle)*100))+"%";
+  g("cyc-fill").style.background=S.mode==="conception"?"#FF7043":"#E91E8C";g("cyc-fill").style.width=Math.min(100,Math.round((day/S.settings.cycle)*100))+"%";
 }
 function renderHist(){
   const asc=[...S.periods].sort((a,b)=>pd(a.start)-pd(b.start));const sorted=[...asc].reverse();const list=g("hist-list");
