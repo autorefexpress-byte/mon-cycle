@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "auth:migrate": "auth migrate --config lib/auth.js -y",
-    "auth:generate": "auth generate --config lib/auth.js -y"
+    "auth:generate": "auth generate --config lib/auth.js -y",
+    "test": "TZ=Pacific/Noumea node --test"
   },
   "dependencies": {
     "better-auth": "^1.7.4",

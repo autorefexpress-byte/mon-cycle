@@ -1,50 +1,21 @@
 import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../lib/auth.js";
 import { getPool } from "../lib/db.js";
+import { validate } from "../lib/validate.js";
 
 export const config = {
   api: { bodyParser: true },
 };
 
-const MODES = ["normal", "conception", "grossesse"];
-const MAX_PERIODS = 1000;
-const LIMITS = { cycle: [20, 45], period: [1, 10], proj: [1, 12] };
-const DEFAULT_SETTINGS = { cycle: 28, period: 5, proj: 3 };
+const SELECT = `select periods, settings, mode, preg_start_date::text as preg_start_date, version
+                from cycle_data where user_id = $1`;
 
-// Verifie qu'une chaine est une vraie date calendaire "YYYY-MM-DD".
-function isDate(s) {
-  if (typeof s !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
-  const [y, m, d] = s.split("-").map(Number);
-  const dt = new Date(Date.UTC(y, m - 1, d));
-  return dt.getUTCFullYear() === y && dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d;
-}
-
-// Renvoie les donnees nettoyees, ou une chaine decrivant l'erreur.
-function validate(body) {
-  if (!body || typeof body !== "object") return "invalid body";
-  const { periods, settings, mode, pregStartDate } = body;
-
-  if (!Array.isArray(periods) || periods.length > MAX_PERIODS) return "invalid periods";
-  const cleanPeriods = [];
-  for (const p of periods) {
-    if (!p || typeof p !== "object" || !isDate(p.start)) return "invalid period start";
-    const end = p.end ?? null;
-    if (end !== null && (!isDate(end) || end < p.start)) return "invalid period end";
-    cleanPeriods.push({ start: p.start, end });
-  }
-
-  if (!settings || typeof settings !== "object") return "invalid settings";
-  const cleanSettings = {};
-  for (const [k, [min, max]] of Object.entries(LIMITS)) {
-    const v = settings[k] ?? DEFAULT_SETTINGS[k];
-    if (!Number.isInteger(v) || v < min || v > max) return `invalid settings.${k}`;
-    cleanSettings[k] = v;
-  }
-
-  if (!MODES.includes(mode)) return "invalid mode";
-  if (pregStartDate != null && !isDate(pregStartDate)) return "invalid pregStartDate";
-
-  return { periods: cleanPeriods, settings: cleanSettings, mode, pregStartDate: pregStartDate ?? null };
+// ::text pour preg_start_date : renvoie "YYYY-MM-DD" (sinon pg renvoie un
+// objet Date serialise en ISO avec heure, que le client ne sait pas comparer).
+function toJson(row) {
+  return row
+    ? { periods: row.periods, settings: row.settings, mode: row.mode, pregStartDate: row.preg_start_date, version: row.version }
+    : { periods: [], settings: null, mode: "normal", pregStartDate: null, version: 0 };
 }
 
 export default async function handler(req, res) {
@@ -64,24 +35,8 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === "GET") {
-      // ::text pour renvoyer "YYYY-MM-DD" (sinon pg renvoie un objet Date
-      // serialise en ISO avec heure, que le client ne sait pas comparer).
-      const { rows } = await pool.query(
-        `select periods, settings, mode, preg_start_date::text as preg_start_date
-         from cycle_data where user_id = $1`,
-        [userId]
-      );
-      const row = rows[0];
-      res.status(200).json(
-        row
-          ? {
-              periods: row.periods,
-              settings: row.settings,
-              mode: row.mode,
-              pregStartDate: row.preg_start_date,
-            }
-          : { periods: [], settings: null, mode: "normal", pregStartDate: null }
-      );
+      const { rows } = await pool.query(SELECT, [userId]);
+      res.status(200).json(toJson(rows[0]));
       return;
     }
 
@@ -91,18 +46,48 @@ export default async function handler(req, res) {
         res.status(400).json({ error: data });
         return;
       }
-      await pool.query(
-        `insert into cycle_data (user_id, periods, settings, mode, preg_start_date, updated_at)
-         values ($1, $2, $3, $4, $5, now())
-         on conflict (user_id) do update set
-           periods = excluded.periods,
-           settings = excluded.settings,
-           mode = excluded.mode,
-           preg_start_date = excluded.preg_start_date,
-           updated_at = now()`,
-        [userId, JSON.stringify(data.periods), JSON.stringify(data.settings), data.mode, data.pregStartDate]
-      );
-      res.status(200).json({ ok: true });
+      const values = [userId, JSON.stringify(data.periods), JSON.stringify(data.settings), data.mode, data.pregStartDate];
+
+      let rows;
+      if (data.version === null) {
+        // Ancien client (sans version) : ecriture sans controle de concurrence.
+        ({ rows } = await pool.query(
+          `insert into cycle_data (user_id, periods, settings, mode, preg_start_date, version, updated_at)
+           values ($1, $2, $3, $4, $5, 1, now())
+           on conflict (user_id) do update set
+             periods = excluded.periods, settings = excluded.settings, mode = excluded.mode,
+             preg_start_date = excluded.preg_start_date, version = cycle_data.version + 1, updated_at = now()
+           returning version`,
+          values
+        ));
+      } else {
+        // On n'ecrit que si la version en base est celle que le client a lue :
+        // sinon un autre appareil a enregistre entre-temps (409).
+        ({ rows } = await pool.query(
+          `update cycle_data set
+             periods = $2, settings = $3, mode = $4, preg_start_date = $5,
+             version = version + 1, updated_at = now()
+           where user_id = $1 and version = $6
+           returning version`,
+          [...values, data.version]
+        ));
+        if (!rows.length && data.version === 0) {
+          ({ rows } = await pool.query(
+            `insert into cycle_data (user_id, periods, settings, mode, preg_start_date, version, updated_at)
+             values ($1, $2, $3, $4, $5, 1, now())
+             on conflict (user_id) do nothing
+             returning version`,
+            values
+          ));
+        }
+      }
+
+      if (!rows.length) {
+        const current = await pool.query(SELECT, [userId]);
+        res.status(409).json(toJson(current.rows[0]));
+        return;
+      }
+      res.status(200).json({ ok: true, version: rows[0].version });
       return;
     }
 
