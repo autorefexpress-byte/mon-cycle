@@ -33,7 +33,8 @@ html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;back
 .loading{position:fixed;inset:0;background:rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:14px;}
 .spinner{width:38px;height:38px;border-radius:50%;border:3px solid var(--pink-light);border-top-color:var(--pink);animation:spin 0.75s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.loading-text{font-size:14px;color:var(--text-sec);}
+.loading-text{font-size:14px;color:var(--text-sec);text-align:center;padding:0 24px;line-height:1.5;}
+.loading-retry{display:none;padding:12px 28px;background:var(--pink);color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
 .top-bar{padding:14px 18px 16px;padding-top:calc(14px + env(safe-area-inset-top,0px));flex-shrink:0;transition:background 0.3s;}
 .top-bar.mode-normal{background:var(--pink);}.top-bar.mode-conception{background:var(--purple);}.top-bar.mode-grossesse{background:var(--blue);}
 .top-bar-row{display:flex;align-items:center;justify-content:space-between;}
@@ -334,11 +335,11 @@ html,body{width:100%;height:100%;font-family:"DM Sans",system-ui,sans-serif;back
     <div class="about-credit" id="abt-credit"></div>
   </div>
 </div>
-<div class="loading" id="loading"><div class="spinner"></div><div class="loading-text" id="loading-text"></div></div>
+<div class="loading" id="loading"><div class="spinner" id="loading-spinner"></div><div class="loading-text" id="loading-text"></div><button class="loading-retry" id="loading-retry" onclick="retryLoad()"></button></div>
 <div class="toast" id="toast"></div>
 
 <script type="module">
-import{createAuthClient}from"https://esm.sh/better-auth/client";
+import{createAuthClient}from"https://esm.sh/better-auth@1.7.4/client";
 const authClient=createAuthClient({baseURL:window.location.origin});
 const BFR={4:"Ton bébé est un embryon. Le tube neural commence à se former.",5:"Le coeur commence à battre ! Taille : un grain de sésame (2mm).",6:"Le visage prend forme. Le coeur bat ~100 fois par minute.",7:"Les bras et jambes apparaissent. Taille : un haricot (1cm).",8:"Tous les organes sont présents. Taille : un raisin (1,6cm).",9:"Les doigts se forment. Le bébé bouge dans l'utérus.",10:"Le bébé est maintenant un foetus. Taille : une fraise (3cm).",11:"Les ongles apparaissent. Le bébé peut ouvrir ses poings.",12:"Fin du 1er trimestre ! Taille : une prune (5,4cm).",13:"Le bébé peut sucer son pouce. Taille : une pêche (7,4cm).",14:"Le bébé fait des grimaces. Le sexe visible à l'échographie.",15:"Le bébé entend ta voix pour la première fois !",16:"Taille : un avocat (11,6cm). Premières sensations de mouvements.",17:"Le bébé développe une couche de graisse.",18:"Taille : une mangue (14cm). Échographie morphologique bientôt !",19:"Le bébé a ses propres empreintes digitales.",20:"Mi-parcours ! Taille : une banane (25cm).",21:"Le bébé avale du liquide amniotique.",22:"Taille : un épi de maïs (27cm).",23:"Le bébé peut percevoir la lumière.",24:"Les poumons se développent. Taille : 30cm.",25:"Le bébé prend du poids. Il réagit aux sons.",26:"Les yeux s'ouvrent ! Taille : 35cm.",27:"Fin du 2e trimestre ! Cerveau en plein développement.",28:"Le bébé a des cycles veille/sommeil.",29:"Taille : 38cm. Les os se durcissent.",30:"Le bébé prend ~200g par semaine.",31:"Le bébé peut tourner la tête. Taille : 41cm.",32:"Le bébé se positionne tête en bas.",33:"Les yeux sont bleus (couleur définitive plus tard).",34:"Les poumons sont presque matures. Taille : 45cm.",35:"Les mouvements sont plus limités.",36:"Le bébé perd son duvet. Taille : 47cm.",37:"Le bébé est à terme ! Il peut naître à tout moment.",38:"La tête descend dans le bassin.",39:"Le bébé est prêt ! Taille : ~50cm.",40:"C'est la date prévue ! Ton bébé arrive bientôt."};
 const BEN={4:"Your baby is a microscopic embryo.",5:"The heart is starting to beat! Size: a sesame seed.",6:"The face is taking shape.",7:"Arms and legs are appearing. Size: a kidney bean.",8:"All organs are present. Size: a grape.",9:"Fingers are forming. Baby moves in the uterus.",10:"Baby is now a fetus. Size: a strawberry.",11:"Nails are appearing.",12:"End of 1st trimester! Size: a plum.",13:"Baby can suck thumb. Size: a peach.",14:"Baby is making faces. Gender visible on ultrasound.",15:"Baby can hear your voice for the first time!",16:"Size: an avocado. First movements arriving.",17:"Baby is developing fat under the skin.",18:"Size: a mango. Morphology ultrasound coming!",19:"Baby now has fingerprints.",20:"Halfway there! Size: a banana.",21:"Baby swallows amniotic fluid.",22:"Size: a corn cob.",23:"Baby can sense light.",24:"Lungs are developing. Size: 30cm.",25:"Baby gaining weight rapidly.",26:"Eyes open for the first time! Size: 35cm.",27:"End of 2nd trimester!",28:"Baby has sleep/wake cycles.",29:"Size: 38cm. Bones hardening.",30:"Baby gains ~200g per week.",31:"Baby can turn their head. Size: 41cm.",32:"Baby positioning head-down.",33:"Baby's eyes are blue.",34:"Lungs almost mature. Size: 45cm.",35:"Movements more limited.",36:"Baby loses lanugo. Size: 47cm.",37:"Baby is full-term!",38:"Head descending into pelvis.",39:"Baby is ready! Size: ~50cm.",40:"Due date! Your baby is arriving soon."};
@@ -382,7 +383,10 @@ toastDeleted:"Cycle supprimé",toastCleared:"Données du cycle effacées",toastE
 toastSelectDay:"Sélectionne d'abord un jour",toastAlready:"Début déjà enregistré",toastNeedStart:"Enregistre d'abord un début",toastEndBefore:"La fin doit être après le début",toastSelectDate:"Sélectionne une date",toastGrSett:"Entre ta date DDR dans les Réglages",
 emptyHist:"Aucun cycle enregistré",histDays:n=>n+" jours de règles",histNoEnd:"Fin non renseignée",histCycle:n=>"Cycle : "+n+" jours",histLast:"Dernier cycle",histBadge:n=>n+"j cycle",
 confirmDelete:"Supprimer ce cycle ?",confirmClear:"Effacer toutes les données de cycle enregistrées ? (ton compte restera actif)",errEmpty:"Remplis tous les champs.",
-errMsgs:{"auth/invalid-email":"Email invalide.","auth/user-not-found":"Aucun compte.","auth/wrong-password":"Mot de passe incorrect.","auth/invalid-credential":"Email ou mot de passe incorrect.","auth/email-already-in-use":"Email déjà utilisé.","auth/weak-password":"Mot de passe trop court (6 car. min).","auth/too-many-requests":"Trop de tentatives.","auth/requires-recent-login":"Session trop ancienne, réessaie."},
+errMsgs:{INVALID_EMAIL:"Email invalide.",USER_NOT_FOUND:"Aucun compte.",INVALID_PASSWORD:"Mot de passe incorrect.",INVALID_EMAIL_OR_PASSWORD:"Email ou mot de passe incorrect.",CREDENTIAL_ACCOUNT_NOT_FOUND:"Email ou mot de passe incorrect.",USER_ALREADY_EXISTS:"Email déjà utilisé.",USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL:"Email déjà utilisé.",PASSWORD_TOO_SHORT:"Mot de passe trop court (8 caractères min).",PASSWORD_TOO_LONG:"Mot de passe trop long.",INVALID_TOKEN:"Lien expiré ou invalide. Refais une demande.",SESSION_EXPIRED:"Session trop ancienne, reconnecte-toi."},
+errRateLimit:"Trop de tentatives. Réessaie dans quelques minutes.",errPwdShort:"Mot de passe trop court (8 caractères min).",
+loadError:"Impossible de charger tes données. Vérifie ta connexion puis réessaie.",retry:"Réessayer",toastSession:"Session expirée, reconnecte-toi",
+lateBy:n=>`Règles en retard de ${n} jour${n>1?"s":""}`,
 rstTitle:"Mot de passe oublié",rstSub:"Entre ton email pour recevoir un lien.",rstBtn:"Envoyer le lien",rstBack:"Retour",rstSuccess:"Email envoyé ! Vérifie ta boîte mail.",rstErrEmpty:"Entre ton email.",rstSending:"Envoi...",
 rstConfirmTitle:"Nouveau mot de passe",rstConfirmSub:"Choisis ton nouveau mot de passe.",rstConfirmBtn:"Valider",rstConfirmSuccess:"Mot de passe modifié ! Tu peux te connecter.",rstConfirmErrEmpty:"Entre un nouveau mot de passe.",rstConfirming:"Validation...",
 prvHeaderTitle:"Confidentialité",prvH1:"Politique de confidentialité",prvUpdated:"Septembre 2026",
@@ -441,7 +445,10 @@ toastDeleted:"Cycle deleted",toastCleared:"Cycle data cleared",toastError:"Save 
 toastSelectDay:"Select a day first",toastAlready:"Start already logged",toastNeedStart:"Log a start first",toastEndBefore:"End must be after start",toastSelectDate:"Select a date",toastGrSett:"Enter your LMP date in Settings",
 emptyHist:"No cycles logged yet",histDays:n=>n+" days of period",histNoEnd:"End not logged",histCycle:n=>"Cycle: "+n+" days",histLast:"Latest cycle",histBadge:n=>n+"d cycle",
 confirmDelete:"Delete this cycle?",confirmClear:"Clear all logged cycle data? (your account will stay active)",errEmpty:"Please fill in all fields.",
-errMsgs:{"auth/invalid-email":"Invalid email.","auth/user-not-found":"No account found.","auth/wrong-password":"Wrong password.","auth/invalid-credential":"Invalid email or password.","auth/email-already-in-use":"Email already in use.","auth/weak-password":"Password min 6 chars.","auth/too-many-requests":"Too many attempts.","auth/requires-recent-login":"Session too old, please try again."},
+errMsgs:{INVALID_EMAIL:"Invalid email.",USER_NOT_FOUND:"No account found.",INVALID_PASSWORD:"Wrong password.",INVALID_EMAIL_OR_PASSWORD:"Invalid email or password.",CREDENTIAL_ACCOUNT_NOT_FOUND:"Invalid email or password.",USER_ALREADY_EXISTS:"Email already in use.",USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL:"Email already in use.",PASSWORD_TOO_SHORT:"Password too short (8 chars min).",PASSWORD_TOO_LONG:"Password too long.",INVALID_TOKEN:"Link expired or invalid. Please request a new one.",SESSION_EXPIRED:"Session too old, please sign in again."},
+errRateLimit:"Too many attempts. Please try again in a few minutes.",errPwdShort:"Password too short (8 chars min).",
+loadError:"Couldn't load your data. Check your connection and try again.",retry:"Try again",toastSession:"Session expired, please sign in again",
+lateBy:n=>`Period ${n} day${n>1?"s":""} late`,
 rstTitle:"Forgot password",rstSub:"Enter your email and we will send a reset link.",rstBtn:"Send link",rstBack:"Back",rstSuccess:"Email sent! Check your inbox.",rstErrEmpty:"Enter your email.",rstSending:"Sending...",
 rstConfirmTitle:"New password",rstConfirmSub:"Choose your new password.",rstConfirmBtn:"Confirm",rstConfirmSuccess:"Password changed! You can now sign in.",rstConfirmErrEmpty:"Enter a new password.",rstConfirming:"Confirming...",
 prvHeaderTitle:"Privacy",prvH1:"Privacy Policy",prvUpdated:"September 2026",
@@ -464,11 +471,24 @@ enterCycleFirst:"Log your period to calculate your fertile window."
 };
 let lang=localStorage.getItem("moncycle_lang")||"fr";
 let t=T[lang];let authMode="login";
-let S={periods:[],settings:{cycle:28,period:5,proj:3},mode:"normal",pregStartDate:null,vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:null,uid:null,email:null};
+let S=initialState();
 window.setLang=function(l){lang=l;t=T[l];localStorage.setItem("moncycle_lang",l);document.documentElement.lang=l;["alb-fr","alb-en","ltb-fr","ltb-en"].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.toggle("active",id.endsWith(l==="fr"?"fr":"en"));});applyT();renderCal();if(document.getElementById("tab-hist").classList.contains("active"))renderHist();};
 function g(id){return document.getElementById(id);}
 function st(id,v){const el=g(id);if(el)el.textContent=v;}
 function shi(id,v){const el=g(id);if(el)el.innerHTML=v;}
+// Dates : toujours en heure locale. new Date("YYYY-MM-DD") et toISOString()
+// travaillent en UTC, ce qui decale d'un jour en Nouvelle-Caledonie (UTC+11).
+const DAY=86400000;
+function parseD(s){const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d);}
+function ymd(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function diffDays(a,b){return Math.round((a-b)/DAY);}
+function todayD(){const d=new Date();d.setHours(0,0,0,0);return d;}
+function sortedPeriods(){return[...S.periods].sort((a,b)=>a.start.localeCompare(b.start));}
+// Duree de cycle utilisee partout (projections, ovulation, phase) : moyenne mesuree, sinon le reglage.
+function avgCycle(){const s=sortedPeriods();if(s.length<2)return S.settings.cycle;return Math.round(diffDays(parseD(s[s.length-1].start),parseD(s[0].start))/(s.length-1));}
+function authErrMsg(error){if(error.status===429)return t.errRateLimit;return t.errMsgs[error.code]||error.message||t.toastError;}
+function initialState(){return{periods:[],settings:{cycle:28,period:5,proj:3},mode:"normal",pregStartDate:null,vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:null,uid:null,email:null,loaded:false};}
 function applyT(){
   const isL=authMode==="login";
   st("auth-sub",t.authSub);st("auth-mode-title",isL?t.loginTitle:t.registerTitle);
@@ -506,7 +526,7 @@ function applyT(){
   applyMode();updatePageTitle();
 }
 function updatePageTitle(){const active=["home","hist","sett"].find(tab=>g("tab-"+tab).classList.contains("active"))||"home";st("page-title",{home:t.pageHome,hist:t.pageHist,sett:t.pageSett}[active]);}
-function showLoading(v,msg){g("loading").style.display=v?"flex":"none";st("loading-text",msg||t.loading);}
+function showLoading(v,msg){g("loading").style.display=v?"flex":"none";g("loading-spinner").style.display="";g("loading-retry").style.display="none";st("loading-text",msg||t.loading);}
 function showApp(v){g("auth-screen").style.display=v?"none":"flex";g("reset-screen").style.display="none";g("reset-screen").classList.remove("active");g("main-app").style.display=v?"flex":"none";}
 let _tt;
 function toast(msg){clearTimeout(_tt);const el=g("toast");el.textContent=msg;el.classList.add("show");_tt=setTimeout(()=>el.classList.remove("show"),2400);}
@@ -532,10 +552,11 @@ window.sendReset=async()=>{
     if(resetToken){
       const newPass=g("reset-newpass").value;
       if(!newPass){authErr("reset-error",t.rstConfirmErrEmpty);return;}
+      if(newPass.length<8){authErr("reset-error",t.errPwdShort);return;}
       showLoading(true,t.rstConfirming);
       const{error}=await authClient.resetPassword({newPassword:newPass,token:resetToken});
       showLoading(false);
-      if(error){authErr("reset-error",error.message||t.toastError);return;}
+      if(error){authErr("reset-error",authErrMsg(error));return;}
       g("reset-success").textContent=t.rstConfirmSuccess;g("reset-success").style.display="block";g("reset-newpass").value="";
       history.replaceState({},"",location.pathname);
     }else{
@@ -544,7 +565,7 @@ window.sendReset=async()=>{
       showLoading(true,t.rstSending);
       const{error}=await authClient.requestPasswordReset({email,redirectTo:window.location.origin+window.location.pathname});
       showLoading(false);
-      if(error){authErr("reset-error",error.message||t.toastError);return;}
+      if(error){authErr("reset-error",authErrMsg(error));return;}
       g("reset-success").textContent=t.rstSuccess;g("reset-success").style.display="block";g("reset-email").value="";
     }
   }catch(e){showLoading(false);authErr("reset-error",t.toastError);}
@@ -555,18 +576,19 @@ window.authSubmit=async()=>{
   const email=g("auth-email").value.trim(),pass=g("auth-password").value;
   if(!email||!pass){authErr("auth-error",t.errEmpty);return;}
   if(authMode==="register"&&!g("consent-check").checked){authErr("auth-error",t.errConsent);return;}
+  if(authMode==="register"&&pass.length<8){authErr("auth-error",t.errPwdShort);return;}
   showLoading(true,authMode==="login"?t.signingIn:t.creating);
   try{
     const{error}=authMode==="login"
       ?await authClient.signIn.email({email,password:pass})
       :await authClient.signUp.email({email,password:pass,name:email});
-    if(error){showLoading(false);authErr("auth-error",t.errMsgs[error.code]||error.message||"Error");return;}
+    if(error){showLoading(false);authErr("auth-error",authErrMsg(error));return;}
     await initSession();
   }catch(e){showLoading(false);authErr("auth-error",t.toastError);}
 };
 window.doLogout=async()=>{
   try{await authClient.signOut();}catch(e){}
-  S={periods:[],settings:{cycle:28,period:5,proj:3},mode:"normal",pregStartDate:null,vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:null,uid:null,email:null};
+  S=initialState();
   showApp(false);
 };
 window.showPrivacy=()=>g("privacy-screen").classList.add("active");
@@ -575,28 +597,54 @@ window.showAbout=()=>g("about-screen").classList.add("active");
 window.hideAbout=()=>g("about-screen").classList.remove("active");
 async function loadData(){
   const res=await fetch("/api/data",{credentials:"include"});
-  if(!res.ok)return;
+  if(!res.ok){const e=new Error("load "+res.status);e.status=res.status;throw e;}
   const d=await res.json();
   S.periods=d.periods||[];S.settings=Object.assign({cycle:28,period:5,proj:3},d.settings||{});S.mode=d.mode||"normal";S.pregStartDate=d.pregStartDate||null;
+  S.loaded=true;
 }
-async function saveData(){
-  if(!S.uid)return;
-  await fetch("/api/data",{method:"PUT",credentials:"include",headers:{"Content-Type":"application/json"},body:JSON.stringify({periods:S.periods,settings:S.settings,mode:S.mode,pregStartDate:S.pregStartDate})});
+// Les sauvegardes sont mises en file pour qu'une ancienne requete ne puisse
+// pas arriver apres une plus recente et ecraser les dernieres modifications.
+let saveQueue=Promise.resolve();
+function saveData(){
+  // Ne jamais envoyer un etat qui n'a pas ete charge depuis le serveur :
+  // on ecraserait l'historique en base avec des donnees vides.
+  if(!S.uid||!S.loaded)return Promise.reject(new Error("not loaded"));
+  const body=JSON.stringify({periods:S.periods,settings:S.settings,mode:S.mode,pregStartDate:S.pregStartDate});
+  const run=saveQueue.catch(()=>{}).then(async()=>{
+    const res=await fetch("/api/data",{method:"PUT",credentials:"include",headers:{"Content-Type":"application/json"},body});
+    if(res.status===401){const e=new Error("unauthorized");e.status=401;throw e;}
+    if(!res.ok)throw new Error("save "+res.status);
+  });
+  saveQueue=run;return run;
 }
+async function persist(){
+  try{await saveData();}
+  catch(e){
+    if(e.status===401){toast(t.toastSession);S=initialState();showApp(false);return;}
+    toast(t.toastError);
+  }
+}
+function showLoadError(){
+  g("loading").style.display="flex";g("loading-spinner").style.display="none";
+  st("loading-text",t.loadError);const b=g("loading-retry");b.textContent=t.retry;b.style.display="block";
+}
+window.retryLoad=()=>initSession();
 async function initSession(){
   let data=null;
   try{({data}=await authClient.getSession());}catch(e){}
   if(data&&data.user){
     S.uid=data.user.id;S.email=data.user.email;g("user-email").textContent=data.user.email;
-    showLoading(true,t.loadingData);try{await loadData();}catch(e){}showLoading(false);
+    showLoading(true,t.loadingData);
+    try{await loadData();}catch(e){if(e.status===401){S=initialState();showLoading(false);showApp(false);return;}showLoadError();return;}
+    showLoading(false);
     showApp(true);syncSett();applyT();renderCal();
   }else{
     S.uid=null;S.email=null;showLoading(false);showApp(false);
   }
 }
 if(resetToken){showLoading(false);showApp(false);showReset();}else{initSession();}
-window.setMode=async(mode)=>{S.mode=mode;applyMode();renderCal();try{await saveData();}catch(e){}};
-window.savePregDate=async()=>{const val=g("preg-start-date").value;if(!val){toast(t.toastSelectDate);return;}S.pregStartDate=val;applyMode();renderCal();toast(t.toastPregSaved);try{await saveData();}catch(e){}};
+window.setMode=async(mode)=>{S.mode=mode;applyMode();renderCal();await persist();};
+window.savePregDate=async()=>{const val=g("preg-start-date").value;if(!val){toast(t.toastSelectDate);return;}S.pregStartDate=val;applyMode();renderCal();toast(t.toastPregSaved);await persist();};
 function applyMode(){
   const tb=g("top-bar"),badge=g("mode-badge"),dc=g("date-input-card");
   tb.className="top-bar mode-"+S.mode;badge.style.display="none";dc.style.display="none";
@@ -616,21 +664,23 @@ window.goTab=tab=>{
   ["home","hist","sett"].forEach(tt=>{g("tab-"+tt).classList.toggle("active",tt===tab);const n=g("nav-"+tt),on=tt===tab;n.classList.toggle("active",on);n.querySelector(".nav-lbl").style.color=on?"var(--pink)":"";n.querySelectorAll("[stroke]").forEach(el=>el.setAttribute("stroke",on?"#E91E8C":"#bbb"));});
   updatePageTitle();g("content").scrollTop=0;if(tab==="hist")renderHist();
 };
-function periodDays(){const s=new Set();S.periods.forEach(p=>{const st=new Date(p.start);const dur=p.end?Math.round((new Date(p.end)-st)/86400000)+1:S.settings.period;for(let i=0;i<dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(d.toISOString().slice(0,10));}});return s;}
-function getProj(){if(!S.periods.length)return[];const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));let avg=S.settings.cycle;if(sorted.length>1){let tt=0;for(let i=1;i<sorted.length;i++)tt+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;avg=Math.round(tt/(sorted.length-1));}const last=new Date(sorted[sorted.length-1].start);return Array.from({length:S.settings.proj},(_,i)=>{const d=new Date(last);d.setDate(d.getDate()+avg*(i+1));return{start:d.toISOString().slice(0,10),dur:S.settings.period};});}
-function projDays(){const s=new Set();getProj().forEach(p=>{const st=new Date(p.start);for(let i=0;i<p.dur;i++){const d=new Date(st);d.setDate(d.getDate()+i);s.add(d.toISOString().slice(0,10));}});return s;}
-function getFertile(){const f=new Set(),ov=new Set();[...S.periods.map(p=>p.start),...getProj().map(p=>p.start)].forEach(st=>{const ovd=new Date(st);ovd.setDate(ovd.getDate()+S.settings.cycle-14);ov.add(ovd.toISOString().slice(0,10));for(let i=-5;i<=1;i++){const fd=new Date(ovd);fd.setDate(fd.getDate()+i);const k=fd.toISOString().slice(0,10);if(!ov.has(k))f.add(k);}});return{f,ov};}
-function getPregInfo(){if(!S.pregStartDate)return null;const start=new Date(S.pregStartDate);const today=new Date();today.setHours(0,0,0,0);const days=Math.round((today-start)/86400000);const weeks=Math.floor(days/7);const rem=days%7;const dpa=new Date(start);dpa.setDate(dpa.getDate()+280);const daysLeft=Math.round((dpa-today)/86400000);return{weeks,rem,dpa,daysLeft,days};}
+function periodDays(){const s=new Set();S.periods.forEach(p=>{const st=parseD(p.start);const dur=p.end?diffDays(parseD(p.end),st)+1:S.settings.period;for(let i=0;i<dur;i++)s.add(ymd(addDays(st,i)));});return s;}
+function getProj(){if(!S.periods.length)return[];const sorted=sortedPeriods();const avg=avgCycle();const last=parseD(sorted[sorted.length-1].start);return Array.from({length:S.settings.proj},(_,i)=>({start:ymd(addDays(last,avg*(i+1))),dur:S.settings.period}));}
+function projDays(){const s=new Set();getProj().forEach(p=>{const st=parseD(p.start);for(let i=0;i<p.dur;i++)s.add(ymd(addDays(st,i)));});return s;}
+// Ovulation estimee 14 jours avant les regles suivantes.
+function ovulationDates(){const c=avgCycle();return[...S.periods.map(p=>p.start),...getProj().map(p=>p.start)].map(st=>addDays(parseD(st),c-14));}
+function getFertile(){const f=new Set(),ov=new Set();ovulationDates().forEach(ovd=>{ov.add(ymd(ovd));for(let i=-5;i<=1;i++){const k=ymd(addDays(ovd,i));if(!ov.has(k))f.add(k);}});ov.forEach(k=>f.delete(k));return{f,ov};}
+function getPregInfo(){if(!S.pregStartDate)return null;const start=parseD(S.pregStartDate);const today=todayD();const days=Math.max(0,diffDays(today,start));const weeks=Math.floor(days/7);const rem=days%7;const dpa=addDays(start,280);const daysLeft=diffDays(dpa,today);return{weeks,rem,dpa,daysLeft,days};}
 function renderCal(){
   const{vy:y,vm:m}=S;g("cal-month").textContent=`${t.MONTHS[m]} ${y}`;
   const pd=periodDays(),prd=projDays(),{f,ov}=getFertile();
-  const today=new Date().toISOString().slice(0,10);
+  const today=ymd(todayD());
   const isC=S.mode==="conception",isG=S.mode==="grossesse";
   const grid=g("cal-grid");grid.innerHTML="";
   t.DAYS.forEach(d=>{const e=document.createElement("div");e.className="cal-hdr";e.textContent=d;grid.appendChild(e);});
   const off=(new Date(y,m,1).getDay()+6)%7;for(let i=0;i<off;i++){const e=document.createElement("div");e.className="day empty";grid.appendChild(e);}
   const dim=new Date(y,m+1,0).getDate();
-  let pregSet=new Set();if(isG&&S.pregStartDate){const ps=new Date(S.pregStartDate);const dpa=new Date(ps);dpa.setDate(dpa.getDate()+280);let cur=new Date(ps);while(cur<=dpa){pregSet.add(cur.toISOString().slice(0,10));cur.setDate(cur.getDate()+1);}}
+  let pregSet=new Set();if(isG&&S.pregStartDate){const ps=parseD(S.pregStartDate);for(let i=0;i<=280;i++)pregSet.add(ymd(addDays(ps,i)));}
   for(let d=1;d<=dim;d++){
     const ds=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
     const e=document.createElement("div");e.className="day";e.textContent=d;
@@ -648,8 +698,8 @@ function renderCal(){
 window.prevMonth=()=>{S.vm--;if(S.vm<0){S.vm=11;S.vy--;}renderCal();};
 window.nextMonth=()=>{S.vm++;if(S.vm>11){S.vm=0;S.vy++;}renderCal();};
 function selectDay(ds){S.sel=ds;const[y,mo,d]=ds.split("-").map(Number);const lbl=new Date(y,mo-1,d).toLocaleDateString(t.locale,{weekday:"long",day:"numeric",month:"long"});const el=g("sel-show");el.textContent=lbl.charAt(0).toUpperCase()+lbl.slice(1);el.classList.remove("ph");renderCal();}
-window.logStart=async()=>{if(S.mode==="grossesse"){goTab("sett");toast(t.toastGrSett);return;}if(!S.sel){toast(t.toastSelectDay);return;}if(S.periods.find(p=>p.start===S.sel)){toast(t.toastAlready);return;}S.periods.push({start:S.sel,end:null});S.periods.sort((a,b)=>new Date(a.start)-new Date(b.start));renderCal();toast(t.toastStart);try{await saveData();}catch(e){toast(t.toastError);}};
-window.logEnd=async()=>{if(!S.sel){toast(t.toastSelectDay);return;}const candidates=S.periods.filter(p=>new Date(p.start)<=new Date(S.sel)).sort((a,b)=>new Date(b.start)-new Date(a.start));const target=candidates[0];if(!target){toast(t.toastNeedStart);return;}S.periods[S.periods.findIndex(p=>p.start===target.start)].end=S.sel;renderCal();toast(t.toastEnd);try{await saveData();}catch(e){toast(t.toastError);}};
+window.logStart=async()=>{if(S.mode==="grossesse"){goTab("sett");toast(t.toastGrSett);return;}if(!S.sel){toast(t.toastSelectDay);return;}if(S.periods.find(p=>p.start===S.sel)){toast(t.toastAlready);return;}S.periods.push({start:S.sel,end:null});S.periods.sort((a,b)=>a.start.localeCompare(b.start));renderCal();toast(t.toastStart);await persist();};
+window.logEnd=async()=>{if(!S.sel){toast(t.toastSelectDay);return;}const candidates=S.periods.filter(p=>p.start<=S.sel).sort((a,b)=>b.start.localeCompare(a.start));const target=candidates[0];if(!target){toast(t.toastNeedStart);return;}S.periods[S.periods.findIndex(p=>p.start===target.start)].end=S.sel;renderCal();toast(t.toastEnd);await persist();};
 function updateBanners(){
   g("banner-normal").style.display="none";g("banner-conception").style.display="none";g("banner-grossesse").style.display="none";g("baby-card").style.display="none";
   g("conception-tip").style.display="none";g("fertile-detail").style.display="none";g("fertile-dates").style.display="none";
@@ -662,18 +712,16 @@ function updateBanners(){
     const w=Math.min(40,Math.max(4,info.weeks));g("baby-card").style.display="block";g("baby-title").textContent=t.babyWeekTitle(info.weeks);g("baby-text").textContent=t.BABY[w]||t.BABY[40];
   }else if(S.mode==="conception"){
     g("banner-conception").style.display="block";
-    const{f,ov}=getFertile();const today=new Date();today.setHours(0,0,0,0);const todayStr=today.toISOString().slice(0,10);
+    const{f,ov}=getFertile();const today=todayD();const todayStr=ymd(today);
     const isInFertile=f.has(todayStr)||ov.has(todayStr);
     const isOvToday=ov.has(todayStr);
     // Trouver TOUTES les ovulations (passées et futures) et prendre la plus proche de today
     let nextOv=null;
-    const allOvStarts=[...S.periods.map(p=>p.start),...getProj().map(p=>p.start)];
-    let allOvDates=[];
-    allOvStarts.forEach(st=>{const ovd=new Date(st);ovd.setDate(ovd.getDate()+S.settings.cycle-14);allOvDates.push(ovd);});
+    const allOvDates=ovulationDates();
     if(allOvDates.length){
       // Chercher d abord l ovulation en cours ou future la plus proche
-      const futureOv=allOvDates.filter(d=>Math.round((d-today)/86400000)>=0).sort((a,b)=>a-b);
-      const pastOv=allOvDates.filter(d=>Math.round((d-today)/86400000)<0).sort((a,b)=>b-a);
+      const futureOv=allOvDates.filter(d=>diffDays(d,today)>=0).sort((a,b)=>a-b);
+      const pastOv=allOvDates.filter(d=>diffDays(d,today)<0).sort((a,b)=>b-a);
       if(futureOv.length)nextOv=futureOv[0];
       else if(pastOv.length)nextOv=pastOv[0];
     }
@@ -692,7 +740,7 @@ function updateBanners(){
         g("bc-title").textContent=isFR?"Tu es dans ta fenêtre fertile !":"You're in your fertile window!";
         g("bc-sub").textContent=isFR?"Les prochains jours sont optimaux pour concevoir.":"The next few days are optimal for conceiving.";
       } else if(nextOv){
-        const diff=Math.round((nextOv-today)/86400000);
+        const diff=diffDays(nextOv,today);
         g("bc-title").textContent=t.ovInDays(diff);
         g("bc-sub").textContent=nextOv.toLocaleDateString(t.locale,{day:"numeric",month:"long"});
       } else {
@@ -702,7 +750,7 @@ function updateBanners(){
 
       // Conseil du jour
       if(nextOv){
-        const diffOv=Math.round((nextOv-today)/86400000);
+        const diffOv=diffDays(nextOv,today);
         const tip=g("conception-tip");tip.style.display="block";
         let tipBg,tipBorder,tipBadgeColor,tipTextColor,badge,text;
         if(diffOv>7){
@@ -751,7 +799,7 @@ function updateBanners(){
         const PROBS=[{d:-5,p:10},{d:-4,p:16},{d:-3,p:27},{d:-2,p:33},{d:-1,p:41},{d:0,p:33},{d:1,p:5}];
         const todayD=today.getTime();
         PROBS.forEach(item=>{
-          const dd=new Date(nextOv);dd.setDate(dd.getDate()+item.d);
+          const dd=addDays(nextOv,item.d);
           const isToday=dd.getTime()===todayD;
           const isOv=item.d===0;
           const num=dd.getDate();
@@ -764,7 +812,7 @@ function updateBanners(){
         // Barres de probabilite
         const barsEl=g("fd-prob-bars");barsEl.innerHTML="";
         PROBS.filter(x=>x.d<=0).forEach(item=>{
-          const dd=new Date(nextOv);dd.setDate(dd.getDate()+item.d);
+          const dd=addDays(nextOv,item.d);
           const lbl=item.d===0?(isFR?"Ovulation":"Ovulation"):`J${item.d} (${dd.getDate()} ${t.MONTHS[dd.getMonth()].slice(0,3)})`;
           const intensity=item.p>=40?"#6A1B9A":item.p>=30?"#7B1FA2":item.p>=20?"#9C27B0":"#AB47BC";
           barsEl.innerHTML+=`<div class="fd-prob-row"><div class="fd-prob-lbl">${lbl}</div><div class="fd-prob-bar"><div class="fd-prob-fill" style="width:${item.p}%;background:${intensity}"></div></div><div class="fd-prob-pct">${item.p}%</div></div>`;
@@ -772,14 +820,13 @@ function updateBanners(){
 
         // Dates cles
         g("fertile-dates").style.display="block";
-        const fertStart=new Date(nextOv);fertStart.setDate(fertStart.getDate()-5);
-        const fertEnd=new Date(nextOv);fertEnd.setDate(fertEnd.getDate()+1);
-        const optimal=new Date(nextOv);optimal.setDate(optimal.getDate()-1);
+        const fertStart=addDays(nextOv,-5);
+        const fertEnd=addDays(nextOv,1);
         const fmt=d=>d.toLocaleDateString(t.locale,{day:"numeric",month:"long"});
         g("fd-lbl-start").textContent=isFR?"Début fenêtre fertile":"Fertile window start";
         g("fd-val-start").textContent=fmt(fertStart);
         g("fd-lbl-optimal").textContent=isFR?"Jour optimal (J-2)":"Optimal day (D-2)";
-        const opt2=new Date(nextOv);opt2.setDate(opt2.getDate()-2);
+        const opt2=addDays(nextOv,-2);
         g("fd-badge-optimal").textContent=fmt(opt2);
         g("fd-lbl-ov").textContent=isFR?"Ovulation prévue":"Estimated ovulation";
         g("fd-badge-ov").textContent=fmt(nextOv);
@@ -793,21 +840,23 @@ function updateBanners(){
     }
   }else{
     const proj=getProj();if(!proj.length)return;g("banner-normal").style.display="block";
-    const next=new Date(proj[0].start);const today=new Date();today.setHours(0,0,0,0);const diff=Math.round((next-today)/86400000);
+    const next=parseD(proj[0].start);const diff=diffDays(next,todayD());
     g("nb-date").textContent=next.toLocaleDateString(t.locale,{day:"numeric",month:"long",year:"numeric"});g("nb-days").textContent=t.inDays(diff);
   }
 }
 function updateStats(){
-  const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));
+  const sorted=sortedPeriods();
   if(S.mode==="grossesse"){const info=getPregInfo();g("st-cycle").textContent=info?`S${info.weeks}`:"—";g("st-period").textContent=info?(info.daysLeft>0?info.daysLeft:0):"—";g("st-count").textContent=info?info.dpa.toLocaleDateString(t.locale,{day:"numeric",month:"short"}):"—";}
-  else if(S.mode==="conception"){g("st-count").textContent=sorted.length;if(sorted.length>1){let tt=0;for(let i=1;i<sorted.length;i++)tt+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;g("st-cycle").textContent=Math.round(tt/(sorted.length-1));}else g("st-cycle").textContent=S.settings.cycle;g("st-period").textContent=6;}
-  else{g("st-count").textContent=sorted.length;if(sorted.length>1){let tt=0;for(let i=1;i<sorted.length;i++)tt+=(new Date(sorted[i].start)-new Date(sorted[i-1].start))/86400000;g("st-cycle").textContent=Math.round(tt/(sorted.length-1));}else g("st-cycle").textContent=S.settings.cycle;const we=sorted.filter(p=>p.end);if(we.length){let tt=0;we.forEach(p=>tt+=(new Date(p.end)-new Date(p.start))/86400000+1);g("st-period").textContent=Math.round(tt/we.length);}else g("st-period").textContent=S.settings.period;}
+  else if(S.mode==="conception"){g("st-count").textContent=sorted.length;g("st-cycle").textContent=avgCycle();g("st-period").textContent=7;}
+  else{g("st-count").textContent=sorted.length;g("st-cycle").textContent=avgCycle();const we=sorted.filter(p=>p.end);if(we.length){let tt=0;we.forEach(p=>tt+=diffDays(parseD(p.end),parseD(p.start))+1);g("st-period").textContent=Math.round(tt/we.length);}else g("st-period").textContent=S.settings.period;}
 }
+// Jour du cycle en cours (0 = premier jour des dernieres regles), sans modulo.
+function cycleDay(){const s=sortedPeriods();return{day:diffDays(todayD(),parseD(s[s.length-1].start)),cycle:avgCycle()};}
 function updatePhase(){
   if(S.mode==="grossesse"||!S.periods.length){g("phase-card").style.display="none";return;}
-  const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));const last=new Date(sorted[sorted.length-1].start);const today=new Date();today.setHours(0,0,0,0);
-  let day=Math.round((today-last)/86400000)%S.settings.cycle;if(day<0)day+=S.settings.cycle;
-  const ph=day<S.settings.period?0:day<Math.round(S.settings.cycle*0.45)?1:day<Math.round(S.settings.cycle*0.55)?2:3;
+  const{day,cycle}=cycleDay();if(day<0){g("phase-card").style.display="none";return;}
+  // Retard : on reste en phase luteale au lieu de repartir en "Menstruation".
+  const ovDay=cycle-14;const ph=day<S.settings.period?0:day<ovDay-1?1:day<=ovDay+1?2:3;
   const pc=g("phase-card"),p=t.PHASES[ph];pc.style.display="block";pc.style.borderLeftColor=p.col;
   const badge=g("phase-badge");badge.textContent=p.name;badge.style.background=p.bg;badge.style.color=p.col;
   g("phase-name").textContent=p.name;g("phase-name").style.color=p.col;g("phase-desc").textContent=p.desc;
@@ -815,20 +864,20 @@ function updatePhase(){
 function updateCycBar(){
   if(S.mode==="grossesse"){const info=getPregInfo();if(!info){g("cyc-wrap").style.display="none";return;}g("cyc-wrap").style.display="";g("cyc-label").textContent=t.pregProg(info.days);g("cyc-fill").style.background="#2196F3";g("cyc-fill").style.width=Math.min(100,Math.round((info.days/280)*100))+"%";return;}
   if(!S.periods.length){g("cyc-wrap").style.display="none";return;}
-  const sorted=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));const last=new Date(sorted[sorted.length-1].start);const today=new Date();today.setHours(0,0,0,0);
-  let day=Math.round((today-last)/86400000)%S.settings.cycle;if(day<0)day+=S.settings.cycle;
-  g("cyc-wrap").style.display="";g("cyc-label").textContent=t.dayOf(day+1,S.settings.cycle);
-  g("cyc-fill").style.background=S.mode==="conception"?"#9C27B0":"#E91E8C";g("cyc-fill").style.width=Math.min(100,Math.round((day/S.settings.cycle)*100))+"%";
+  const{day,cycle}=cycleDay();if(day<0){g("cyc-wrap").style.display="none";return;}
+  const late=day+1-cycle;
+  g("cyc-wrap").style.display="";g("cyc-label").textContent=t.dayOf(day+1,cycle)+(late>0?" · "+t.lateBy(late):"");
+  g("cyc-fill").style.background=S.mode==="conception"?"#9C27B0":"#E91E8C";g("cyc-fill").style.width=Math.min(100,Math.round((day/cycle)*100))+"%";
 }
 function renderHist(){
-  const asc=[...S.periods].sort((a,b)=>new Date(a.start)-new Date(b.start));const sorted=[...asc].reverse();const list=g("hist-list");
+  const asc=sortedPeriods();const sorted=[...asc].reverse();const list=g("hist-list");
   if(!sorted.length){list.innerHTML=`<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">${t.emptyHist}</div></div>`;return;}
   list.innerHTML="";
-  sorted.forEach((p,i)=>{const st=new Date(p.start);const dur=p.end?Math.round((new Date(p.end)-st)/86400000)+1:null;const ascIdx=asc.length-1-i;let cycleDur=null;if(ascIdx+1<asc.length)cycleDur=Math.round((new Date(asc[ascIdx+1].start)-new Date(asc[ascIdx].start))/86400000);const el=document.createElement("div");el.className="hist-item";el.innerHTML=`<div style="flex:1"><div class="hist-date">${st.toLocaleDateString(t.locale,{day:"numeric",month:"long",year:"numeric"})}</div><div class="hist-sub">${dur?t.histDays(dur):t.histNoEnd} · ${cycleDur?t.histCycle(cycleDur):t.histLast}</div></div><div class="hist-right"><span class="hist-badge">${cycleDur?t.histBadge(cycleDur):dur?dur+"j":"?"}</span><button class="del-btn" data-start="${p.start}">✕</button></div>`;list.appendChild(el);});
+  sorted.forEach((p,i)=>{const st=parseD(p.start);const dur=p.end?diffDays(parseD(p.end),st)+1:null;const ascIdx=asc.length-1-i;let cycleDur=null;if(ascIdx+1<asc.length)cycleDur=diffDays(parseD(asc[ascIdx+1].start),parseD(asc[ascIdx].start));const el=document.createElement("div");el.className="hist-item";el.innerHTML=`<div style="flex:1"><div class="hist-date">${st.toLocaleDateString(t.locale,{day:"numeric",month:"long",year:"numeric"})}</div><div class="hist-sub">${dur?t.histDays(dur):t.histNoEnd} · ${cycleDur?t.histCycle(cycleDur):t.histLast}</div></div><div class="hist-right"><span class="hist-badge">${cycleDur?t.histBadge(cycleDur):dur?dur+"j":"?"}</span><button class="del-btn" data-start="${p.start}">✕</button></div>`;list.appendChild(el);});
   list.querySelectorAll(".del-btn").forEach(btn=>btn.addEventListener("click",()=>delPeriod(btn.dataset.start)));
 }
-async function delPeriod(start){if(!confirm(t.confirmDelete))return;S.periods=S.periods.filter(p=>p.start!==start);renderHist();renderCal();toast(t.toastDeleted);try{await saveData();}catch(e){}}
-window.clearAll=async()=>{if(!confirm(t.confirmClear))return;S.periods=[];S.mode="normal";S.pregStartDate=null;renderHist();renderCal();applyMode();toast(t.toastCleared);try{await saveData();}catch(e){}};
+async function delPeriod(start){if(!confirm(t.confirmDelete))return;S.periods=S.periods.filter(p=>p.start!==start);renderHist();renderCal();toast(t.toastDeleted);await persist();}
+window.clearAll=async()=>{if(!confirm(t.confirmClear))return;S.periods=[];S.mode="normal";S.pregStartDate=null;renderHist();renderCal();applyMode();toast(t.toastCleared);await persist();};
 window.exportData=()=>{
   const data={email:S.email,periods:S.periods,settings:S.settings,mode:S.mode,pregStartDate:S.pregStartDate,exportedAt:new Date().toISOString()};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
@@ -845,13 +894,13 @@ window.deleteAccount=async()=>{
   // la suppression automatique et immediate de toutes les donnees de cycle associees.
   let error;
   try{({error}=await authClient.deleteUser({password:pass}));}catch(e){toast(t.toastError);return;}
-  if(error){toast(t.errMsgs[error.code]||error.message||t.toastError);return;}
+  if(error){toast(authErrMsg(error));return;}
   toast(t.toastAccountDeleted);
-  S={periods:[],settings:{cycle:28,period:5,proj:3},mode:"normal",pregStartDate:null,vy:new Date().getFullYear(),vm:new Date().getMonth(),sel:null,uid:null,email:null};
+  S=initialState();
   showApp(false);
 };
 const LIM={cycle:[20,45],period:[1,10],proj:[1,12]};
-window.adj=async(k,d)=>{S.settings[k]=Math.max(LIM[k][0],Math.min(LIM[k][1],S.settings[k]+d));syncSett();renderCal();try{await saveData();}catch(e){}};
+window.adj=async(k,d)=>{S.settings[k]=Math.max(LIM[k][0],Math.min(LIM[k][1],S.settings[k]+d));syncSett();renderCal();await persist();};
 function syncSett(){g("sv-cycle").textContent=S.settings.cycle;g("sv-period").textContent=S.settings.period;g("sv-proj").textContent=S.settings.proj;}
 applyT();
 </script>
