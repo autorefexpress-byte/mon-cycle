@@ -21,6 +21,13 @@ html,body{width:100%;height:100%;font-family:system-ui,-apple-system,"Segoe UI",
 .auth-error{background:#FFF3F3;border:1px solid #FFCDD2;color:#C62828;border-radius:12px;padding:11px 14px;font-size:13px;display:none;text-align:center;line-height:1.5;}
 .auth-input{width:100%;padding:15px 16px;border:1.5px solid var(--border);border-radius:14px;font-size:16px;font-family:inherit;background:var(--card);color:var(--text);outline:none;transition:border-color 0.2s;}
 .auth-input:focus{border-color:var(--pink);}
+.pwd-wrap{position:relative;width:100%;}
+.pwd-wrap .auth-input{padding-right:52px;}
+.pwd-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:none;background:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-sec);}
+.pwd-toggle:active{background:var(--bg);}
+.pwd-toggle svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.pwd-toggle .eye-closed,.pwd-toggle[aria-pressed="true"] .eye-open{display:none;}
+.pwd-toggle[aria-pressed="true"] .eye-closed{display:block;}
 .auth-btn{width:100%;padding:15px;background:var(--pink);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:4px;}
 .auth-btn:active{background:var(--pink-dark);}
 .auth-toggle{text-align:center;font-size:14px;color:var(--text-sec);cursor:pointer;}
@@ -185,7 +192,7 @@ a.about-link{text-decoration:none;}
     <div class="auth-mode-title" id="auth-mode-title"></div>
     <div class="auth-error" id="auth-error"></div>
     <input class="auth-input" type="email" id="auth-email" placeholder="Email" autocomplete="email">
-    <input class="auth-input" type="password" id="auth-password" placeholder="Password" autocomplete="current-password">
+    <div class="pwd-wrap"><input class="auth-input" type="password" id="auth-password" placeholder="Password" autocomplete="current-password"><button type="button" class="pwd-toggle" data-action="togglePwd" data-arg="auth-password" aria-pressed="false"><svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 19c-7 0-11-7-11-7a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 7 11 7a18.5 18.5 0 01-2.16 3.19M14.12 14.12a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg></button></div>
     <div class="consent-row" id="consent-row" style="display:none">
       <input type="checkbox" id="consent-check">
       <label for="consent-check" id="consent-label"></label>
@@ -204,7 +211,7 @@ a.about-link{text-decoration:none;}
     <div class="auth-error" id="reset-error"></div>
     <div class="reset-success" id="reset-success"></div>
     <input class="auth-input" type="email" id="reset-email" placeholder="Email" autocomplete="email">
-    <input class="auth-input" type="password" id="reset-newpass" placeholder="Nouveau mot de passe" autocomplete="new-password" style="display:none">
+    <div class="pwd-wrap" id="reset-newpass-wrap" style="display:none"><input class="auth-input" type="password" id="reset-newpass" placeholder="Nouveau mot de passe" autocomplete="new-password"><button type="button" class="pwd-toggle" data-action="togglePwd" data-arg="reset-newpass" aria-pressed="false"><svg class="eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0112 19c-7 0-11-7-11-7a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 7 11 7a18.5 18.5 0 01-2.16 3.19M14.12 14.12a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg></button></div>
     <button class="auth-btn" id="rst-btn" data-action="sendReset"></button>
     <div class="reset-back" id="rst-back" role="button" tabindex="0" data-action="showAuth"></div>
   </div>
