@@ -106,9 +106,26 @@ function applyT() {
     const [k, d] = b.dataset.arg.split(":");
     b.setAttribute("aria-label", `${d < 0 ? t.aDecrease : t.aIncrease} : ${t[`sett${k[0].toUpperCase()}${k.slice(1)}Lbl`]}`);
   });
+  document.querySelectorAll(".pwd-toggle").forEach(updatePwdToggle);
   const selEl = g("sel-show");
   if (selEl.classList.contains("ph")) selEl.textContent = t.selPrompt;
   applyMode();
+}
+
+// Bouton oeil : affiche ou masque le mot de passe saisi.
+function updatePwdToggle(btn) {
+  const visible = g(btn.dataset.arg).type === "text";
+  btn.setAttribute("aria-pressed", visible);
+  btn.setAttribute("aria-label", visible ? t.aHidePwd : t.aShowPwd);
+}
+function togglePwd(id) {
+  const input = g(id);
+  input.type = input.type === "password" ? "text" : "password";
+  updatePwdToggle(document.querySelector(`.pwd-toggle[data-arg="${id}"]`));
+}
+// Remasque les mots de passe (apres connexion / deconnexion).
+function hidePasswords() {
+  document.querySelectorAll(".pwd-toggle").forEach((b) => { g(b.dataset.arg).type = "password"; updatePwdToggle(b); });
 }
 
 function updatePageTitle() {
@@ -131,6 +148,7 @@ function showLoadError() {
   show("loading-retry", true);
 }
 function showApp(v) {
+  hidePasswords();
   show("auth-screen", !v, "flex");
   show("reset-screen", false);
   g("reset-screen").classList.remove("active");
@@ -149,7 +167,7 @@ function showReset() {
   authErr("reset-error", "");
   show("reset-success", false);
   show("reset-email", !resetToken);
-  show("reset-newpass", !!resetToken);
+  show("reset-newpass-wrap", !!resetToken);
   if (!resetToken) g("reset-email").value = g("auth-email").value || "";
   applyT();
 }
@@ -637,7 +655,7 @@ function renderHist() {
 // chaque element cliquable porte data-action / data-arg.
 
 const ACTIONS = {
-  setLang, authSubmit, showReset, toggleAuthMode, sendReset, showAuth, doLogout,
+  setLang, authSubmit, togglePwd, showReset, toggleAuthMode, sendReset, showAuth, doLogout,
   prevMonth, nextMonth, logStart, logEnd, setMode, savePregDate, adj, selectDay, delPeriod,
   exportData, clearAll, deleteAccount, goTab,
   retryLoad: () => initSession(),
