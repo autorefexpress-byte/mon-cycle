@@ -10,7 +10,11 @@ const authClient = createAuthClient({ baseURL: window.location.origin });
 
 // ---------- Etat ----------
 
+const urlParams = new URLSearchParams(location.search);
 function readLang() {
+  // Lien recu par email : il porte la langue choisie lors de la demande.
+  const fromUrl = urlParams.get("lang");
+  if (fromUrl === "fr" || fromUrl === "en") return fromUrl;
   try { return localStorage.getItem("moncycle_lang") || "fr"; } catch (e) { return "fr"; }
 }
 let lang = readLang();
@@ -24,7 +28,9 @@ function initialState() {
   };
 }
 let S = initialState();
-const resetToken = new URLSearchParams(location.search).get("token");
+const resetToken = urlParams.get("token");
+// Lien de reinitialisation expire ou deja utilise : Better Auth renvoie ?error=INVALID_TOKEN.
+const resetLinkError = urlParams.get("error") === "INVALID_TOKEN";
 
 // ---------- Petits utilitaires DOM ----------
 
@@ -211,7 +217,7 @@ async function sendReset() {
       const email = g("reset-email").value.trim();
       if (!email) { authErr("reset-error", t.rstErrEmpty); return; }
       showLoading(true, t.rstSending);
-      const { error } = await authClient.requestPasswordReset({ email, redirectTo: window.location.origin + window.location.pathname });
+      const { error } = await authClient.requestPasswordReset({ email, redirectTo: `${window.location.origin}${window.location.pathname}?lang=${lang}` });
       showLoading(false);
       if (error) { authErr("reset-error", authErrMsg(error)); return; }
       st("reset-success", t.rstSuccess); show("reset-success", true); g("reset-email").value = "";
@@ -687,4 +693,10 @@ g("auth-password").addEventListener("keydown", (e) => { if (e.key === "Enter") a
 
 setLang(lang);
 if (resetToken) { showLoading(false); showApp(false); showReset(); }
+else if (resetLinkError) {
+  // On redemande un lien, avec un message expliquant que l'ancien a expire.
+  history.replaceState({}, "", location.pathname);
+  showLoading(false); showApp(false); showReset();
+  authErr("reset-error", t.errMsgs.INVALID_TOKEN);
+}
 else initSession();
